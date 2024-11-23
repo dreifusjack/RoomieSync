@@ -39,20 +39,20 @@ CREATE TABLE group_members (
 CREATE TABLE expenses (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     group_id uuid REFERENCES groups(id),
+    paid_by uuid REFERENCES users(id),
     amount numeric NOT NULL,
     description varchar(100) NOT NULL,
-    paid_on timestamp NOT NULL,
+    is_paid boolean NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE expense_participants (
-    expense_id uuid REFERENCES expenses(id),
-    user_id uuid REFERENCES users(id),
-    is_paid boolean NOT NULL,
+CREATE TABLE expense_payment (
+    amount_paid numeric NOT NULL,
+    recipient uuid REFERENCES users(id),
+    payer uuid REFERENCES users(id),
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (expense_id, user_id)
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chores (
