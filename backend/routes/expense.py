@@ -13,7 +13,7 @@ def ExpensesRoutes(app: Flask, supabase: Client):
 
     @app.route('/calculate_expenses/<group_id>', methods=['GET'])
     def calculate_expenses(group_id):
-        response = supabase.table('expenses').select('*').eq('group_id', group_id).execute()
+        response = supabase.table('expenses').select('*').eq('group_id', group_id).eq('is_paid', False).execute()
         expenses = response.data
 
         # start by calculating the total amount each person in the group spent
@@ -26,7 +26,7 @@ def ExpensesRoutes(app: Flask, supabase: Client):
             else:
                 total_spent[payer] = amount
 
-        # Calculate how much every owes each person (ex. {'user1': 20, 'user2': 30} --> user2 owes user1 20 and user1 owes user2 30)
+        # Calculate how much everyone owes each person
         num_roommates = len(total_spent)
         per_person_share = {user_id: total / num_roommates for user_id, total in total_spent.items()}
 
@@ -58,9 +58,9 @@ def ExpensesRoutes(app: Flask, supabase: Client):
         return jsonify(response.data), response.status_code
     
     # Route to get all expenses by the person who paid for them
-    @app.route('/expenses_by_person/user_id>', methods=['GET'])
-    def get_expenses_by_person(paid_by):
-        response = supabase.table('expenses').select('*').eq('paid_by', paid_by).execute()
+    @app.route('/expenses_by_person/<user_id>', methods=['GET'])
+    def get_expenses_by_person(user_id):
+        response = supabase.table('expenses').select('*').eq('paid_by', user_id).execute()
         return jsonify(response.data), response.status_code
 
     # Route to get a specific expense by its ID
