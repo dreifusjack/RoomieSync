@@ -62,3 +62,23 @@ def AuthRoutes(app: Flask, supabase: Client):
             })
         except Exception as e:
             return {"error": str(e)}, 401
+
+    # Get the current user
+    @app.route("/auth/user", methods=["GET"])
+    def current_user():
+        try:
+            # Extract the access token from the Authorization header
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return jsonify({'error': 'Authorization header missing or malformed'}), 401
+            access_token = auth_header.split(' ')[1]
+
+            # Retrieve the user associated with the access token
+            response = supabase.auth.get_user(access_token)
+
+            # Fetch the user from the users table
+            user_response = supabase.table("users").select(
+                "*").eq("id", response.user.id).single().execute()
+            return jsonify(user_response.data), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400

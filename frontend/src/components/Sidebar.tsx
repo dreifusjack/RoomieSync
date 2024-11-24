@@ -13,9 +13,7 @@ const Sidebar: React.FC = () => {
           </a>
         </li>
         <li><a href="/explore">Explore</a></li>
-        <li><a href="/calendar">Calendar</a></li>
-        <li><a href="/club-info">Club Info</a></li>
-        <li><a href="/profile">Profile</a></li>
+        <li><a href="/alarms">Alarms</a></li>
       </ul>
     </div>
   );

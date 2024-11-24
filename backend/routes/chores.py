@@ -50,7 +50,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify(response.data), response.status_code
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
-        
+
     # Gets all chore assignments associated with the chore_id
     @app.route('/chores/assignees/<chore_id>', methods=['GET'])
     def get_assignees(chore_id):
@@ -59,7 +59,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                 'user_id, due_date').eq('chore_id', chore_id).execute()
             return jsonify(response.data), response.status_code
         except Exception as e:
-            return jsonify({'error:': str(e)}), 500   
+            return jsonify({'error:': str(e)}), 500
 
     # Deletes the chore with the given id
     @app.route('/chores/<chore_id>', methods=['DELETE'])
@@ -75,7 +75,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify({'error:': str(e)}), 500
 
     # Remind user assinged to chore
-    @app.route('/chores/<chore_id>/reminder', method=['POST'])
+    @app.route('/chores/<chore_id>/reminder', methods=['POST'])
     def remind_user(chore_id):
         try:
             chore = supabase.table('chores').select(
