@@ -40,23 +40,6 @@ def HomeRoutes(app: Flask, supabase: Client):
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
-    # Get all groups a user is in
-    @app.route("/user/<user_id>/groups", methods=["GET"])
-    def get_user_groups(user_id):
-        try:
-            # Query the Supabase `group_members` table with a join to `groups`
-            response = supabase.table('group_members').select(
-                "group_id, groups(name, created_at, updated_at)"
-            ).eq('user_id', user_id).execute()
-
-            if response.get('error'):
-                return jsonify({'error': response['error']['message']}), 400
-
-            # Return the data as JSON
-            return jsonify({'groups': response.get('data', [])}), 200
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-
     # Get all users in a group
     @app.route("/group/<group_id>/users", methods=["GET"])
     def get_group_users(group_id):
@@ -71,5 +54,15 @@ def HomeRoutes(app: Flask, supabase: Client):
 
             # Return the data as JSON
             return jsonify({'users': response.get('data', [])}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    # Get a group
+    @app.route("/group/<group_id>", methods=["GET"])
+    def get_group(group_id):
+        try:
+            select_response = supabase.table(
+                "groups").select().eq("id", group_id).execute()
+            return jsonify(select_response.data), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500

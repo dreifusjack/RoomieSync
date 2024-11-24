@@ -15,9 +15,16 @@ def AuthRoutes(app: Flask, supabase: Client):
             })
             user_id = auth_response.user.id
 
+            # Create a new group for the user
+            insert_response = supabase.table("groups").insert({
+                "name": f"{data['first_name']}'s Group",
+            }).execute()
+            group_id = insert_response.data[0]["id"]
+
             # Insert the user into the users table
             insert_response = supabase.table("users").insert({
                 "id": user_id,
+                "group_id": group_id,
                 "email": data["email"],
                 "first_name": data["first_name"],
                 "last_name": data["last_name"],

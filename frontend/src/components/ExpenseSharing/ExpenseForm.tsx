@@ -27,11 +27,6 @@ const fetchUserDetails = async () => {
   return await response.json();
 };
 
-const fetchUserGroup = async (userId: string) => {
-  const response = await fetch(`${BASE_URL}/group/user/${userId}`);
-  return await response.json();
-};
-
 const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense }) => {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -44,10 +39,7 @@ const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense }) => {
         // Fetch user details
         const userData = await fetchUserDetails();
         setUserId(userData.id);
-
-        // Fetch group ID for the user
-        const groupData = await fetchUserGroup(userData.id);
-        setGroupId(groupData.groupId);
+        setGroupId(userData.group_id);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -66,7 +58,7 @@ const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense }) => {
       is_paid: false,
     };
     try {
-      const response = await fetch('/add_expense', {
+      const response = await fetch(`${BASE_URL}/add_expense`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

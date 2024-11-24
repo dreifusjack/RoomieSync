@@ -31,11 +31,9 @@ def AlarmRoutes(app: Flask, supabase: Client):
     def get_group_alarms(group_id):
         try:
             # Step 1: Retrieve all user_ids in the specified group
-            group_members_response = supabase.table("group_members") \
-                .select("user_id") \
-                .eq("group_id", group_id) \
-                .execute()
-            user_ids = [member['user_id']
+            group_members_response = supabase.table("users").select(
+                "*").eq("group_id", group_id).execute()
+            user_ids = [member['id']
                         for member in group_members_response.data]
 
             # No users in the group

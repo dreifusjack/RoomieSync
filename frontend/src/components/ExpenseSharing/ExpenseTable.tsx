@@ -39,13 +39,10 @@ const ExpenseTable: React.FC = () => {
         // Fetch user details
         const userData = await fetchUserDetails();
         setUserId(userData.id);
-
-        // Fetch group ID for the user
-        const groupData = await fetchUserGroup(userData.id);
-        setGroupId(groupData.groupId);
+        setGroupId(userData.group_id);
 
         // Fetch expenses for the group
-        const response = await fetch(`${BASE_URL}/calculate_expenses/${groupData.groupId}`);
+        const response = await fetch(`${BASE_URL}/calculate_expenses/${userData.group_id}`);
         const data = await response.json();
         setExpenses(data.net_owes);
       } catch (error) {

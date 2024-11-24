@@ -11,6 +11,7 @@ type Alarm = {
 };
 type User = {
     id: string;
+    group_id: string;
     name: string;
     email: string;
 };
@@ -37,11 +38,6 @@ export const fetchUserDetails = async () => {
     return await response.json();
 };
 
-export const fetchUserGroups = async (userId: string) => {
-    const response = await fetch(`${BASE_URL}/group/user/${userId}`);
-    return await response.json();
-}
-
 function AlarmsPage() {
     const [newAlarmName, setNewAlarmName] = useState('');
     const [newAlarmTime, setNewAlarmTime] = useState('');
@@ -61,20 +57,10 @@ function AlarmsPage() {
                 const userAlarmsData = await userAlarmsResponse.json();
                 setUserAlarms(userAlarmsData);
 
-                // Fetch group IDs from user data
-                const groupIds = userData.groupIds || []; // Ensure groupIds is an array
-
-                // Fetch alarms for each group the user belongs to
-                const groupsAlarms = await Promise.all(
-                    groupIds.map(async (groupId: number) => {
-                        const response = await fetch(`${BASE_URL}/alarm/groups/${groupId}`);
-                        const data = await response.json();
-                        return data.alarms || [];
-                    })
-                );
-
-                const allGroupAlarms = groupsAlarms.flat();
-                setGroupAlarms(allGroupAlarms);
+                // Fetch alarms for the user's group
+                const groupAlarmsResponse = await fetch(`${BASE_URL}/alarm/groups/${userData.group_id}`);
+                const groupAlarmsData = await groupAlarmsResponse.json();
+                setGroupAlarms(groupAlarmsData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -152,11 +138,11 @@ function AlarmsPage() {
 
                 <h2 className={styles.subheading}>Your Alarms</h2>
                 <div className={styles.alarmList}>
-                    {userAlarms.map((alarm) => (
-                        <div className={styles.alarmCard} key={alarm.id}>
+                    {(Array.isArray(userAlarms) ? userAlarms : []).map((alarm) => (
+                        <div className={styles.alarmCard} key={alarm.id || Math.random()}>
                             <div className={styles.alarmInfo}>
-                                <h3 className={styles.alarmName}>{alarm.name || "Unnamed Alarm"}</h3>
-                                <p className={styles.alarmTime}>⏰ {alarm.time || "Unknown Time"}</p>
+                                <h3 className={styles.alarmName}>{alarm?.name || "Unnamed Alarm"}</h3>
+                                <p className={styles.alarmTime}>⏰ {alarm?.time || "Unknown Time"}</p>
                             </div>
                         </div>
                     ))}
@@ -164,16 +150,17 @@ function AlarmsPage() {
 
                 <h2 className={styles.subheading}>Group Alarms</h2>
                 <div className={styles.alarmList}>
-                    {groupAlarms.map((alarm) => (
-                        <div className={styles.alarmCard} key={alarm.id}>
+                    {(Array.isArray(groupAlarms) ? groupAlarms : []).map((alarm) => (
+                        <div className={styles.alarmCard} key={alarm.id || Math.random()}>
                             <div className={styles.alarmInfo}>
-                                <h3 className={styles.alarmName}>{alarm.name || "Unnamed Alarm"}</h3>
-                                <p className={styles.alarmTime}>⏰ {alarm.time || "Unknown Time"}</p>
-                                <p className={styles.alarmUser}>👤 Created by User ID: {alarm.user_id || "Unknown User"}</p>
+                                <h3 className={styles.alarmName}>{alarm?.name || "Unnamed Alarm"}</h3>
+                                <p className={styles.alarmTime}>⏰ {alarm?.time || "Unknown Time"}</p>
+                                <p className={styles.alarmUser}>👤 Created by User ID: {alarm?.user_id || "Unknown User"}</p>
                             </div>
                         </div>
                     ))}
                 </div>
+
             </div>
         </div>
     );

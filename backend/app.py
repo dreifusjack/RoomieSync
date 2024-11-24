@@ -9,6 +9,8 @@ from routes.user import UserRoutes
 from routes.chores import ChoresRoutes
 from routes.alarms import AlarmRoutes
 from routes.home import HomeRoutes
+from routes.expense import ExpensesRoutes
+from routes.expense_payment import ExpensePaymentRoutes
 
 SUPABASE_URL = "http://127.0.0.1:54321"
 # Replace this by running `npx supabase status` and using "anon key" value
@@ -34,6 +36,8 @@ def create_app():
     AuthRoutes(app, supabase)
     UserRoutes(app, supabase)
     ChoresRoutes(app, supabase)
+    ExpensesRoutes(app, supabase)
+    ExpensePaymentRoutes(app, supabase)
     HomeRoutes(app, supabase)
     AlarmRoutes(app, supabase)
 

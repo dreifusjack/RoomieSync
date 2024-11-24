@@ -10,15 +10,6 @@ CREATE TABLE examples (
     some_text varchar(100) NOT NULL
 );
 
-CREATE TABLE users (
-    id uuid PRIMARY KEY REFERENCES auth.users(id),
-    first_name varchar(100) NOT NULL,
-    last_name varchar(100) NOT NULL,
-    email varchar(100) NOT NULL,
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE groups (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name varchar(100) NOT NULL,
@@ -26,13 +17,16 @@ CREATE TABLE groups (
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE group_members (
+CREATE TABLE users (
+    id uuid PRIMARY KEY REFERENCES auth.users(id),
     group_id uuid REFERENCES groups(id),
-    user_id uuid REFERENCES users(id),
+    first_name varchar(100) NOT NULL,
+    last_name varchar(100) NOT NULL,
+    email varchar(100) NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (group_id, user_id)
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE expenses (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
