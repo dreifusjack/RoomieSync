@@ -60,12 +60,13 @@ CREATE TABLE chores (
     group_id uuid REFERENCES groups(id),
     name varchar(100) NOT NULL,
     description varchar(100) NOT NULL,
+    cadence varchar(100) NOT NULL, 
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE chore_assignments (
-    chore_id uuid REFERENCES chores(id),
+    chore_id uuid REFERENCES chores(id) ON DELETE CASCADE,
     user_id uuid REFERENCES users(id),
     due_date timestamp NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,

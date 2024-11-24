@@ -8,6 +8,7 @@ from routes.club_event import ClubEventRoutes
 from routes.club_link import ClubLinkRoutes
 from routes.event import EventRoutes
 from routes.user import UserRoutes
+from routes.chores import ChoresRoutes
 
 SUPABASE_URL = "http://127.0.0.1:54321"
 # Replace this by running `npx supabase status` and using "anon key" value
@@ -27,5 +28,6 @@ def create_app():
     ClubLinkRoutes(app, supabase)
     EventRoutes(app, supabase)
     UserRoutes(app, supabase)
+    ChoresRoutes(app, supabase)
 
     return app
