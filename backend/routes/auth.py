@@ -62,3 +62,16 @@ def AuthRoutes(app: Flask, supabase: Client):
             })
         except Exception as e:
             return {"error": str(e)}, 401
+
+    # Get the current user
+    @app.route("/auth/user", methods=["GET"])
+    def current_user():
+        try:
+            access_token = request.headers.get('Authorization')
+            if not access_token:
+                return {"error": "Access token required"}, 401
+
+            user = supabase.auth.api.get_user(access_token)
+            return jsonify(user)
+        except Exception as e:
+            return {"error": str(e)}, 401

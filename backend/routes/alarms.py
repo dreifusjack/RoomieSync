@@ -13,14 +13,11 @@ def AlarmRoutes(app: Flask, supabase: Client):
         try:
             data = request.json
             name = data["name"]
-            military_time = data["time"]
-            today_date = datetime.date.today()
-            datetime_str = f"{today_date} {military_time}"
             timestamp = datetime.datetime.strptime(
-                datetime_str, "%Y-%m-%d %H:%M")
+                data["time"], "%H:%M")
 
             insert_response = supabase.table("alarms").insert({
-                "time": timestamp,
+                "time": timestamp.isoformat(),
                 "name": name,
                 "user_id": user_id,
             }).execute()
