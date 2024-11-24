@@ -1,11 +1,6 @@
 from flask import Flask, jsonify, request
+from utils.email import send_email
 from supabase import Client
-
-from auth.authenticate_user import authenticate_user
-
-# Single route function for this file, that handles all routes pertaining to
-# 'Examples' (something I made up)
-
 
 def ChoresRoutes(app: Flask, supabase: Client):
     # Create a new chore associated with the group_id
@@ -17,13 +12,16 @@ def ChoresRoutes(app: Flask, supabase: Client):
         description = data['description']
         cadence = data['cadence']
 
-        insert_response = supabase.table('chores').insert({
-            'group_id': group_id,
-            'name': name,
-            'description': description,
-            'cadence': cadence
-        }).execute()
-        return jsonify(insert_response.data), insert_response.status_code
+        try:
+            insert_response = supabase.table('chores').insert({
+                'group_id': group_id,
+                'name': name,
+                'description': description,
+                'cadence': cadence
+            }).execute()
+            return jsonify(insert_response.data), insert_response.status_code
+        except Exception as e:
+            return jsonify({'error:': str(e)}), 500
 
     # Assign a existing chore to the given user id
     @app.route('/chore/user/<user_id>', methods=['POST'])
@@ -52,7 +50,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
            return jsonify({'error:': str(e)}), 500
     
     # Deletes the chore with the given id
-    @app.route('chore/<chore_id>', methods=['DELETE'])
+    @app.route('/chore/<chore_id>', methods=['DELETE'])
     def delete_chore(chore_id):
         try:
             delete_response = supabase.table('chores').delete().eq('id', chore_id).execute()
@@ -64,8 +62,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify({'error:': str(e)}), 500
       
     # Remind user assinged to chore 
-    """
-    @app.route('chore/<chore_id>/reminder', method=['POST'])
+    @app.route('/chore/<chore_id>/reminder', method=['POST'])
     def remind_user(chore_id):
         try:
             chore = supabase.table('chores').select('group_id, name, description').eq('id', chore_id).execute()
@@ -88,12 +85,14 @@ def ChoresRoutes(app: Flask, supabase: Client):
 
                 if user.data:
                     user_email = user.data[0]['email']
+                    subject = f"Chore Reminder: {chore_data['name']}"
+                    body = f"Reminder: You are assigned the chore '{chore_data['name']}'.\n" \
+                           f"Description: {chore_data['description']}\n" \
+                           f"Due date: {due_date}"
                     
-                    send_email(user_email, "Chore Reminder: " + chore_data['name'],
-                               f'Reminder: You are assigned the chore ' + chore_data['name'] + ', ' + chore_data['description'] 
-                               + '. Due date: ' assignments['due_date'])
+                    send_email(user_email, subject, body)
 
                 return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
             return jsonify({'error': 'An error occured while sending reminders'}), 500
-            """
+            
