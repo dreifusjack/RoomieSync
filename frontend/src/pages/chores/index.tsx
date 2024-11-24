@@ -93,6 +93,15 @@ const ChoresPage: React.FC<ChoresPageProps> = ({ groupId }) => {
         createdAt: "11/24/2024",
         updatedAt: "11/24/2024",
       },
+      {
+        id: "3",
+        groupId: groupId,
+        name: "Unload the dishwasher",
+        description: "Unload all the dishes from the dishwasher after ran.",
+        cadence: "Daily",
+        createdAt: "11/24/2024",
+        updatedAt: "11/24/2024",
+      },
     ];
     setChores(mockChores);
 
@@ -100,6 +109,14 @@ const ChoresPage: React.FC<ChoresPageProps> = ({ groupId }) => {
       {
         id: "1",
         name: "Jack",
+      },
+      {
+        id: "2",
+        name: "Easha",
+      },
+      {
+        id: "3",
+        name: "Seby",
       },
     ];
     setUsers(mockUsers);
@@ -131,6 +148,7 @@ const ChoresPage: React.FC<ChoresPageProps> = ({ groupId }) => {
       <div className="chores-list">
         <ChoresList
           chores={chores}
+          assigneeName="Jack"
           onRemindUser={remindUser}
           onDeletedChore={deleteChore}
         />
