@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar';
-import styles from '../../styles/Explore.module.css';
+import styles from '@/styles/Explore.module.css';
+import "./styles.css";
 
 type Alarm = {
     id: string;
@@ -102,7 +103,10 @@ function AlarmsPage() {
                 console.log(data);
 
                 // Add the new alarm to the user's alarms
-                setUserAlarms([...userAlarms, data[0]]);
+                if (data[0]) {
+                    setUserAlarms([...userAlarms, data[0]]);
+                    setGroupAlarms([...groupAlarms, data[0]]);
+                }
 
                 // Reset the form
                 setNewAlarmName('');
@@ -115,14 +119,15 @@ function AlarmsPage() {
         <div className={styles.container}>
             <Sidebar />
             <div className={styles.mainContent}>
-                <h1>Alarms</h1>
+                <h1 className={styles.heading}>Alarms</h1>
 
-                <h2>Create New Alarm</h2>
-                <form onSubmit={handleCreateAlarm}>
+                <h2 className={styles.subheading}>Create New Alarm</h2>
+                <form className={styles.form} onSubmit={handleCreateAlarm}>
                     <div>
-                        <label>
+                        <label className={styles.label}>
                             Alarm Name:
                             <input
+                                className={styles.input}
                                 type="text"
                                 value={newAlarmName}
                                 onChange={(e) => setNewAlarmName(e.target.value)}
@@ -131,9 +136,10 @@ function AlarmsPage() {
                         </label>
                     </div>
                     <div>
-                        <label>
+                        <label className={styles.label}>
                             Alarm Time:
                             <input
+                                className={styles.input}
                                 type="time"
                                 value={newAlarmTime}
                                 onChange={(e) => setNewAlarmTime(e.target.value)}
@@ -141,26 +147,33 @@ function AlarmsPage() {
                             />
                         </label>
                     </div>
-                    <button type="submit">Create Alarm</button>
+                    <button className={styles.button} type="submit">Create Alarm</button>
                 </form>
 
-                <h2>Your Alarms</h2>
-                <ul>
-                    {(userAlarms || [] as Alarm[]).map((alarm) => (
-                        <li key={alarm?.id || ""}>
-                            {alarm?.name || "Unnamed Alarm"} at {alarm?.time || "Unknown Time"}
-                        </li>
+                <h2 className={styles.subheading}>Your Alarms</h2>
+                <div className={styles.alarmList}>
+                    {userAlarms.map((alarm) => (
+                        <div className={styles.alarmCard} key={alarm.id}>
+                            <div className={styles.alarmInfo}>
+                                <h3 className={styles.alarmName}>{alarm.name || "Unnamed Alarm"}</h3>
+                                <p className={styles.alarmTime}>⏰ {alarm.time || "Unknown Time"}</p>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
 
-                <h2>Group Alarms</h2>
-                <ul>
-                    {(groupAlarms || [] as Alarm[]).map((alarm) => (
-                        <li key={alarm?.id || ""}>
-                            {alarm?.name || "Unnamed Alarm"} at {alarm?.time || "Unknown Time"} by {alarm?.user_id || "Unknown User"}
-                        </li>
+                <h2 className={styles.subheading}>Group Alarms</h2>
+                <div className={styles.alarmList}>
+                    {groupAlarms.map((alarm) => (
+                        <div className={styles.alarmCard} key={alarm.id}>
+                            <div className={styles.alarmInfo}>
+                                <h3 className={styles.alarmName}>{alarm.name || "Unnamed Alarm"}</h3>
+                                <p className={styles.alarmTime}>⏰ {alarm.time || "Unknown Time"}</p>
+                                <p className={styles.alarmUser}>👤 Created by User ID: {alarm.user_id || "Unknown User"}</p>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
         </div>
     );

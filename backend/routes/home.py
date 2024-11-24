@@ -56,3 +56,20 @@ def HomeRoutes(app: Flask, supabase: Client):
             return jsonify({'groups': response.get('data', [])}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+
+    # Get all users in a group
+    @app.route("/group/<group_id>/users", methods=["GET"])
+    def get_group_users(group_id):
+        try:
+            # Query the Supabase `group_members` table with a join to `users`
+            response = supabase.table('group_members').select(
+                "user_id, users(email, first_name, last_name)"
+            ).eq('group_id', group_id).execute()
+
+            if response.get('error'):
+                return jsonify({'error': response['error']['message']}), 400
+
+            # Return the data as JSON
+            return jsonify({'users': response.get('data', [])}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
