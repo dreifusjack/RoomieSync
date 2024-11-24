@@ -21,7 +21,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             }).execute()
             return jsonify(insert_response.data), insert_response.status_code
         except Exception as e:
-            return jsonify({'error:': str(e)}), 500
+            return jsonify({'error': str(e)}), 500
 
     # Assign a existing chore to the given user id
     @app.route('/chore/user/<user_id>', methods=['POST'])
@@ -38,7 +38,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             }).execute()
             return jsonify(insert_response.data), insert_response.status_code
         except Exception as e:
-            return jsonify({'error:': str(e)}), 500
+            return jsonify({'error': str(e)}), 500
 
     # Gets all chores associated with the group_id
     @app.route('/chore/group/<group_id>', methods=['GET'])
@@ -55,7 +55,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
         try:
             delete_response = supabase.table('chores').delete().eq('id', chore_id).execute()
             if delete_response.count == 0:
-                return jsonify({'message': 'Chore not found'}), 400
+                return jsonify({'message': 'Chore not found'}), 404
             
             return jsonify({'message': 'Chore successfully deleted'}), delete_response.status
         except Exception as e:
@@ -92,7 +92,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                     
                     send_email(user_email, subject, body)
 
-                return jsonify({'message': 'Reminder sent successfully.'}), 200
+            return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
             return jsonify({'error': 'An error occured while sending reminders'}), 500
             
