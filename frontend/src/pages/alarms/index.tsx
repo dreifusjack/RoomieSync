@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Sidebar from '../../components/Sidebar';
+import styles from '../../styles/Explore.module.css';
 
 type Alarm = {
     id: string;
@@ -34,38 +36,50 @@ export const fetchUserDetails = async () => {
     return await response.json();
 };
 
+export const fetchUserGroups = async (userId: string) => {
+    const response = await fetch(`${BASE_URL}/group/user/${userId}`);
+    return await response.json();
+}
+
 function AlarmsPage() {
     const [newAlarmName, setNewAlarmName] = useState('');
     const [newAlarmTime, setNewAlarmTime] = useState('');
-    const [userAlarms, setUserAlarms] = useState([] as Alarm[]);
-    const [groupAlarms, setGroupAlarms] = useState([] as Alarm[]);
+    const [userAlarms, setUserAlarms] = useState<Alarm[]>([]);
+    const [groupAlarms, setGroupAlarms] = useState<Alarm[]>([]);
     const [user, setUser] = useState({} as User);
 
     useEffect(() => {
-        // Fetch user details
-        fetchUserDetails()
-            .then((data) => setUser(data))
-            .catch((error) => console.error('Error fetching user details:', error));
+        const fetchData = async () => {
+            try {
+                // Fetch user details
+                const userData = await fetchUserDetails();
+                setUser(userData);
 
-        // Fetch user's own alarms
-        fetch(`${BASE_URL}/alarm/user/${user.id}`)
-            .then((response) => response.json())
-            .then((data) => setUserAlarms(data))
-            .catch((error) => console.error('Error fetching user alarms:', error));
+                // Fetch user's own alarms
+                const userAlarmsResponse = await fetch(`${BASE_URL}/alarm/user/${userData.id}`);
+                const userAlarmsData = await userAlarmsResponse.json();
+                setUserAlarms(userAlarmsData);
 
-        // Fetch alarms for each group the user belongs to
-        Promise.all(
-            groupIds.map((groupId) =>
-                fetch(`/alarm/groups/${groupId}`)
-                    .then((response) => response.json())
-                    .then((data) => data.alarms || [])
-            )
-        )
-            .then((groupsAlarms) => {
+                // Fetch group IDs from user data
+                const groupIds = userData.groupIds || []; // Ensure groupIds is an array
+
+                // Fetch alarms for each group the user belongs to
+                const groupsAlarms = await Promise.all(
+                    groupIds.map(async (groupId: number) => {
+                        const response = await fetch(`${BASE_URL}/alarm/groups/${groupId}`);
+                        const data = await response.json();
+                        return data.alarms || [];
+                    })
+                );
+
                 const allGroupAlarms = groupsAlarms.flat();
                 setGroupAlarms(allGroupAlarms);
-            })
-            .catch((error) => console.error('Error fetching group alarms:', error));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const handleCreateAlarm = (e: { preventDefault: () => void; }) => {
@@ -76,7 +90,7 @@ function AlarmsPage() {
             name: newAlarmName,
         };
 
-        fetch(`${BASE_URL}/alarm/user/${userId}`, {
+        fetch(`${BASE_URL}/alarm/user/${user.id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,53 +112,56 @@ function AlarmsPage() {
     };
 
     return (
-        <div>
-            <h1>Alarms</h1>
+        <div className={styles.container}>
+            <Sidebar />
+            <div className={styles.mainContent}>
+                <h1>Alarms</h1>
 
-            <h2>Create New Alarm</h2>
-            <form onSubmit={handleCreateAlarm}>
-                <div>
-                    <label>
-                        Alarm Name:
-                        <input
-                            type="text"
-                            value={newAlarmName}
-                            onChange={(e) => setNewAlarmName(e.target.value)}
-                            required
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Alarm Time:
-                        <input
-                            type="time"
-                            value={newAlarmTime}
-                            onChange={(e) => setNewAlarmTime(e.target.value)}
-                            required
-                        />
-                    </label>
-                </div>
-                <button type="submit">Create Alarm</button>
-            </form>
+                <h2>Create New Alarm</h2>
+                <form onSubmit={handleCreateAlarm}>
+                    <div>
+                        <label>
+                            Alarm Name:
+                            <input
+                                type="text"
+                                value={newAlarmName}
+                                onChange={(e) => setNewAlarmName(e.target.value)}
+                                required
+                            />
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            Alarm Time:
+                            <input
+                                type="time"
+                                value={newAlarmTime}
+                                onChange={(e) => setNewAlarmTime(e.target.value)}
+                                required
+                            />
+                        </label>
+                    </div>
+                    <button type="submit">Create Alarm</button>
+                </form>
 
-            <h2>Your Alarms</h2>
-            <ul>
-                {(userAlarms || []).map((alarm) => (
-                    <li key={alarm?.id || ""}>
-                        {alarm?.name || "Unnamed Alarm"} at {alarm?.time || "Unknown Time"}
-                    </li>
-                ))}
-            </ul>
+                <h2>Your Alarms</h2>
+                <ul>
+                    {(userAlarms || [] as Alarm[]).map((alarm) => (
+                        <li key={alarm?.id || ""}>
+                            {alarm?.name || "Unnamed Alarm"} at {alarm?.time || "Unknown Time"}
+                        </li>
+                    ))}
+                </ul>
 
-            <h2>Group Alarms</h2>
-            <ul>
-                {(groupAlarms || []).map((alarm) => (
-                    <li key={alarm?.id || ""}>
-                        {alarm?.name || "Unnamed Alarm"} at {alarm?.time || "Unknown Time"} by {alarm?.user_id || "Unknown User"}
-                    </li>
-                ))}
-            </ul>
+                <h2>Group Alarms</h2>
+                <ul>
+                    {(groupAlarms || [] as Alarm[]).map((alarm) => (
+                        <li key={alarm?.id || ""}>
+                            {alarm?.name || "Unnamed Alarm"} at {alarm?.time || "Unknown Time"} by {alarm?.user_id || "Unknown User"}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 }
