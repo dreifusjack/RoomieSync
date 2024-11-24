@@ -11,7 +11,7 @@ const LoginForm: React.FC = () => {
     const onLoginSuccess = (accessToken: string, refreshToken: string) => {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-        window.location.href = '/explore';
+        window.location.href = '/alarms';
     };
 
     const handleLogin = async (event: React.FormEvent) => {

@@ -35,44 +35,46 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="create-chore-form">
-      <div>
-        <label htmlFor="name">Chore Name</label>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="Enter chore name"
-        />
-      </div>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="form-card">
+        <div>
+          <label htmlFor="name">Chore Name</label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            placeholder="Enter chore name"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="description">Description</label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-          placeholder="Enter chore description"
-        />
-      </div>
+        <div>
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            placeholder="Enter chore description"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="cadence">Cadence</label>
-        <input
-          id="cadence"
-          type="text"
-          value={cadence}
-          onChange={(e) => setCadence(e.target.value)}
-          required
-          placeholder="e.g., Daily, Weekly, Monthly"
-        />
-      </div>
+        <div>
+          <label htmlFor="cadence">Cadence</label>
+          <input
+            id="cadence"
+            type="text"
+            value={cadence}
+            onChange={(e) => setCadence(e.target.value)}
+            required
+            placeholder="e.g., Daily, Weekly, Monthly"
+          />
+        </div>
 
-      <button type="submit">Create Chore</button>
-    </form>
+        <button type="submit">Create Chore</button>
+      </form>
+    </div>
   );
 };
 

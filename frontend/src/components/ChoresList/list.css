@@ -1,0 +1,71 @@
+/* Container for the list of chores */
+.chores-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+  justify-content: center; /* Center the cards */
+  padding: 20px;
+}
+
+/* Individual chore card styling */
+.chore-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  padding: 20px;
+  width: 300px; /* Fixed width */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover */
+}
+
+/* Hover effect for the chore card */
+.chore-card:hover {
+  transform: translateY(-5px); /* Lift card slightly */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Title styling */
+.chore-card h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Description styling */
+.chore-card p {
+  font-size: 1rem;
+  color: #666;
+  margin: 8px 0;
+}
+
+/* For Assignee and Due Date sections */
+.chore-card p:last-child {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+/* Button styles */
+.chore-card button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s, transform 0.3s ease;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+/* Button hover effect */
+.chore-card button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px); /* Lift button on hover */
+}
+
+/* Button focus effect for accessibility */
+.chore-card button:focus {
+  outline: 2px solid #0056b3;
+  outline-offset: 4px;
+}

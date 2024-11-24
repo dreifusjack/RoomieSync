@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import styles from '../styles/Home.module.css';
-import Sidebar from '../components/Sidebar';
 
 export default function Home() {
   const router = useRouter();
@@ -13,13 +12,10 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className={styles.container}>
-      <Sidebar />
-      <div className={styles.mainContent}>
-        <div className={styles.header}>
-          <h1>Welcome to ClubHub</h1>
-          <button onClick={() => router.push('/login')}>Explore Clubs</button>
-        </div>
+    <div className={styles.mainContent}>
+      <div className={styles.header}>
+        <h1>Welcome to Roomie Sync</h1>
+        <button onClick={() => router.push('/login')}>Login</button>
       </div>
     </div>
   );

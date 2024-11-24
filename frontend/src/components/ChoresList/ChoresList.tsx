@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import "./list.css";
 
 interface Chore {
   id: string;
@@ -36,7 +37,7 @@ const ChoresList: React.FC<ChoresListProps> = ({
           <p>Assignees: </p>
           <p>Due at: </p>
           <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
-          <button onClick={() => onDeletedChore(chore.id)}>Delete Chore</button>
+          <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
         </div>
       ))}
     </div>
