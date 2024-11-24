@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_mail import Mail
+from shared import mail
 from supabase import create_client
 
 from routes.auth import AuthRoutes
@@ -19,7 +20,7 @@ app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'roomiesync@gmail.com' 
 app.config['MAIL_PASSWORD'] = 'lykzipcowkzwwrwa' 
 app.config['MAIL_DEFAULT_SENDER'] = 'roomiesync@gmail.com' 
-mail = Mail(app)
+mail.init_app(app)
 
 SUPABASE_URL = "http://127.0.0.1:54321"
 # Replace this by running `npx supabase status` and using "anon key" value

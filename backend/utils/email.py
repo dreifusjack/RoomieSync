@@ -1,6 +1,6 @@
 from flask_mail import Message
+from shared import mail
 from flask import jsonify
-from app import mail
 
 def send_email(recipient, subject, body):
   try:
