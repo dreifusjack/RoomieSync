@@ -35,8 +35,8 @@ const Expenses: React.FC<ExpenseSharingPageProps> = ({ userId, groupId }) => {
       <Sidebar />
       <div className={styles.mainContent}>
         <h1 className="text-primary">Expense Sharing</h1>
-        <ExpenseForm addExpense={addExpense} userId={userId} groupId={groupId} />
-        <ExpenseTable groupId={groupId} userId={userId} />
+        <ExpenseForm addExpense={addExpense} />
+        <ExpenseTable/>
       </div>
     </div>
   );

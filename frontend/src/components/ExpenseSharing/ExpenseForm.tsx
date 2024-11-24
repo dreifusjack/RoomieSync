@@ -2,13 +2,59 @@ import React, { useState, useEffect } from 'react';
 
 interface ExpenseProps {
   addExpense: (expense: any) => void;
-  userId: string;
-  groupId: string;
 }
 
-const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense, userId, groupId }) => {
+const BASE_URL = 'http://127.0.0.1:3000';
+
+const fetchUserDetails = async () => {
+  const accessToken = localStorage.getItem('accessToken');
+  if (!accessToken) {
+    throw new Error('No access token available');
+  }
+
+  const response = await fetch(`${BASE_URL}/auth/user`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user details');
+  }
+
+  return await response.json();
+};
+
+const fetchUserGroup = async (userId: string) => {
+  const response = await fetch(`${BASE_URL}/group/user/${userId}`);
+  return await response.json();
+};
+
+const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense }) => {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
+  const [userId, setUserId] = useState('');
+  const [groupId, setGroupId] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user details
+        const userData = await fetchUserDetails();
+        setUserId(userData.id);
+
+        // Fetch group ID for the user
+        const groupData = await fetchUserGroup(userData.id);
+        setGroupId(groupData.groupId);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
