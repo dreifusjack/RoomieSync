@@ -14,25 +14,26 @@ interface Chore {
 interface AssignChoreFormProps {
   chores: Chore[];
   users: User[];
-  assignChoreFunc: () => void;
+  onChoreAssigned: () => void;
 }
 
 const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   chores,
   users,
-  assignChoreFunc, // callback to update the chores
+  onChoreAssigned, // callback to update the chores
 }) => {
   const [selectedChore, setSelectedChore] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
+  const [selectedDueDate, setSelectedDueDate] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("/chores/assign-chore", {
-        choreId: selectedChore,
-        userId: selectedUser,
+      await axios.post(`/chores/user/${selectedUser}`, {
+        chore_id: selectedChore,
+        due_date: selectedDueDate,
       });
-      assignChoreFunc();
+      onChoreAssigned();
       // refresh selections
       setSelectedChore("");
       setSelectedUser("");
@@ -76,8 +77,21 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
           ))}
         </select>
       </div>
+      <div>
+        <label htmlFor="dueDate">Due Date</label>
+        <input
+          type="date"
+          id="dueDate"
+          value={selectedDueDate}
+          onChange={(e) => setSelectedDueDate(e.target.value)}
+          required
+        />
+      </div>
 
-      <button type="submit" disabled={!selectedChore || !selectedUser}>
+      <button
+        type="submit"
+        disabled={!selectedChore || !selectedUser || !selectedDueDate}
+      >
         Assign Chore
       </button>
     </form>

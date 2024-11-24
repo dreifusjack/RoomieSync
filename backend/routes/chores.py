@@ -5,7 +5,7 @@ from supabase import Client
 
 def ChoresRoutes(app: Flask, supabase: Client):
     # Create a new chore associated with the group_id
-    @app.route('/chore', methods=['POST'])
+    @app.route('/chores', methods=['POST'])
     def create_chore():
         data = request.json
         group_id = data['group_id']
@@ -25,7 +25,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify({'error': str(e)}), 500
 
     # Assign a existing chore to the given user id
-    @app.route('/chore/user/<user_id>', methods=['POST'])
+    @app.route('/chores/user/<user_id>', methods=['POST'])
     def assign_chore(user_id):
         data = request.json
         chore_id = data['chore_id']
@@ -42,7 +42,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify({'error': str(e)}), 500
 
     # Gets all chores associated with the group_id
-    @app.route('/chore/group/<group_id>', methods=['GET'])
+    @app.route('/chores/group/<group_id>', methods=['GET'])
     def get_chore(group_id):
         try:
             response = supabase.table('chores').select(
@@ -50,9 +50,19 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify(response.data), response.status_code
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
+        
+    # Gets all chore assignments associated with the chore_id
+    @app.route('/chores/assignees/<chore_id>', methods=['GET'])
+    def get_assignees(chore_id):
+        try:
+            response = supabase.table('chore_assignments').select(
+                'user_id, due_date').eq('chore_id', chore_id).execute()
+            return jsonify(response.data), response.status_code
+        except Exception as e:
+            return jsonify({'error:': str(e)}), 500   
 
     # Deletes the chore with the given id
-    @app.route('/chore/<chore_id>', methods=['DELETE'])
+    @app.route('/chores/<chore_id>', methods=['DELETE'])
     def delete_chore(chore_id):
         try:
             delete_response = supabase.table(
@@ -65,7 +75,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             return jsonify({'error:': str(e)}), 500
 
     # Remind user assinged to chore
-    @app.route('/chore/<chore_id>/reminder', method=['POST'])
+    @app.route('/chores/<chore_id>/reminder', method=['POST'])
     def remind_user(chore_id):
         try:
             chore = supabase.table('chores').select(
