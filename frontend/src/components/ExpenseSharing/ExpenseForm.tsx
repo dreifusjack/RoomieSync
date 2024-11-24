@@ -38,7 +38,7 @@ const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense, userId, groupId }) =>
 
   return (
     <form onSubmit={handleSubmit} className="mb-4" style={{ backgroundColor: '#f0f4f8', padding: '20px', borderRadius: '8px' }}>
-      <div className="form-group">
+      <div className="form-group" style={{ marginBottom: '15px' }}>
         <label style={{ color: '#007bff' }}>Amount</label>
         <input
           type="number"
@@ -49,7 +49,7 @@ const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense, userId, groupId }) =>
           style={{ borderColor: '#007bff' }}
         />
       </div>
-      <div className="form-group">
+      <div className="form-group" style={{ marginBottom: '15px' }}>
         <label style={{ color: '#007bff' }}>Description</label>
         <input
           type="text"
@@ -60,7 +60,7 @@ const ExpenseForm: React.FC<ExpenseProps> = ({ addExpense, userId, groupId }) =>
           style={{ borderColor: '#007bff' }}
         />
       </div>
-      <button type="submit" className="btn btn-primary" style={{ backgroundColor: '#007bff', borderColor: '#007bff' }}>Add Expense</button>
+      <button type="submit" className="btn btn-primary" style={{ backgroundColor: '#007bff', borderColor: '#007bff', marginTop: '15px' }}>Add Expense</button>
     </form>
   );
 };
