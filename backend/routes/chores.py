@@ -93,12 +93,11 @@ def ChoresRoutes(app: Flask, supabase: Client):
                     user_email = user.data[0]['email']
                     subject = f"Chore Reminder: {chore_data['name']}"
                     body = f"Reminder: You are assigned the chore '{chore_data['name']}'.\n" \
-                           f"Description: {chore_data['description']}\n" \
-                           f"Due date: {due_date}"
+                        f"Description: {chore_data['description']}\n" \
+                        f"Due date: {due_date}"
 
                     send_email(user_email, subject, body)
 
             return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
             return jsonify({'error': 'An error occured while sending reminders'}), 500
-            """
