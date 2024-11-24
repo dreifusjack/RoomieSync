@@ -29,12 +29,23 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1
 
 def create_app():
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    app = Flask(__name__)
+
+    # Flask-Mail configs
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = 'roomiesync@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'lykzipcowkzwwrwa'
+    app.config['MAIL_DEFAULT_SENDER'] = 'roomiesync@gmail.com'
+    app.mail = Mail(app)
 
     # Initialize routes here!
     ExamplesRoutes(app, supabase)
     AuthRoutes(app, supabase)
     UserRoutes(app, supabase)
-    ChoresRoutes(app, supabase)
+    # ChoresRoutes(app, supabase)
     HomeRoutes(app, supabase)
     AlarmRoutes(app, supabase)
 

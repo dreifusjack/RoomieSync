@@ -106,7 +106,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                         f"Description: {chore_data['description']}\n" \
                         f"Due date: {due_date}"
 
-                    send_email(user_email, subject, body)
+                    send_email(user_email, subject, body, app)
 
             return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:

@@ -1,3 +1,5 @@
+import datetime
+import json
 from flask import Flask, jsonify, request
 from supabase import Client
 
@@ -10,11 +12,15 @@ def AlarmRoutes(app: Flask, supabase: Client):
     def create_alarm(user_id):
         try:
             data = request.json
-            time = data["time"]
             name = data["name"]
+            military_time = data["time"]
+            today_date = datetime.date.today()
+            datetime_str = f"{today_date} {military_time}"
+            timestamp = datetime.datetime.strptime(
+                datetime_str, "%Y-%m-%d %H:%M")
 
             insert_response = supabase.table("alarms").insert({
-                "time": time,
+                "time": timestamp,
                 "name": name,
                 "user_id": user_id,
             }).execute()
