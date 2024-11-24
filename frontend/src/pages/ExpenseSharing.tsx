@@ -1,11 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ExpenseForm from '@/components/ExpenseSharing/ExpenseForm';
+import ExpenseTable from '@/components/ExpenseSharing/ExpenseTable';
 
-const ExpenseSharingPage: React.FC = ({ groupId, userId }) => {
-  const [expenses, setExpenses] = useState({});
+interface Expense {
+  paid_by: string;
+  group_id: string;
+  amount: number;
+  description: string;
+  is_paid: boolean;
+}
 
-  const addExpense = (expense) => {
+interface ExpenseSharingPageProps {
+  userId: string;
+  groupId: string;
+}
+
+const ExpenseSharingPage: React.FC<ExpenseSharingPageProps> = ({ userId, groupId }) => {
+  const [expenses, setExpenses] = useState<{ [key: string]: { [key: string]: number } }>({});
+
+  const addExpense = (expense: Expense) => {
     setExpenses((prevExpenses) => ({
       ...prevExpenses,
       [expense.paid_by]: {
