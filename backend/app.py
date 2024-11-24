@@ -6,6 +6,8 @@ from routes.auth import AuthRoutes
 from routes.examples import ExamplesRoutes
 from routes.user import UserRoutes
 from routes.chores import ChoresRoutes
+from routes.alarms import AlarmRoutes
+from routes.home import HomeRoutes
 
 app = Flask(__name__)
 
@@ -29,10 +31,10 @@ def create_app():
 
     # Initialize routes here!
     ExamplesRoutes(app, supabase)
-
     AuthRoutes(app, supabase)
-
     UserRoutes(app, supabase)
     ChoresRoutes(app, supabase)
+    HomeRoutes(app, supabase)
+    AlarmRoutes(app, supabase)
 
     return app

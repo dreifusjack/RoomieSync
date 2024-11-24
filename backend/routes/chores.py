@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from utils.email import send_email
 from supabase import Client
 
+
 def ChoresRoutes(app: Flask, supabase: Client):
     # Create a new chore associated with the group_id
     @app.route('/chore', methods=['POST'])
@@ -43,45 +44,50 @@ def ChoresRoutes(app: Flask, supabase: Client):
     # Gets all chores associated with the group_id
     @app.route('/chore/group/<group_id>', methods=['GET'])
     def get_chore(group_id):
-       try: 
-           response = supabase.table('chores').select('*').eq('group_id', group_id).execute()
-           return jsonify(response.data), response.status_code
-       except Exception as e: 
-           return jsonify({'error:': str(e)}), 500
-    
+        try:
+            response = supabase.table('chores').select(
+                '*').eq('group_id', group_id).execute()
+            return jsonify(response.data), response.status_code
+        except Exception as e:
+            return jsonify({'error:': str(e)}), 500
+
     # Deletes the chore with the given id
     @app.route('/chore/<chore_id>', methods=['DELETE'])
     def delete_chore(chore_id):
         try:
-            delete_response = supabase.table('chores').delete().eq('id', chore_id).execute()
+            delete_response = supabase.table(
+                'chores').delete().eq('id', chore_id).execute()
             if delete_response.count == 0:
                 return jsonify({'message': 'Chore not found'}), 404
-            
+
             return jsonify({'message': 'Chore successfully deleted'}), delete_response.status
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
-      
-    # Remind user assinged to chore 
+
+    # Remind user assinged to chore
     @app.route('/chore/<chore_id>/reminder', method=['POST'])
     def remind_user(chore_id):
         try:
-            chore = supabase.table('chores').select('group_id, name, description').eq('id', chore_id).execute()
+            chore = supabase.table('chores').select(
+                'group_id, name, description').eq('id', chore_id).execute()
 
-            if not chore.data: 
+            if not chore.data:
                 return jsonify({'error': 'Chore not found'}), 404
 
             chore_data = chore.data[0]
 
-            assignments = supabase.table('chore_assignments').select('user_id, due_date').eq('chore_id', chore_id).execute()
+            assignments = supabase.table('chore_assignments').select(
+                'user_id, due_date').eq('chore_id', chore_id).execute()
 
             if not assignments.data:
                 return jsonify({'error': 'No user assignments to this chore'}), 404
-            
+
             for assignment in assignments.data:
                 user_id = assignment['user_id']
                 due_date = assignment['due_date']
 
-                user = supabase.table('users').select('email').eq('id', user_id).execute()
+                user = supabase.table('users').select(
+                    'email').eq('id', user_id).execute()
 
                 if user.data:
                     user_email = user.data[0]['email']
@@ -89,10 +95,10 @@ def ChoresRoutes(app: Flask, supabase: Client):
                     body = f"Reminder: You are assigned the chore '{chore_data['name']}'.\n" \
                            f"Description: {chore_data['description']}\n" \
                            f"Due date: {due_date}"
-                    
+
                     send_email(user_email, subject, body)
 
             return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
             return jsonify({'error': 'An error occured while sending reminders'}), 500
-            
+            """

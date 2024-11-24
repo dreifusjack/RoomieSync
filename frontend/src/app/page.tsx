@@ -9,7 +9,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/explore');
+    router.push('/login');
   }, [router]);
 
   return (
@@ -18,7 +18,7 @@ export default function Home() {
       <div className={styles.mainContent}>
         <div className={styles.header}>
           <h1>Welcome to ClubHub</h1>
-          <button onClick={() => router.push('/explore')}>Explore Clubs</button>
+          <button onClick={() => router.push('/login')}>Explore Clubs</button>
         </div>
       </div>
     </div>

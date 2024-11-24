@@ -11,12 +11,10 @@ CREATE TABLE examples (
 );
 
 CREATE TABLE users (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    id uuid PRIMARY KEY REFERENCES auth.users(id),
     first_name varchar(100) NOT NULL,
     last_name varchar(100) NOT NULL,
     email varchar(100) NOT NULL,
-    password varchar(100) NOT NULL,
-    supabase_id uuid UNIQUE NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
@@ -29,11 +27,11 @@ CREATE TABLE groups (
 );
 
 CREATE TABLE group_members (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     group_id uuid REFERENCES groups(id),
     user_id uuid REFERENCES users(id),
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (group_id, user_id)
 );
 
 CREATE TABLE expenses (
@@ -77,7 +75,7 @@ CREATE TABLE chore_assignments (
 CREATE TABLE alarms (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id uuid REFERENCES users(id),
-    name varchar(100) NOT NULL,
+    name varchar(100) UNIQUE NOT NULL,
     time timestamp NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
