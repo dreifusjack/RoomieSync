@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import ExpenseForm from '@/components/ExpenseSharing/ExpenseForm';
 import ExpenseTable from '@/components/ExpenseSharing/ExpenseTable';
+import Sidebar from '@/components/Sidebar';
+import styles from '@/styles/Explore.module.css';
 
 interface Expense {
   paid_by: string;
@@ -30,10 +31,13 @@ const Expenses: React.FC<ExpenseSharingPageProps> = ({ userId, groupId }) => {
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-primary">Expense Sharing</h1>
-      <ExpenseForm addExpense={addExpense} userId={userId} groupId={groupId} />
-      <ExpenseTable groupId={groupId} userId={userId} />
+    <div className={styles.container}>
+      <Sidebar />
+      <div className={styles.mainContent}>
+        <h1 className="text-primary">Expense Sharing</h1>
+        <ExpenseForm addExpense={addExpense} userId={userId} groupId={groupId} />
+        <ExpenseTable groupId={groupId} userId={userId} />
+      </div>
     </div>
   );
 };
