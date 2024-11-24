@@ -16,7 +16,7 @@ interface ExpenseSharingPageProps {
   groupId: string;
 }
 
-const ExpenseSharingPage: React.FC<ExpenseSharingPageProps> = ({ userId, groupId }) => {
+const Expenses: React.FC<ExpenseSharingPageProps> = ({ userId, groupId }) => {
   const [expenses, setExpenses] = useState<{ [key: string]: { [key: string]: number } }>({});
 
   const addExpense = (expense: Expense) => {
@@ -38,4 +38,4 @@ const ExpenseSharingPage: React.FC<ExpenseSharingPageProps> = ({ userId, groupId
   );
 };
 
-export default ExpenseSharingPage;
+export default Expenses;
