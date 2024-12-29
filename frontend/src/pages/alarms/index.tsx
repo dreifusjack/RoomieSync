@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
 import styles from "@/styles/Explore.module.css";
 import "./styles.css";
+import { useAlarms } from "@/hooks/AlarmHooks";
 
 type Alarm = {
   id: string;
@@ -17,93 +18,26 @@ type User = {
 };
 const BASE_URL = "http://127.0.0.1:5000";
 
-export const fetchUserDetails = async () => {
-  const accessToken = localStorage.getItem("accessToken");
-  if (!accessToken) {
-    throw new Error("No access token available");
-  }
-
-  const response = await fetch(`${BASE_URL}/auth/user`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch user details");
-  }
-
-  return await response.json();
-};
-
 function AlarmsPage() {
   const [newAlarmName, setNewAlarmName] = useState("");
   const [newAlarmTime, setNewAlarmTime] = useState("");
-  const [userAlarms, setUserAlarms] = useState<Alarm[]>([]);
-  const [groupAlarms, setGroupAlarms] = useState<Alarm[]>([]);
-  const [user, setUser] = useState({} as User);
+  const { userAlarms, groupAlarms, createAlarm } = useAlarms();
+
+  const handleCreateAlarm = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      await createAlarm(newAlarmName, newAlarmTime);
+      setNewAlarmName("");
+      setNewAlarmTime("");
+    } catch (error) {
+      console.error("Error creating alarm:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch user details
-        const userData = await fetchUserDetails();
-        setUser(userData);
-
-        // Fetch user's own alarms
-        const userAlarmsResponse = await fetch(
-          `${BASE_URL}/alarm/user/${userData.id}`
-        );
-        const userAlarmsData = await userAlarmsResponse.json();
-        setUserAlarms(userAlarmsData);
-
-        // Fetch alarms for the user's group
-        const groupAlarmsResponse = await fetch(
-          `${BASE_URL}/alarm/groups/${userData.group_id}`
-        );
-        const groupAlarmsData = await groupAlarmsResponse.json();
-        setGroupAlarms(groupAlarmsData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleCreateAlarm = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    const newAlarm = {
-      time: newAlarmTime,
-      name: newAlarmName,
-    };
-
-    fetch(`${BASE_URL}/alarm/user/${user.id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newAlarm),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-
-        // Add the new alarm to the user's alarms
-        if (data[0]) {
-          setUserAlarms([...userAlarms, data[0]]);
-          setGroupAlarms([...groupAlarms, data[0]]);
-        }
-
-        // Reset the form
-        setNewAlarmName("");
-        setNewAlarmTime("");
-      })
-      .catch((error) => console.error("Error creating alarm:", error));
-  };
+    console.log("User Alarms:", userAlarms);
+    console.log("Group Alarms:", groupAlarms);
+  }, [userAlarms, groupAlarms]);
 
   return (
     <div className={styles.container}>
