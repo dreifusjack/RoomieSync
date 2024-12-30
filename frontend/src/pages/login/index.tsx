@@ -1,117 +1,87 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { useAuth } from "@/hooks/AuthenticationHooks";
+import { Button } from "@mui/material";
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const BASE_URL = "http://127.0.0.1:5000";
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { handleLogin, handleSignUp, error, loading, isSignup, setIsSignup } =
+    useAuth();
 
-  const onLoginSuccess = (accessToken: string, refreshToken: string) => {
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    window.location.href = "/alarms";
-  };
-
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`${BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
-      }
-
-      onLoginSuccess(data.access_token, data.refresh_token);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignUp = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const first_name = "Sebastian";
-      const last_name = "Vettel";
-      const response = await fetch(`${BASE_URL}/auth/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email,
-          password,
-          first_name,
-          last_name,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Sign up failed");
-      }
-
-      onLoginSuccess(data.access_token, data.refresh_token);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSignup) {
+      await handleSignUp(email, password, firstName, lastName);
+    } else {
+      await handleLogin(email, password);
     }
   };
 
   return (
     <div className="login-container">
-      <form onSubmit={handleLogin} className="login-form">
-        <h2>Login</h2>
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2>{isSignup ? "Sign Up" : "Login"}</h2>
         {error && <div className="error-message">{error}</div>}
+
+        {isSignup && (
+          <>
+            <div className="form-group">
+              <label>First Name:</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Last Name:</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
+          </>
+        )}
+
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label>Email:</label>
           <input
             type="email"
-            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
+
         <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label>Password:</label>
           <input
             type="password"
-            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-        <button onClick={handleSignUp} disabled={loading}>
-          {loading ? "Signing up..." : "Sign Up"}
-        </button>
+
+        <Button type="submit" disabled={loading}>
+          {loading ? "Processing..." : isSignup ? "Sign Up" : "Login"}
+        </Button>
+
+        <Button
+          type="button"
+          onClick={() => setIsSignup(!isSignup)}
+          className="toggle-button"
+        >
+          {isSignup
+            ? "Already have an account? Login"
+            : "Need an account? Sign Up"}
+        </Button>
       </form>
     </div>
   );
