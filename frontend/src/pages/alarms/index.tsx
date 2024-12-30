@@ -4,20 +4,6 @@ import styles from "@/styles/Explore.module.css";
 import "./styles.css";
 import { useAlarms } from "@/hooks/AlarmHooks";
 
-type Alarm = {
-  id: string;
-  time: string;
-  name: string;
-  user_id: string;
-};
-type User = {
-  id: string;
-  group_id: string;
-  name: string;
-  email: string;
-};
-const BASE_URL = "http://127.0.0.1:5000";
-
 function AlarmsPage() {
   const [newAlarmName, setNewAlarmName] = useState("");
   const [newAlarmTime, setNewAlarmTime] = useState("");
@@ -30,14 +16,9 @@ function AlarmsPage() {
       setNewAlarmName("");
       setNewAlarmTime("");
     } catch (error) {
-      console.error("Error creating alarm:", error);
+      throw new Error("Error creating alarm:");
     }
   };
-
-  useEffect(() => {
-    console.log("User Alarms:", userAlarms);
-    console.log("Group Alarms:", groupAlarms);
-  }, [userAlarms, groupAlarms]);
 
   return (
     <div className={styles.container}>
