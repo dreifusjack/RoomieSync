@@ -11,7 +11,7 @@
 cd backend/
 
 # Start the backend
-pipenv run flask run -p 3000
+python app.py
 ```
 
 # Database Setup
