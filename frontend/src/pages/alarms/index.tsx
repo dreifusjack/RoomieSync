@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import styles from "@/styles/Explore.module.css";
 import "./styles.css";
 import { useAlarms } from "@/hooks/AlarmHooks";
+import AlarmCard from "@/components/AlarmCard";
 
 function AlarmsPage() {
   const [newAlarmName, setNewAlarmName] = useState("");
@@ -60,35 +61,14 @@ function AlarmsPage() {
         <h2 className={styles.subheading}>Your Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(userAlarms) ? userAlarms : []).map((alarm) => (
-            <div className={styles.alarmCard} key={alarm.id || Math.random()}>
-              <div className={styles.alarmInfo}>
-                <h3 className={styles.alarmName}>
-                  {alarm?.name || "Unnamed Alarm"}
-                </h3>
-                <p className={styles.alarmTime}>
-                  ⏰ {alarm?.time || "Unknown Time"}
-                </p>
-              </div>
-            </div>
+            <AlarmCard alarm={alarm} />
           ))}
         </div>
 
         <h2 className={styles.subheading}>Group Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(groupAlarms) ? groupAlarms : []).map((alarm) => (
-            <div className={styles.alarmCard} key={alarm.id || Math.random()}>
-              <div className={styles.alarmInfo}>
-                <h3 className={styles.alarmName}>
-                  {alarm?.name || "Unnamed Alarm"}
-                </h3>
-                <p className={styles.alarmTime}>
-                  ⏰ {alarm?.time || "Unknown Time"}
-                </p>
-                <p className={styles.alarmUser}>
-                  👤 Created by User ID: {alarm?.user_id || "Unknown User"}
-                </p>
-              </div>
-            </div>
+            <AlarmCard alarm={alarm} isGroup={true} />
           ))}
         </div>
       </div>
