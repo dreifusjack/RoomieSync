@@ -27,7 +27,6 @@ CREATE TABLE users (
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE expenses (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     group_id uuid REFERENCES groups(id),
@@ -70,7 +69,7 @@ CREATE TABLE alarms (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id uuid REFERENCES users(id),
     name varchar(100) UNIQUE NOT NULL,
-    time timestamp NOT NULL,
+    time time NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
