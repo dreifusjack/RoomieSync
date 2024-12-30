@@ -23,7 +23,7 @@ def AlarmRoutes(app: Flask, supabase: Client):
 
             return jsonify(insert_response.data), 200
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return jsonify({"error": str(e)}), 500  
 
     # Get all alarms in a group
     @app.route("/alarm/groups/<group_id>", methods=["GET"])
