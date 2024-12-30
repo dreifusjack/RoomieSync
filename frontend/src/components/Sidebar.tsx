@@ -1,7 +1,8 @@
 // src/components/Sidebar.tsx
 import React from "react";
-import Image from "next/image";
+
 import styles from "../styles/Sidebar.module.css";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Sidebar: React.FC = () => {
   return (
@@ -9,12 +10,7 @@ const Sidebar: React.FC = () => {
       <ul>
         <li>
           <a href="/">
-            <Image
-              src="/images/images.png"
-              alt="Logo"
-              width={150}
-              height={100}
-            />
+            <LogoutIcon sx={{ fontSize: "50px" }} />
           </a>
         </li>
         <li>
