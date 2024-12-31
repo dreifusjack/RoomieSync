@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import styles from "@/styles/Explore.module.css";
-import { useCreateExpense } from "@/hooks/ExpenseHooks";
+import { useCreateExpense, useExpenses } from "@/hooks/ExpenseHooks";
 
 /*
 interface Expense {
@@ -46,6 +46,11 @@ const Expenses: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const { createExpenseWithUser, isLoading, error } = useCreateExpense();
+  const { expenses, userId, handlePaid } = useExpenses();
+
+  if (error) {
+    return <div className="alert alert-danger">{error}</div>;
+  }
 
   const handleCreateExpense = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,10 +101,73 @@ const Expenses: React.FC = () => {
         </form>
 
         <h2 className={styles.subheading}>Expenses You Owe</h2>
-        <div className={styles.alarmList}></div>
+        <div className={styles.alarmList}>
+          {expenses.map(([key, amount]) => {
+            const [ower, recipient] = key.split(",");
+            if (ower === userId && amount > 0) {
+              return (
+                <div
+                  key={key}
+                  className="mb-3"
+                  style={{
+                    backgroundColor: "#e9ecef",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <span>
+                      You owe {recipient}: ${amount}
+                    </span>
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={() => handlePaid(ower, recipient, amount)}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      Paid {recipient}
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
 
         <h2 className={styles.subheading}>Expenses Owed to You</h2>
-        <div className={styles.alarmList}></div>
+        <div className={styles.alarmList}>
+          {expenses.map(([key, amount]) => {
+            const [ower, recipient] = key.split(",");
+            if (recipient === userId && amount > 0) {
+              return (
+                <div
+                  key={key}
+                  className="mb-3"
+                  style={{
+                    backgroundColor: "#e9ecef",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ marginBottom: "10px" }}
+                  >
+                    <span>
+                      {ower} owes you: ${amount}
+                    </span>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
       </div>
     </div>
   );
