@@ -12,7 +12,7 @@ const BASE_URL = "http://127.0.0.1:5000";
  * assign a chore 
  */
 type Chore = {
-  groupId: string;
+  group_id: string;
   name: string;
   description: string;
   cadence: string;
@@ -46,6 +46,15 @@ export const deleteChore = async (choreId: string) => {
   }
 };
 
+export const createChore = async (payload: Chore) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/chores`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating chore:", error);
+  }
+}
+
 export const assignChore = async (userId: string) => {
   try {
     const response = await axios.post(`${BASE_URL}/chores/user/${userId}`)
@@ -55,27 +64,18 @@ export const assignChore = async (userId: string) => {
   }
 }
 
-export const createChore = async (payload: Chore) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/chores}`,
-    payload)
-    return response.data;
-  } catch (error) {
-    console.error("Error creating chore:", error);
-  }
-}
-
 // hooks 
 export const useGetGroupChores =  () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const getAllGroupChores = async (groupId: string) => {
+  const getAllGroupChores = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const data = await getGroupChores(groupId);
+      const user = await fetchUserDetails();
+      const data = await getGroupChores(user.group_id);
       return data;
     } catch (err) {
       setError(err as Error)
@@ -88,11 +88,9 @@ export const useGetGroupChores =  () => {
   return { getAllGroupChores, isLoading, error}
 }
 
-
-
 export const uesRemindUser = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const remindUserWithId = async (choreId: string) => {
     setIsLoading(true);
@@ -102,7 +100,8 @@ export const uesRemindUser = () => {
       const data = await remindUser(choreId);
       return data;
     } catch (err) {
-      throw new Error("Failed to delete expense");
+      setError(err as Error)
+      throw err;
     } finally {
       setIsLoading(false)
     }
@@ -113,7 +112,7 @@ export const uesRemindUser = () => {
 
 export const useDeleteChore =  () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const deleteChoreWithId = async (choreId: string) => {
     setIsLoading(true);
@@ -123,7 +122,8 @@ export const useDeleteChore =  () => {
       const data = await deleteChore(choreId);
       return data;
     } catch (err) {
-      throw new Error("Failed to delete expense");
+      setError(err as Error)
+      throw err;
     } finally {
       setIsLoading(false)
     }
@@ -132,3 +132,54 @@ export const useDeleteChore =  () => {
   return { deleteChoreWithId, isLoading, error}
 }
 
+export const useCreateChore = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const createChoreWithPayload = async (name: string, description: string, cadence: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const user = await fetchUserDetails();
+            const payload: Chore = {
+              group_id: user.group_id,
+              name,
+              description,
+              cadence
+            };
+      const data = await createChore(payload);
+      return data;
+    } catch (err) {
+      setError(err as Error)
+      throw err;
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { createChoreWithPayload, isLoading, error}
+
+}
+
+export const useAssignChore = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const assignChoreWithId = async (userId: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const data = await assignChore(userId);
+      return data;
+    } catch (err) {
+      setError(err as Error)
+      throw err;
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { assignChoreWithId, isLoading, error}
+}

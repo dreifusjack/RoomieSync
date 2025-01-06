@@ -30,20 +30,12 @@ const ChoresPage: React.FC = () => {
   const { remindUserWithId } = uesRemindUser();
   const { deleteChoreWithId } = useDeleteChore();
 
-  const currentGroupId = async () => {
-    const userDetails = await fetchUserDetails();
-    return userDetails.group_id;
+  const fetchChores = async () => {
+    const choresData = await getAllGroupChores();
+    setChores(choresData || []);
   };
 
   useEffect(() => {
-    const fetchChores = async () => {
-      const userDetails = await fetchUserDetails();
-      const groupId = userDetails.group_id;
-      console.log(groupId);
-      const choresData = await getAllGroupChores(groupId);
-      setChores(choresData || []);
-    };
-
     fetchChores();
   }, []);
 
@@ -54,9 +46,7 @@ const ChoresPage: React.FC = () => {
 
   const handleDeleteChore = async (choreId: string) => {
     await deleteChoreWithId(choreId);
-    const userDetails = await fetchUserDetails();
-    const choresData = await getAllGroupChores(userDetails.group_id);
-    setChores(choresData || []);
+    await fetchChores();
   };
 
   if (isLoading) {
@@ -94,6 +84,17 @@ const ChoresPage: React.FC = () => {
           onDeletedChore={handleDeleteChore}
         />
       </div>
+      {isCreateFormVisible && (
+        <div className="form">
+          <CreateChoreForm onChoreCreated={fetchChores} />
+          <button
+            className="form-close"
+            onClick={() => setCreateFormVisible(false)}
+          >
+            Close
+          </button>
+        </div>
+      )}
 
       <Sidebar />
     </div>

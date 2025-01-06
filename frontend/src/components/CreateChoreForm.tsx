@@ -1,31 +1,26 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useCreateChore } from "@/hooks/ChoreHooks";
 
 interface CreateChoreFormProps {
-  groupId: string;
   onChoreCreated: () => void; // callback to update the chores
 }
 
 const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
-  groupId,
   onChoreCreated,
 }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [cadence, setCadence] = useState("");
+  const { createChoreWithPayload } = useCreateChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await axios.post("/chores", {
-        group_id: groupId,
-        name,
-        description,
-        cadence,
-      });
+      await createChoreWithPayload(name, description, cadence);
+
       onChoreCreated();
-      // refresh selections
       setName("");
       setDescription("");
       setCadence("");
