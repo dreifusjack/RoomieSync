@@ -20,7 +20,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                 'description': description,
                 'cadence': cadence
             }).execute()
-            return jsonify(insert_response.data), insert_response.status_code
+            return jsonify(insert_response.data)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
@@ -37,7 +37,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                 'user_id': user_id,
                 'due_date': due_date
             }).execute()
-            return jsonify(insert_response.data), insert_response.status_code
+            return jsonify(insert_response.data)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
@@ -57,7 +57,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
         try:
             response = supabase.table('chore_assignments').select(
                 'user_id, due_date').eq('chore_id', chore_id).execute()
-            return jsonify(response.data), response.status_code
+            return jsonify(response.data)
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
 
@@ -70,7 +70,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             if delete_response.count == 0:
                 return jsonify({'message': 'Chore not found'}), 404
 
-            return jsonify({'message': 'Chore successfully deleted'}), delete_response.status
+            return jsonify({'message': 'Chore successfully deleted'})
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
 
