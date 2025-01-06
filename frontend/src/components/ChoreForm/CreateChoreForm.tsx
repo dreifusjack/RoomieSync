@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
+import "./style.css";
+
 import { useCreateChore } from "@/hooks/ChoreHooks";
 
 interface CreateChoreFormProps {
@@ -66,7 +67,6 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
             placeholder="e.g., Daily, Weekly, Monthly"
           />
         </div>
-
         <button type="submit">Create Chore</button>
       </form>
     </div>

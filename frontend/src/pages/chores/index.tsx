@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import ChoresList from "@/components/ChoresList/ChoresList";
 import AssignChoreForm from "@/components/AssignChoreForm";
-import CreateChoreForm from "@/components/CreateChoreForm";
+import CreateChoreForm from "@/components/ChoreForm/CreateChoreForm";
 import "./styles.css";
 import Sidebar from "@/components/Sidebar";
-import { fetchUserDetails } from "@/hooks/UserHooks";
 import {
   uesRemindUser,
   useDeleteChore,
   useGetGroupChores,
 } from "@/hooks/ChoreHooks";
+import { Box, Modal } from "@mui/material";
 
 type Chore = {
   id: string;
@@ -79,23 +78,37 @@ const ChoresPage: React.FC = () => {
       <div className="chores-list">
         <ChoresList
           chores={chores}
-          assigneeName="Jack"
+          assigneeName=""
           onRemindUser={handleRemindUser}
           onDeletedChore={handleDeleteChore}
         />
       </div>
-      {isCreateFormVisible && (
-        <div className="form">
-          <CreateChoreForm onChoreCreated={fetchChores} />
-          <button
-            className="form-close"
-            onClick={() => setCreateFormVisible(false)}
-          >
-            Close
-          </button>
-        </div>
-      )}
-
+      <Modal
+        open={isCreateFormVisible}
+        onClose={() => setCreateFormVisible(false)}
+        aria-labelledby="create-chore-modal-title"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <CreateChoreForm
+            onChoreCreated={() => {
+              fetchChores();
+              setCreateFormVisible(false);
+            }}
+          />
+        </Box>
+      </Modal>
       <Sidebar />
     </div>
   );

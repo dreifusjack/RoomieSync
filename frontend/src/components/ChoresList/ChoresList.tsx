@@ -30,8 +30,8 @@ const ChoresList: React.FC<ChoresListProps> = ({
         <div key={chore.id} className="chore-card">
           <h3>{chore.name}</h3>
           <p>{chore.description}</p>
-          <p>Created on: {chore.createdAt}</p>
-          <p>Assignees: {assigneeName}</p>
+          <p>Cadence: {chore.cadence}</p>
+          <p>Assigned to: {assigneeName}</p>
           <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
           <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
         </div>
