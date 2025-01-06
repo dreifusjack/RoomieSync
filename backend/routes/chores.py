@@ -47,7 +47,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
         try:
             response = supabase.table('chores').select(
                 '*').eq('group_id', group_id).execute()
-            return jsonify(response.data), response.status_code
+            return jsonify(response.data)
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
 
