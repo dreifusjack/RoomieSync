@@ -42,15 +42,25 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
   }, []);
 
   const userName = useUserById(assignee?.user_id || "").userName;
+  let parsedDueDate = "chore must be assigned";
+
+  if (assignee?.due_date) {
+    const year = assignee.due_date.substring(0, 4);
+    const month = assignee.due_date.substring(5, 7);
+    const day = assignee.due_date.substring(8, 10);
+    parsedDueDate = `${month}/${day}/${year}`;
+  }
 
   return (
     <div key={chore.id} className="chore-card">
       <h3>{chore.name}</h3>
       <p>{chore.description}</p>
       <p>Cadence: {chore.cadence}</p>
-      <p>Assigned to: {userName || "chore must be assigned"}</p>
-      <p>Due Date: {assignee?.due_date || "chore must be assigned"}</p>
-      <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
+      <p>👤 {userName || "chore must be assigned"}</p>
+      <p>⏰ {parsedDueDate}</p>
+      {userName && (
+        <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
+      )}
       <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
     </div>
   );
