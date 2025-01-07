@@ -56,7 +56,6 @@ const ChoresPage: React.FC = () => {
 
   const handleRemindUser = async (choreId: string) => {
     await remindUserWithId(choreId);
-    alert("Reminder sent successfully!");
   };
 
   const handleDeleteChore = async (choreId: string) => {

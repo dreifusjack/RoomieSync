@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./list.css";
 import { useGetChoreAssignees } from "@/hooks/ChoreHooks";
 import { useUserById } from "@/hooks/UserHooks";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Chore {
   id: string;
@@ -59,7 +61,14 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
       <p>👤 {userName || "chore must be assigned"}</p>
       <p>⏰ {parsedDueDate}</p>
       {userName && (
-        <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
+        <button
+          onClick={() => {
+            onRemindUser(chore.id);
+            toast.success("Reminder sent successfully!");
+          }}
+        >
+          Send Reminder
+        </button>
       )}
       <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
     </div>
@@ -78,14 +87,17 @@ const ChoresList: React.FC<ChoresListProps> = ({
   onDeletedChore,
 }) => {
   return (
-    <div className="chores-list">
-      {chores.map((chore) => (
-        <ChoreCard
-          chore={chore}
-          onRemindUser={onRemindUser}
-          onDeletedChore={onDeletedChore}
-        />
-      ))}
+    <div>
+      <ToastContainer />
+      <div className="chores-list">
+        {chores.map((chore) => (
+          <ChoreCard
+            chore={chore}
+            onRemindUser={onRemindUser}
+            onDeletedChore={onDeletedChore}
+          />
+        ))}
+      </div>
     </div>
   );
 };
