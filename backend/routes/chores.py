@@ -32,12 +32,14 @@ def ChoresRoutes(app: Flask, supabase: Client):
         due_date = data['due_date']
 
         try:
-            insert_response = supabase.table('chore_assignments').insert({
+            # Use upsert to replace the record if it exists
+            upsert_response = supabase.table('chore_assignments').upsert({
                 'chore_id': chore_id,
                 'user_id': user_id,
                 'due_date': due_date
             }).execute()
-            return jsonify(insert_response.data)
+
+            return jsonify(upsert_response.data)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 

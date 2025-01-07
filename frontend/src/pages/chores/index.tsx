@@ -34,7 +34,7 @@ const ChoresPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isAssignFormVisible, setAssignFormVisible] = useState(false);
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
-  const { getAllGroupChores, isLoading, error } = useGetGroupChores();
+  const { getAllGroupChores, isLoading } = useGetGroupChores();
   const { remindUserWithId } = uesRemindUser();
   const { deleteChoreWithId } = useDeleteChore();
   const { getAllGroupUsers } = useAllGroupUsers();

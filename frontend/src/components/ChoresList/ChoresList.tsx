@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./list.css";
 import { useGetChoreAssignees } from "@/hooks/ChoreHooks";
+import { useUserById } from "@/hooks/UserHooks";
 
 interface Chore {
   id: string;
@@ -18,24 +19,37 @@ interface ChoreCardProps {
   onDeletedChore: (choreId: string) => void;
 }
 
+interface ChoreAssignee {
+  user_id: string;
+  due_date: string;
+}
+
 const ChoreCard: React.FC<ChoreCardProps> = ({
   chore,
   onRemindUser,
   onDeletedChore,
 }) => {
-  const { getChoreAssigneesFromId, isLoading, error } = useGetChoreAssignees();
+  const { getChoreAssigneesFromId } = useGetChoreAssignees();
+  const [assignee, setAssignee] = useState<ChoreAssignee>();
 
   const handleGetAssignee = async () => {
     const assignee = await getChoreAssigneesFromId(chore.id);
-    console.log(assignee);
+    setAssignee(assignee[0]);
   };
+
+  useEffect(() => {
+    handleGetAssignee();
+  }, []);
+
+  const userName = useUserById(assignee?.user_id || "").userName;
 
   return (
     <div key={chore.id} className="chore-card">
       <h3>{chore.name}</h3>
       <p>{chore.description}</p>
       <p>Cadence: {chore.cadence}</p>
-      <p>Assigned to: {}</p>
+      <p>Assigned to: {userName || "chore must be assigned"}</p>
+      <p>Due Date: {assignee?.due_date || "chore must be assigned"}</p>
       <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
       <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
     </div>
