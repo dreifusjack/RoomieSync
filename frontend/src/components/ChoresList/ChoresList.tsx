@@ -47,10 +47,10 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
   let parsedDueDate = "chore must be assigned";
 
   if (assignee?.due_date) {
-    const year = assignee.due_date.substring(0, 4);
-    const month = assignee.due_date.substring(5, 7);
-    const day = assignee.due_date.substring(8, 10);
-    parsedDueDate = `${month}/${day}/${year}`;
+    const date = new Date(assignee.due_date); // Parse the date string
+    parsedDueDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(
+      date.getDate()
+    ).padStart(2, "0")}/${date.getFullYear()}`;
   }
 
   return (

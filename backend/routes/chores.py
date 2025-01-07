@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from utils.email import send_email
 from supabase import Client
+from datetime import datetime
 
 
 def ChoresRoutes(app: Flask, supabase: Client):
@@ -96,20 +97,26 @@ def ChoresRoutes(app: Flask, supabase: Client):
 
             for assignment in assignments.data:
                 user_id = assignment['user_id']
-                due_date = assignment['due_date']
+
+                # Parsing the data
+                raw_date = str(assignment['due_date']).split('.')[0]  # Remove microseconds if present
+                raw_date = raw_date.replace('Z', '')  # Remove UTC indicator if present
+                due_date_obj = datetime.strptime(raw_date, '%Y-%m-%dT%H:%M:%S')
+                formatted_date = due_date_obj.strftime("%A, %B %d, %Y")
 
                 user = supabase.table('users').select(
                     'email').eq('id', user_id).execute()
-
                 if user.data:
                     user_email = user.data[0]['email']
                     subject = f"Chore Reminder: {chore_data['name']}"
-                    body = f"Reminder: You are assigned the chore '{chore_data['name']}'.\n" \
-                        f"Description: {chore_data['description']}\n" \
-                        f"Due date: {due_date}"
+                    body = f"Reminder: You are assigned to the chore \"{chore_data['name']}\".\n" \
+                        f"Description: {chore_data['description']}.\n" \
+                        f"Due date: {formatted_date}."
 
                     send_email(user_email, subject, body)
 
             return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
-            return jsonify({'error': 'An error occured while sending reminders'}), 500
+            # Log the full error details
+            print(f"Error in remind_user: {str(e)}")
+            return jsonify({'error': f'An error occurred while sending reminders: {str(e)}'}), 500
