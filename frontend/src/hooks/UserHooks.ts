@@ -59,3 +59,35 @@ export const useUserById = (userId: string) => {
 
   return { userName, loading, error };
 };
+
+export const getAllUsersInGroup = async (groupId: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/group/${groupId}/users`);
+    return response.data.users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const useAllGroupUsers = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const getAllGroupUsers = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const user = await fetchUserDetails();
+      const data = await getAllUsersInGroup(user.group_id);
+      return data;
+    } catch (err) {
+      setError(err as Error);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return { getAllGroupUsers, isLoading, error };
+}

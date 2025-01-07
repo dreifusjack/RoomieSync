@@ -4,18 +4,16 @@ import { fetchUserDetails } from "./UserHooks";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
-/**
- * create chore 
- * get all chores 
- * reminder user 
- * delete a chore 
- * assign a chore 
- */
 type Chore = {
   group_id: string;
   name: string;
   description: string;
   cadence: string;
+}
+
+interface AssignChorePayload {
+  chore_id: string;
+  due_date: string;
 }
 
 // api calls
@@ -55,9 +53,9 @@ export const createChore = async (payload: Chore) => {
   }
 }
 
-export const assignChore = async (userId: string) => {
+export const assignChore = async (userId: string, payload: AssignChorePayload) => {
   try {
-    const response = await axios.post(`${BASE_URL}/chores/user/${userId}`)
+    const response = await axios.post(`${BASE_URL}/chores/user/${userId}`, payload);
     return response.data;
   } catch (error) {
     console.error("Error assigning chore:", error);
@@ -142,12 +140,12 @@ export const useCreateChore = () => {
 
     try {
       const user = await fetchUserDetails();
-            const payload: Chore = {
-              group_id: user.group_id,
-              name,
-              description,
-              cadence
-            };
+      const payload: Chore = {
+        group_id: user.group_id,
+        name,
+        description,
+        cadence
+      };
       const data = await createChore(payload);
       return data;
     } catch (err) {
@@ -166,12 +164,16 @@ export const useAssignChore = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const assignChoreWithId = async (userId: string) => {
+  const assignChoreWithPayload = async (userId: string, choreId: string, dueDate: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const data = await assignChore(userId);
+      const payload: AssignChorePayload = {
+        chore_id: choreId,
+        due_date: dueDate
+      }
+      const data = await assignChore(userId, payload);
       return data;
     } catch (err) {
       setError(err as Error)
@@ -181,5 +183,36 @@ export const useAssignChore = () => {
     }
   }
 
-  return { assignChoreWithId, isLoading, error}
+  return { assignChoreWithPayload, isLoading, error}
+}
+
+export const getChoreAssignees = async (choreId: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/chores/assignees/${choreId}`)
+    return response.data;
+  } catch (error) {
+    console.error("Error getting chore assignees:", error)
+  }
+}
+
+export const useGetChoreAssignees = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const getChoreAssigneesFromId = async (choreId: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const data = await getChoreAssignees(choreId);
+      return data;
+    } catch (err) {
+      setError(err as Error)
+      throw err;
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return { getChoreAssigneesFromId, isLoading, error}
 }

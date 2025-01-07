@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useAssignChore } from "@/hooks/ChoreHooks";
 
-interface User {
+type User = {
   id: string;
-  name: string;
-}
+  email: string;
+  first_name: string;
+  last_name: string;
+};
 
 interface Chore {
   id: string;
@@ -26,13 +28,16 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedDueDate, setSelectedDueDate] = useState("");
 
+  const { assignChoreWithPayload, isLoading } = useAssignChore();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(`/chores/user/${selectedUser}`, {
-        chore_id: selectedChore,
-        due_date: selectedDueDate,
-      });
+      await assignChoreWithPayload(
+        selectedUser,
+        selectedChore,
+        selectedDueDate
+      );
       onChoreAssigned();
       // refresh selections
       setSelectedChore("");
@@ -73,7 +78,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
             <option value="">-- Select User --</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
-                {user.name}
+                {user.first_name + " " + user.last_name}
               </option>
             ))}
           </select>
@@ -93,7 +98,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
           type="submit"
           disabled={!selectedChore || !selectedUser || !selectedDueDate}
         >
-          Assign Chore
+          {isLoading ? "Assigning..." : "Assign Chore"}
         </button>
       </form>
     </div>
