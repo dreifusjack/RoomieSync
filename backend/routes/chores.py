@@ -99,8 +99,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                 user_id = assignment['user_id']
 
                 # Parsing the data
-                raw_date = str(assignment['due_date']).split('.')[0]  # Remove microseconds if present
-                raw_date = raw_date.replace('Z', '')  # Remove UTC indicator if present
+                raw_date = str(assignment['due_date']).split('.')[0]  # Removing microseconds 
                 due_date_obj = datetime.strptime(raw_date, '%Y-%m-%dT%H:%M:%S')
                 formatted_date = due_date_obj.strftime("%A, %B %d, %Y")
 
@@ -117,6 +116,4 @@ def ChoresRoutes(app: Flask, supabase: Client):
 
             return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
-            # Log the full error details
-            print(f"Error in remind_user: {str(e)}")
             return jsonify({'error': f'An error occurred while sending reminders: {str(e)}'}), 500
