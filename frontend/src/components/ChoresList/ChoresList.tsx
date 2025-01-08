@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./list.css";
 import { useGetChoreAssignees } from "@/hooks/ChoreHooks";
-import { useUserById } from "@/hooks/UserHooks";
+import { useAllGroupUsers, useUserById } from "@/hooks/UserHooks";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Box, Modal } from "@mui/material";
+import AssignChoreForm from "../AssignChoreForm";
 
 interface Chore {
   id: string;
@@ -15,32 +17,50 @@ interface Chore {
   updatedAt: string;
 }
 
+interface ChoreAssignee {
+  user_id: string;
+  due_date: string;
+}
+
+interface User {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
 interface ChoreCardProps {
   chore: Chore;
   onRemindUser: (choreId: string) => void;
   onDeletedChore: (choreId: string) => void;
-}
-
-interface ChoreAssignee {
-  user_id: string;
-  due_date: string;
+  onChoreAssigned: () => void;
 }
 
 const ChoreCard: React.FC<ChoreCardProps> = ({
   chore,
   onRemindUser,
   onDeletedChore,
+  onChoreAssigned,
 }) => {
   const { getChoreAssigneesFromId } = useGetChoreAssignees();
   const [assignee, setAssignee] = useState<ChoreAssignee>();
+  const [users, setUsers] = useState<User[]>([]);
+  const [isAssignFormVisible, setAssignFormVisible] = useState(false);
+  const { getAllGroupUsers } = useAllGroupUsers();
 
   const handleGetAssignee = async () => {
     const assignee = await getChoreAssigneesFromId(chore.id);
     setAssignee(assignee[0]);
   };
 
+  const fetchGroupMembers = async () => {
+    const groupUsers = await getAllGroupUsers();
+    setUsers(groupUsers || []);
+  };
+
   useEffect(() => {
     handleGetAssignee();
+    fetchGroupMembers();
   }, []);
 
   const userName = useUserById(assignee?.user_id || "").userName;
@@ -58,19 +78,55 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
       <h3>{chore.name}</h3>
       <p>{chore.description}</p>
       <p>Cadence: {chore.cadence}</p>
-      <p>👤 {userName || "chore must be assigned"}</p>
-      <p>⏰ {parsedDueDate}</p>
-      {userName && (
+      {userName ? (
+        <>
+          <p>👤 {userName}</p>
+          <p>⏰ {parsedDueDate}</p>
+          <button
+            onClick={() => {
+              onRemindUser(chore.id);
+              toast.success("Reminder sent successfully!");
+            }}
+          >
+            Send Reminder
+          </button>
+        </>
+      ) : (
         <button
+          className="action-button"
           onClick={() => {
-            onRemindUser(chore.id);
-            toast.success("Reminder sent successfully!");
+            setAssignFormVisible(true);
           }}
         >
-          Send Reminder
+          Assign Chore
         </button>
       )}
       <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
+      <Modal
+        open={isAssignFormVisible}
+        onClose={() => setAssignFormVisible(false)}
+        aria-labelledby="assign-chore-modal-title"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <AssignChoreForm
+            chores={[chore]}
+            users={users}
+            onChoreAssigned={onChoreAssigned}
+          />
+        </Box>
+      </Modal>
     </div>
   );
 };
@@ -79,12 +135,14 @@ interface ChoresListProps {
   chores: Chore[];
   onRemindUser: (choreId: string) => void;
   onDeletedChore: (choreId: string) => void;
+  onChoreAssigned: () => void;
 }
 
 const ChoresList: React.FC<ChoresListProps> = ({
   chores,
   onRemindUser,
   onDeletedChore,
+  onChoreAssigned,
 }) => {
   return (
     <div>
@@ -95,6 +153,7 @@ const ChoresList: React.FC<ChoresListProps> = ({
             chore={chore}
             onRemindUser={onRemindUser}
             onDeletedChore={onDeletedChore}
+            onChoreAssigned={onChoreAssigned}
           />
         ))}
       </div>

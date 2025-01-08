@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ChoresList from "@/components/ChoresList/ChoresList";
-import AssignChoreForm from "@/components/AssignChoreForm";
 import CreateChoreForm from "@/components/ChoreForm/CreateChoreForm";
 import "./styles.css";
 import Sidebar from "@/components/Sidebar";
@@ -10,7 +9,6 @@ import {
   useGetGroupChores,
 } from "@/hooks/ChoreHooks";
 import { Box, Modal } from "@mui/material";
-import { useAllGroupUsers } from "@/hooks/UserHooks";
 
 type Chore = {
   id: string;
@@ -31,27 +29,18 @@ type User = {
 
 const ChoresPage: React.FC = () => {
   const [chores, setChores] = useState<Chore[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [isAssignFormVisible, setAssignFormVisible] = useState(false);
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
   const { getAllGroupChores, isLoading } = useGetGroupChores();
   const { remindUserWithId } = uesRemindUser();
   const { deleteChoreWithId } = useDeleteChore();
-  const { getAllGroupUsers } = useAllGroupUsers();
 
   const fetchChores = async () => {
     const choresData = await getAllGroupChores();
     setChores(choresData || []);
   };
 
-  const fetchGroupMembers = async () => {
-    const groupUsers = await getAllGroupUsers();
-    setUsers(groupUsers || []);
-  };
-
   useEffect(() => {
     fetchChores();
-    fetchGroupMembers();
   }, []);
 
   const handleRemindUser = async (choreId: string) => {
@@ -75,19 +64,9 @@ const ChoresPage: React.FC = () => {
           className="action-button"
           onClick={() => {
             setCreateFormVisible(true);
-            setAssignFormVisible(false);
           }}
         >
           Create New Chore
-        </button>
-        <button
-          className="action-button"
-          onClick={() => {
-            setAssignFormVisible(true);
-            setCreateFormVisible(false);
-          }}
-        >
-          Assign Chore
         </button>
       </div>
       <div className="chores-list">
@@ -95,6 +74,9 @@ const ChoresPage: React.FC = () => {
           chores={chores}
           onRemindUser={handleRemindUser}
           onDeletedChore={handleDeleteChore}
+          onChoreAssigned={() => {
+            fetchChores();
+          }}
         />
       </div>
       <Modal
@@ -119,34 +101,6 @@ const ChoresPage: React.FC = () => {
             onChoreCreated={() => {
               fetchChores();
               setCreateFormVisible(false);
-            }}
-          />
-        </Box>
-      </Modal>
-      <Modal
-        open={isAssignFormVisible}
-        onClose={() => setAssignFormVisible(false)}
-        aria-labelledby="assign-chore-modal-title"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <AssignChoreForm
-            chores={chores}
-            users={users}
-            onChoreAssigned={() => {
-              fetchChores();
-              setAssignFormVisible(false);
             }}
           />
         </Box>
