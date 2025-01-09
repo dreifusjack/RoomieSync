@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { fetchUserDetails } from "./UserHooks";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
@@ -30,6 +31,21 @@ export const useAuth = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isSignup, setIsSignup] = useState<boolean>(false);
+
+  const checkUserGroupAndRedirect = async () => {
+    try {
+      const userData = await fetchUserDetails();
+      if (userData.group_id) {
+        window.location.href = "/alarms";
+      } else {
+        window.location.href = "/landing";
+      }
+    } catch (err) {
+      // If we can't fetch user details, default to landing page
+      console.error("Error fetching user details:", err);
+      window.location.href = "/landing";
+    }
+  };
 
   const handleLogin = async (email: string, password: string) => {
     setLoading(true);
@@ -62,10 +78,14 @@ export const useAuth = () => {
     }
   };
 
-  const onLoginSuccess = (accessToken: string, refreshToken: string) => {
+  const onLoginSuccess = async (accessToken: string, refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
-    window.location.href = "/landing";
+     // Add a small delay to ensure tokens are properly set
+     await new Promise(resolve => setTimeout(resolve, 100));
+    
+     // Now check user's group status and redirect
+     await checkUserGroupAndRedirect();
   };
 
   return { handleLogin, handleSignUp, error, loading, isSignup, setIsSignup };
