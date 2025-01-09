@@ -20,13 +20,6 @@ type Chore = {
   updatedAt: string;
 };
 
-type User = {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-};
-
 const ChoresPage: React.FC = () => {
   const [chores, setChores] = useState<Chore[]>([]);
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);

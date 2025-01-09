@@ -1,5 +1,4 @@
 import React from "react";
-
 import styles from "../styles/Sidebar.module.css";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -20,6 +19,9 @@ const Sidebar: React.FC = () => {
         </li>
         <li>
           <a href="/chores">Chores</a>
+        </li>
+        <li>
+          <a href="/landing">Landing</a>
         </li>
       </ul>
     </div>
