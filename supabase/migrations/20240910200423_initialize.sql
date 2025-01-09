@@ -13,6 +13,7 @@ CREATE TABLE examples (
 CREATE TABLE groups (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name varchar(100) NOT NULL,
+    group_code varchar(10) UNIQUE NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
