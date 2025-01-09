@@ -65,8 +65,7 @@ export const useAuth = () => {
   const onLoginSuccess = (accessToken: string, refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
-    // TODO: change href to home 
-    window.location.href = "/alarms";
+    window.location.href = "/landing";
   };
 
   return { handleLogin, handleSignUp, error, loading, isSignup, setIsSignup };

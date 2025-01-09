@@ -22,14 +22,20 @@ export const createExpense = async (newExpense: Expense) => {
 
 export const fetchGroupExpenses = async (groupId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/calculate_expenses/${groupId}`);
+    const response = await axios.get(
+      `${BASE_URL}/calculate_expenses/${groupId}`
+    );
     return response.data;
   } catch (error) {
-    throw new Error('Failed to fetch group expenses');
+    throw new Error("Failed to fetch group expenses");
   }
 };
 
-export const markExpenseAsPaid = async (payerId: string, recipientId: string, amount: number) => {
+export const markExpenseAsPaid = async (
+  payerId: string,
+  recipientId: string,
+  amount: number
+) => {
   try {
     const response = await axios.post(`${BASE_URL}/api/expense_payment`, {
       amount_paid: amount,
@@ -38,7 +44,7 @@ export const markExpenseAsPaid = async (payerId: string, recipientId: string, am
     });
     return response.data;
   } catch (error) {
-    throw new Error('Failed to mark expense as paid');
+    throw new Error("Failed to mark expense as paid");
   }
 };
 
@@ -73,8 +79,8 @@ export const useCreateExpense = () => {
 
 export const useExpenses = () => {
   const [expenses, setExpenses] = useState<{ [key: string]: number }>({});
-  const [userId, setUserId] = useState('');
-  const [groupId, setGroupId] = useState('');
+  const [userId, setUserId] = useState("");
+  const [groupId, setGroupId] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,15 +93,19 @@ export const useExpenses = () => {
         const expenseData = await fetchGroupExpenses(userData.group_id);
         setExpenses(expenseData.net_owes);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch expense data');
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch expense data");
       }
     };
 
     fetchData();
   }, []);
 
-  const handlePaid = async (payerId: string, recipientId: string, amount: number) => {
+  const handlePaid = async (
+    payerId: string,
+    recipientId: string,
+    amount: number
+  ) => {
     try {
       await markExpenseAsPaid(payerId, recipientId, amount);
       setExpenses((prevExpenses) => ({
@@ -103,13 +113,13 @@ export const useExpenses = () => {
         [`${payerId},${recipientId}`]: 0,
       }));
     } catch (error) {
-      console.error('Error marking as paid:', error);
-      setError('Failed to mark expense as paid');
+      console.error("Error marking as paid:", error);
+      setError("Failed to mark expense as paid");
     }
   };
 
-  const filteredExpenses = Object.entries(expenses).filter(
-    ([key]) => key.includes(userId)
+  const filteredExpenses = Object.entries(expenses).filter(([key]) =>
+    key.includes(userId)
   );
 
   return {
