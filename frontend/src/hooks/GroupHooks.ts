@@ -61,7 +61,7 @@ export const useGroup = () => {
         user_id: userId,
       };
       await joinGroup(payload);
-      onJoinSuccess();
+      onSuccess();
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to join group");
       throw err;
@@ -70,11 +70,11 @@ export const useGroup = () => {
     }
   };
 
-  const onJoinSuccess = () => {
+  const onSuccess = () => {
     window.location.href = '/alarms';
   }
 
-  return { handleCreateGroup, handleJoinGroup, error, loading };
+  return { handleCreateGroup, handleJoinGroup, error, loading, onSuccess };
 };
 
 
