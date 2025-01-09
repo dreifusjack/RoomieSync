@@ -30,12 +30,13 @@ const getGroup = async (group_id: string) => {
 };
 
 // hooks
-export const useCreateGroup = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+export const useGroup = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const userCreateGroup = async (name: string, userId: string) => {
-    setIsLoading(true);
+  const handleCreateGroup = async (name: string, userId: string) => {
+    setLoading(true);
+    setError(null);
     try {
       const payload: CreateGroupPayload = {
         name,
@@ -43,40 +44,39 @@ export const useCreateGroup = () => {
       };
       const data = await createGroup(payload);
       return data;
-    } catch (err) {
-      setError(err as Error);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to create group");
       throw err;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  return { userCreateGroup, error, isLoading };
-};
-
-export const useJoinGroup = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const userJoinGroup = async (groupCode: string, userId: string) => {
-    setIsLoading(true);
+  const handleJoinGroup = async (groupCode: string, userId: string) => {
+    setLoading(true);
+    setError(null);
     try {
       const payload: JoinGroupPayload = {
         group_code: groupCode,
         user_id: userId,
       };
-      const data = await joinGroup(payload);
-      return data;
-    } catch (err) {
-      setError(err as Error);
+      await joinGroup(payload);
+      onJoinSuccess();
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to join group");
       throw err;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  return { userJoinGroup, error, isLoading };
+  const onJoinSuccess = () => {
+    window.location.href = '/alarms';
+  }
+
+  return { handleCreateGroup, handleJoinGroup, error, loading };
 };
+
 
 export const useGetGroup = () => {
   const [isLoading, setIsLoading] = useState(false);

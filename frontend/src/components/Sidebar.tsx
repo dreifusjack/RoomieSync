@@ -20,9 +20,6 @@ const Sidebar: React.FC = () => {
         <li>
           <a href="/chores">Chores</a>
         </li>
-        <li>
-          <a href="/landing">Landing</a>
-        </li>
       </ul>
     </div>
   );
