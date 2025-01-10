@@ -32,21 +32,6 @@ export const useAuth = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isSignup, setIsSignup] = useState<boolean>(false);
 
-  const checkUserGroupAndRedirect = async () => {
-    try {
-      const userData = await fetchUserDetails();
-      if (userData.group_id) {
-        window.location.href = "/alarms";
-      } else {
-        window.location.href = "/landing";
-      }
-    } catch (err) {
-      // If we can't fetch user details, default to landing page
-      console.error("Error fetching user details:", err);
-      window.location.href = "/landing";
-    }
-  };
-
   const handleLogin = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
@@ -81,11 +66,25 @@ export const useAuth = () => {
   const onLoginSuccess = async (accessToken: string, refreshToken: string) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
-     // Add a small delay to ensure tokens are properly set
+
+     // Delay for tokens to be set
      await new Promise(resolve => setTimeout(resolve, 100));
-    
-     // Now check user's group status and redirect
+
      await checkUserGroupAndRedirect();
+  };
+
+  const checkUserGroupAndRedirect = async () => {
+    try {
+      const userData = await fetchUserDetails();
+      if (userData.group_id) {
+        window.location.href = "/alarms";
+      } else {
+        window.location.href = "/landing";
+      }
+    } catch (err) {
+      console.error("Error fetching user details:", err);
+      window.location.href = "/landing";
+    }
   };
 
   return { handleLogin, handleSignUp, error, loading, isSignup, setIsSignup };

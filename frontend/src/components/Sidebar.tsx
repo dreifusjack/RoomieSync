@@ -8,7 +8,7 @@ const Sidebar: React.FC = () => {
       <ul>
         <li>
           <a href="/">
-            <LogoutIcon sx={{ fontSize: "50px" }} />
+            <LogoutIcon sx={{ fontSize: "50px", color: "#A2A2A2" }} />
           </a>
         </li>
         <li>

@@ -1,7 +1,7 @@
 .sidebar {
-  width: 200px;
+  width: 60px;
   height: 100vh;
-  background-color: #f4f4f4;
+  background-color: #161616;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: fixed;
@@ -15,12 +15,12 @@
 }
 
 .sidebar ul li {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .sidebar ul li a {
   text-decoration: none;
-  color: #333;
+  color: #a2a2a2;
   font-weight: bold;
 }
 
