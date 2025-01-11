@@ -1,8 +1,10 @@
 import { useUserById } from "@/hooks/UserHooks";
 import styles from "@/styles/Explore.module.css";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface AlarmCardProps {
   alarm: Alarm;
+  onDelete: (alarm_id: string) => Promise<any>;
   isGroup?: boolean;
 }
 
@@ -13,7 +15,7 @@ interface Alarm {
   time: string;
 }
 
-const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, isGroup }) => {
+const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, onDelete, isGroup }) => {
   const { userName, loading, error } = useUserById(alarm.user_id);
   const hour = parseInt(alarm?.time.substring(0, 2));
   const min = alarm?.time.substring(2, 5);
@@ -30,7 +32,20 @@ const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, isGroup }) => {
           {isGroup && (
             <p className={styles.alarmUser}>👤 {userName || "Unknown User"}</p>
           )}
-          <p className={styles.alarmTime}>⏰ {parsedTime || "Unknown Time"}</p>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <p className={styles.alarmTime}>
+              ⏰ {parsedTime || "Unknown Time"}
+            </p>
+            {!isGroup && (
+              <DeleteIcon
+                sx={{
+                  color: "#ffffff",
+                  cursor: "pointer",
+                }}
+                onClick={() => onDelete(alarm.id)}
+              ></DeleteIcon>
+            )}
+          </div>
         </div>
       </div>
     </div>

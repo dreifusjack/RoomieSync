@@ -80,3 +80,18 @@ def AlarmRoutes(app: Flask, supabase: Client):
             return jsonify(alarms_response.data), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        
+    # Delete an alarm 
+    @app.route("/alarm/<alarm_id>/delete", methods=["DELETE"])
+    def delete_alarm(alarm_id):
+        try:
+            delete_response = supabase.table(
+                "alarms").delete().eq("id", alarm_id).execute()
+            if delete_response.count == 0:
+                return jsonify({'message': 'Alarm not found'}), 404
+
+            return jsonify({'message': 'Alarm successfully deleted'})
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+

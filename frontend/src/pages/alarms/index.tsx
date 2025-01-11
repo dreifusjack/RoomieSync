@@ -8,7 +8,7 @@ import CreateAlarmForm from "@/components/CreateAlarmForm";
 
 function AlarmsPage() {
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
-  const { userAlarms, groupAlarms, createAlarm } = useAlarms();
+  const { userAlarms, groupAlarms, createAlarm, deleteAlarm } = useAlarms();
 
   return (
     <div className={styles.container}>
@@ -27,14 +27,14 @@ function AlarmsPage() {
         <h2 className={styles.subheading}>Your Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(userAlarms) ? userAlarms : []).map((alarm) => (
-            <AlarmCard alarm={alarm} />
+            <AlarmCard alarm={alarm} onDelete={deleteAlarm} />
           ))}
         </div>
 
         <h2 className={styles.subheading}>Group Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(groupAlarms) ? groupAlarms : []).map((alarm) => (
-            <AlarmCard alarm={alarm} isGroup={true} />
+            <AlarmCard alarm={alarm} onDelete={deleteAlarm} isGroup={true} />
           ))}
         </div>
         <Modal

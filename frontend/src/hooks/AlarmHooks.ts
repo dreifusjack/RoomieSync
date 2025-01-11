@@ -112,10 +112,23 @@ export const useAlarms = () => {
     }
   };
 
+  const deleteAlarm = async (alarm_id: string) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/alarm/${alarm_id}/delete`
+      );
+      fetchAlarms();
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to delete alarm")
+    }
+  }
+
   return {
     user,
     userAlarms,
     groupAlarms,
     createAlarm,
+    deleteAlarm
   };
 };
