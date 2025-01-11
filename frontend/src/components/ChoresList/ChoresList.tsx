@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Box, Modal } from "@mui/material";
 import AssignChoreForm from "../AssignChoreForm";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Chore {
   id: string;
@@ -82,6 +83,7 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
         <>
           <p>👤 {userName}</p>
           <p>⏰ {parsedDueDate}</p>
+
           <button
             onClick={() => {
               onRemindUser(chore.id);
@@ -101,7 +103,15 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
           Assign Chore
         </button>
       )}
-      <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
+      <DeleteIcon
+        sx={{
+          marginLeft: "70px",
+          color: "#ffffff",
+          cursor: "pointer",
+        }}
+        onClick={() => onDeletedChore(chore.id)}
+      ></DeleteIcon>
+
       <Modal
         open={isAssignFormVisible}
         onClose={() => setAssignFormVisible(false)}
