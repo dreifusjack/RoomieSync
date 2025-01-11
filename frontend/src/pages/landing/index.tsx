@@ -86,7 +86,7 @@ const LandingPage: React.FC = () => {
             <h2>Group Created Successfully!</h2>
             <p>Share this code with your roommates:</p>
 
-            <div className="floating-label-group">
+            <div className="floating-label-group" style={{ marginTop: "40px" }}>
               <input
                 type="text"
                 value={groupCode}
@@ -95,19 +95,11 @@ const LandingPage: React.FC = () => {
               />
               <label className="floating-label">Group Code</label>
             </div>
-            <Button
-              onClick={handleCopyCode}
-              variant="contained"
-              className="copy-button"
-            >
+            <Button onClick={handleCopyCode} className="copy-button">
               {copied ? "Copied!" : "Copy Code"}
             </Button>
 
-            <Button
-              onClick={onSuccess}
-              variant="contained"
-              className="continue-button"
-            >
+            <Button onClick={onSuccess} className="continue-button">
               Continue
             </Button>
           </div>
