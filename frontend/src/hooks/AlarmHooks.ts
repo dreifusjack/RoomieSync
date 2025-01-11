@@ -52,33 +52,33 @@ export const useAlarms = () => {
     };
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await fetchUserDetails();
-        setUser(userData);
+  const fetchAlarms = async () => {
+    try {
+      const userData = await fetchUserDetails();
+      setUser(userData);
 
-        const [userAlarmsResponse, groupAlarmsResponse] = await Promise.all([
-          axios.get(`${BASE_URL}/alarm/user/${userData.id}`),
-          axios.get(`${BASE_URL}/alarm/groups/${userData.group_id}`),
-        ]);
+      const [userAlarmsResponse, groupAlarmsResponse] = await Promise.all([
+        axios.get(`${BASE_URL}/alarm/user/${userData.id}`),
+        axios.get(`${BASE_URL}/alarm/groups/${userData.group_id}`),
+      ]);
 
-        setUserAlarms(userAlarmsResponse.data);
+      setUserAlarms(userAlarmsResponse.data);
 
-        const groupAlarmsData = groupAlarmsResponse.data as GroupAlarmsResponse;
-        if (groupAlarmsData && Array.isArray(groupAlarmsData.alarms)) {
-          const normalizedGroupAlarms =
-            groupAlarmsData.alarms.map(normalizeGroupAlarm);
-          setGroupAlarms(normalizedGroupAlarms);
-        } else {
-          setGroupAlarms([]);
-        }
-      } catch (error) {
-        throw new Error("Error fetching data");
+      const groupAlarmsData = groupAlarmsResponse.data as GroupAlarmsResponse;
+      if (groupAlarmsData && Array.isArray(groupAlarmsData.alarms)) {
+        const normalizedGroupAlarms =
+          groupAlarmsData.alarms.map(normalizeGroupAlarm);
+        setGroupAlarms(normalizedGroupAlarms);
+      } else {
+        setGroupAlarms([]);
       }
-    };
+    } catch (error) {
+      throw new Error("Error fetching data");
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchAlarms();
   }, []);
 
   const createAlarm = async (alarmName: string, alarmTime: string) => {

@@ -121,7 +121,7 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
           }}
         >
           <AssignChoreForm
-            chores={[chore]}
+            chore={chore}
             users={users}
             onChoreAssigned={onChoreAssigned}
           />

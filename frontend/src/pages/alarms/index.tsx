@@ -1,62 +1,28 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import styles from "@/styles/Explore.module.css";
-import "./styles.css";
 import { useAlarms } from "@/hooks/AlarmHooks";
 import AlarmCard from "@/components/AlarmCard";
+import { Box, Modal } from "@mui/material";
+import CreateAlarmForm from "@/components/CreateAlarmForm";
 
 function AlarmsPage() {
-  const [newAlarmName, setNewAlarmName] = useState("");
-  const [newAlarmTime, setNewAlarmTime] = useState("");
+  const [isCreateFormVisible, setCreateFormVisible] = useState(false);
   const { userAlarms, groupAlarms, createAlarm } = useAlarms();
-
-  const handleCreateAlarm = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      await createAlarm(newAlarmName, newAlarmTime);
-      setNewAlarmName("");
-      setNewAlarmTime("");
-    } catch (error) {
-      throw new Error("Error creating alarm:");
-    }
-  };
 
   return (
     <div className={styles.container}>
       <Sidebar />
       <div className={styles.mainContent}>
-        <h1 className={styles.heading}>Alarms</h1>
-
-        <h2 className={styles.subheading}>Create New Alarm</h2>
-        <form className={styles.form} onSubmit={handleCreateAlarm}>
-          <div>
-            <label className={styles.label}>
-              Alarm Name:
-              <input
-                className={styles.input}
-                type="text"
-                value={newAlarmName}
-                onChange={(e) => setNewAlarmName(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div>
-            <label className={styles.label}>
-              Alarm Time:
-              <input
-                className={styles.input}
-                type="time"
-                value={newAlarmTime}
-                onChange={(e) => setNewAlarmTime(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <button className={styles.button} type="submit">
-            Create Alarm
+        <div>
+          <h1 className={styles.heading}>Alarms</h1>
+          <button
+            className={styles.button}
+            onClick={() => setCreateFormVisible(true)}
+          >
+            Create New Alarm
           </button>
-        </form>
+        </div>
 
         <h2 className={styles.subheading}>Your Alarms</h2>
         <div className={styles.alarmList}>
@@ -71,6 +37,30 @@ function AlarmsPage() {
             <AlarmCard alarm={alarm} isGroup={true} />
           ))}
         </div>
+        <Modal
+          open={isCreateFormVisible}
+          onClose={() => setCreateFormVisible(false)}
+          aria-labelledby="create-chore-modal-title"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              borderRadius: 2,
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <CreateAlarmForm
+              createAlarm={createAlarm}
+              onAlarmCreated={() => setCreateFormVisible(false)}
+            />
+          </Box>
+        </Modal>
       </div>
     </div>
   );
