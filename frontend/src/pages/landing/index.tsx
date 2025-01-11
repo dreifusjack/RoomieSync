@@ -86,21 +86,22 @@ const LandingPage: React.FC = () => {
             <h2>Group Created Successfully!</h2>
             <p>Share this code with your roommates:</p>
 
-            <div className="form-group">
+            <div className="floating-label-group">
               <input
                 type="text"
                 value={groupCode}
                 readOnly
-                className="code-display"
+                className="floating-input code-display"
               />
-              <Button
-                onClick={handleCopyCode}
-                variant="contained"
-                className="copy-button"
-              >
-                {copied ? "Copied!" : "Copy Code"}
-              </Button>
+              <label className="floating-label">Group Code</label>
             </div>
+            <Button
+              onClick={handleCopyCode}
+              variant="contained"
+              className="copy-button"
+            >
+              {copied ? "Copied!" : "Copy Code"}
+            </Button>
 
             <Button
               onClick={onSuccess}
@@ -117,34 +118,39 @@ const LandingPage: React.FC = () => {
 
             {isCreating ? (
               <div className="form-group">
-                <label>Group Name:</label>
-                <input
-                  type="text"
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                  required
-                />
+                <div className="floating-label-group">
+                  <input
+                    type="text"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    required
+                    className="floating-input"
+                  />
+                  <label className="floating-label">Group Name</label>
+                </div>
               </div>
             ) : (
               <div className="form-group">
-                <label>Group Code:</label>
-                <input
-                  type="text"
-                  value={groupCode}
-                  onChange={(e) => setGroupCode(e.target.value)}
-                  required
-                />
+                <div className="floating-label-group">
+                  <input
+                    type="text"
+                    value={groupCode}
+                    onChange={(e) => setGroupCode(e.target.value)}
+                    required
+                    className="floating-input"
+                  />
+                  <label className="floating-label">Group Code</label>
+                </div>
               </div>
             )}
 
-            <Button type="submit" disabled={loading} variant="contained">
+            <Button type="submit" disabled={loading}>
               {loading ? "Processing..." : isCreating ? "Create" : "Join"}
             </Button>
 
             <Button
               type="button"
               onClick={() => setIsCreating(!isCreating)}
-              variant="outlined"
               className="toggle-button"
             >
               {isCreating

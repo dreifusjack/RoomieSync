@@ -28,45 +28,49 @@ const LoginForm: React.FC = () => {
 
         {isSignup && (
           <>
-            <div className="form-group">
-              <label>First Name:</label>
+            <div className="floating-label-group">
               <input
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
+                className="floating-input"
               />
+              <label className="floating-label">First Name</label>
             </div>
-            <div className="form-group">
-              <label>Last Name:</label>
+            <div className="floating-label-group">
               <input
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
+                className="floating-input"
               />
+              <label className="floating-label">Last Name</label>
             </div>
           </>
         )}
 
-        <div className="form-group">
-          <label>Email:</label>
+        <div className="floating-label-group">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="floating-input"
           />
+          <label className="floating-label">Email</label>
         </div>
 
-        <div className="form-group">
-          <label>Password:</label>
+        <div className="floating-label-group">
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="floating-input"
           />
+          <label className="floating-label">Password</label>
         </div>
 
         <Button type="submit" disabled={loading}>

@@ -4,26 +4,66 @@
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
+  background-color: #000000;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Source Sans Pro", source-sans-pro, Helvetica, Verdana,
+    sans-serif;
+}
+
+/* Container for floating labels */
+.floating-label-group {
+  position: relative;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.floating-input {
+  width: 100%;
+  padding: 10px 10px 10px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.floating-input:focus {
+  outline: none;
+  border-bottom: 2px solid #007bff;
+}
+
+.floating-label {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  color: #aaa;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.floating-input:focus + .floating-label,
+.floating-input:not(:placeholder-shown) + .floating-label {
+  top: -20px;
+  font-size: 12px;
+  color: #007bff;
+}
+
+.floating-input::placeholder {
+  color: transparent;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
+  color: #ffffff;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.form-group input {
+input {
   padding: 8px;
   border: 1px solid #ccc;
+  color: white;
+  background-color: #000000;
   border-radius: 4px;
 }
 
@@ -32,16 +72,20 @@
   margin-bottom: 10px;
 }
 
-button {
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* Remove Chrome's default autofill styling */
+.floating-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-button:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
+.floating-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.floating-input:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
