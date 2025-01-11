@@ -3,8 +3,6 @@
   flex-direction: row;
   min-height: 100vh;
   background-color: #000000;
-  font-family: "Source Sans Pro", source-sans-pro, Helvetica, Verdana,
-    sans-serif;
 }
 
 .mainContent {
