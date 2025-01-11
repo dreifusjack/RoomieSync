@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChoresList from "@/components/ChoresList/ChoresList";
 import CreateChoreForm from "@/components/ChoreForm/CreateChoreForm";
-import "./styles.css";
+import styles from "@/styles/Explore.module.css";
 import Sidebar from "@/components/Sidebar";
 import {
   uesRemindUser,
@@ -50,55 +50,59 @@ const ChoresPage: React.FC = () => {
   }
 
   return (
-    <div className="chores-page">
-      <h1 className="page-title">Chores</h1>
-      <div className="button-container">
-        <button
-          className="action-button"
-          onClick={() => {
-            setCreateFormVisible(true);
-          }}
-        >
-          Create New Chore
-        </button>
-      </div>
-      <div className="chores-list">
-        <ChoresList
-          chores={chores}
-          onRemindUser={handleRemindUser}
-          onDeletedChore={handleDeleteChore}
-          onChoreAssigned={() => {
-            fetchChores();
-          }}
-        />
-      </div>
-      <Modal
-        open={isCreateFormVisible}
-        onClose={() => setCreateFormVisible(false)}
-        aria-labelledby="create-chore-modal-title"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <CreateChoreForm
-            onChoreCreated={() => {
+    <div className={styles.container}>
+      <Sidebar />
+      <div className={styles.mainContent}>
+        <div>
+          <h1 className={styles.heading}>Chores</h1>
+
+          <button
+            className={styles.button}
+            onClick={() => {
+              setCreateFormVisible(true);
+            }}
+          >
+            Create New Chore
+          </button>
+        </div>
+        <div className="chores-list">
+          <ChoresList
+            chores={chores}
+            onRemindUser={handleRemindUser}
+            onDeletedChore={handleDeleteChore}
+            onChoreAssigned={() => {
               fetchChores();
-              setCreateFormVisible(false);
             }}
           />
-        </Box>
-      </Modal>
-      <Sidebar />
+        </div>
+        <Modal
+          open={isCreateFormVisible}
+          onClose={() => setCreateFormVisible(false)}
+          aria-labelledby="create-chore-modal-title"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              borderRadius: 2,
+              boxShadow: 24,
+              p: 4,
+              backgroundColor: "#000000",
+            }}
+          >
+            <CreateChoreForm
+              onChoreCreated={() => {
+                fetchChores();
+                setCreateFormVisible(false);
+              }}
+            />
+          </Box>
+        </Modal>
+      </div>
     </div>
   );
 };

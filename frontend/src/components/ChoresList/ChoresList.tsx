@@ -77,7 +77,7 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
     <div key={chore.id} className="chore-card">
       <h3>{chore.name}</h3>
       <p>{chore.description}</p>
-      <p>Cadence: {chore.cadence}</p>
+      <p>⏳ {chore.cadence}</p>
       {userName ? (
         <>
           <p>👤 {userName}</p>
@@ -118,6 +118,7 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
+            backgroundColor: "#000000",
           }}
         >
           <AssignChoreForm
