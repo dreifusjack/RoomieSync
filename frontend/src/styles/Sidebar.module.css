@@ -1,5 +1,5 @@
 .sidebar {
-  width: 70px;
+  width: 105px;
   height: 100vh;
   background-color: #161616;
   padding: 20px;
@@ -22,6 +22,7 @@
   text-decoration: none;
   color: #a2a2a2;
   font-weight: bold;
+  font-size: 15px;
 }
 
 .sidebar ul li a:hover {
