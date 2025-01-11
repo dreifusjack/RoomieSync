@@ -53,6 +53,7 @@ function AlarmsPage() {
               borderRadius: 2,
               boxShadow: 24,
               p: 4,
+              backgroundColor: "#000000",
             }}
           >
             <CreateAlarmForm

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "./ChoreForm/style.css";
+import { Box } from "@mui/material";
 
 interface CreateAlarmFormProps {
   createAlarm: (alarmName: string, alarmTime: string) => Promise<any>;
@@ -49,8 +51,12 @@ const CreateAlarmForm: React.FC<CreateAlarmFormProps> = ({
           />
         </div>
 
-        <button type="submit" disabled={!newAlarmName || !newAlarmTime}>
-          Create Alarm
+        <button
+          type="submit"
+          disabled={!newAlarmName || !newAlarmTime}
+          className="modal-button"
+        >
+          Create
         </button>
       </form>
     </div>
