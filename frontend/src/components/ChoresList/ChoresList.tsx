@@ -111,7 +111,6 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
         }}
         onClick={() => onDeletedChore(chore.id)}
       ></DeleteIcon>
-
       <Modal
         open={isAssignFormVisible}
         onClose={() => setAssignFormVisible(false)}

@@ -14,7 +14,7 @@ function AlarmsPage() {
     <div className={styles.container}>
       <Sidebar />
       <div className={styles.mainContent}>
-        <div>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.heading}>Alarms</h1>
           <button
             className={styles.button}

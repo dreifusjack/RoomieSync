@@ -53,7 +53,7 @@ const ChoresPage: React.FC = () => {
     <div className={styles.container}>
       <Sidebar />
       <div className={styles.mainContent}>
-        <div>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.heading}>Chores</h1>
 
           <button

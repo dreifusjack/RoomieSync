@@ -7,7 +7,9 @@
 
 .mainContent {
   flex: 1;
-  margin-left: 100px;
+  margin-left: 200px;
+  margin-right: 100px;
+  margin-top: 25px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -19,12 +21,14 @@
 .heading {
   font-size: 2rem;
   color: #ffffff;
+  font-weight: bold;
 }
 
 .subheading {
   font-size: 1.5rem;
   color: #ffffff;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .alarmList {
