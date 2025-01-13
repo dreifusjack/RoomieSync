@@ -1,4 +1,4 @@
-.login-container {
+.modalContainer {
   width: 300px;
   margin: 100px auto;
   padding: 20px;
@@ -8,13 +8,13 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-.floating-label-group {
+.floatingLabelGroup {
   position: relative;
   margin-bottom: 20px;
   margin-top: 20px;
 }
 
-.floating-input {
+.floatingInput {
   width: 100%;
   padding: 10px 10px 10px 0;
   border: none;
@@ -24,12 +24,12 @@
   font-size: 16px;
 }
 
-.floating-input:focus {
+.floatingInput:focus {
   outline: none;
   border-bottom: 2px solid #007bff;
 }
 
-.floating-label {
+.floatingLabel {
   position: absolute;
   left: 0;
   top: 10px;
@@ -39,30 +39,30 @@
   pointer-events: none;
 }
 
-.floating-input:focus + .floating-label,
-.floating-input:not(:placeholder-shown) + .floating-label {
+.floatingInput:focus + .floatingLabel,
+.floatingInput:not(:placeholder-shown) + .floatingLabel {
   top: -20px;
   font-size: 12px;
   color: #007bff;
 }
 
-.floating-input::placeholder {
+.floatingInput::placeholder {
   color: transparent;
 }
 
-.login-form {
+.modalForm {
   display: flex;
   flex-direction: column;
   color: #ffffff;
+}
+
+.modalForm h2 {
+  margin-bottom: 30px;
+  font-size: 30px;
   font-weight: bold;
 }
 
-.login-form h2 {
-  margin-bottom: 30px;
-  font-size: 30px;
-}
-
-input {
+.input {
   padding: 8px;
   border: 1px solid #ccc;
   color: white;
@@ -70,25 +70,25 @@ input {
   border-radius: 4px;
 }
 
-.error-message {
+.errorMessage {
   color: red;
   margin-bottom: 10px;
 }
 
 /* Remove Chrome's default autofill styling */
-.floating-input:-webkit-autofill {
+.floatingInput:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
   -webkit-text-fill-color: #ffffff !important;
   caret-color: #ffffff !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
-.floating-input:-webkit-autofill:focus {
+.floatingInput:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
   -webkit-text-fill-color: #ffffff !important;
 }
 
-.floating-input:-webkit-autofill:hover {
+.floatingInput:-webkit-autofill:hover {
   -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
   -webkit-text-fill-color: #ffffff !important;
 }

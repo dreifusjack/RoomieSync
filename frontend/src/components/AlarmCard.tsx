@@ -1,5 +1,5 @@
 import { useUserById } from "@/hooks/UserHooks";
-import styles from "@/styles/Explore.module.css";
+import styles from "@/styles/Feature.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface AlarmCardProps {

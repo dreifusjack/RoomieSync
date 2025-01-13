@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
-import styles from "@/styles/Explore.module.css";
+import styles from "@/styles/Feature.module.css";
 import { useCreateExpense, useExpenses } from "@/hooks/ExpenseHooks";
 
 /*

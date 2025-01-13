@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../login/styles.css";
+import styles from "../../styles/Modal.module.css";
 import { fetchUserDetails } from "@/hooks/UserHooks";
 import { Button } from "@mui/material";
 import { useGroup } from "@/hooks/GroupHooks";
@@ -77,23 +77,26 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h1>Welcome to RoomieSync, {user.first_name}!</h1>
+    <div className={styles.modalContainer}>
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <h2>Welcome to RoomieSync, {user.first_name}!</h2>
 
         {showGroupCode ? (
           <div>
             <h2>Group Created Successfully!</h2>
             <p>Share this code with your roommates:</p>
 
-            <div className="floating-label-group" style={{ marginTop: "40px" }}>
+            <div
+              className={styles.floatingLabelGroup}
+              style={{ marginTop: "40px" }}
+            >
               <input
                 type="text"
                 value={groupCode}
                 readOnly
-                className="floating-input code-display"
+                className={styles.floatingInput} // + code-display
               />
-              <label className="floating-label">Group Code</label>
+              <label className={styles.floatingLabel}>Group Code</label>
             </div>
             <Button onClick={handleCopyCode} className="copy-button">
               {copied ? "Copied!" : "Copy Code"}
@@ -106,33 +109,29 @@ const LandingPage: React.FC = () => {
         ) : (
           <>
             <h2>{isCreating ? "Create a Group" : "Join a Group"}</h2>
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className={styles.errorMessage}>{error}</div>}
 
             {isCreating ? (
-              <div className="form-group">
-                <div className="floating-label-group">
-                  <input
-                    type="text"
-                    value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
-                    required
-                    className="floating-input"
-                  />
-                  <label className="floating-label">Group Name</label>
-                </div>
+              <div className={styles.floatingLabelGroup}>
+                <input
+                  type="text"
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
+                  required
+                  className={styles.floatingInput}
+                />
+                <label className={styles.floatingLabel}>Group Name</label>
               </div>
             ) : (
-              <div className="form-group">
-                <div className="floating-label-group">
-                  <input
-                    type="text"
-                    value={groupCode}
-                    onChange={(e) => setGroupCode(e.target.value)}
-                    required
-                    className="floating-input"
-                  />
-                  <label className="floating-label">Group Code</label>
-                </div>
+              <div className={styles.floatingLabelGroup}>
+                <input
+                  type="text"
+                  value={groupCode}
+                  onChange={(e) => setGroupCode(e.target.value)}
+                  required
+                  className={styles.floatingInput}
+                />
+                <label className={styles.floatingLabel}>Group Code</label>
               </div>
             )}
 

@@ -4,7 +4,7 @@ import "./style.css";
 import { useCreateChore } from "@/hooks/ChoreHooks";
 
 interface CreateChoreFormProps {
-  onChoreCreated: () => void; // callback to update the chores
+  onChoreCreated: () => void;
 }
 
 const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
@@ -31,42 +31,49 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit} className="form-card">
-        <div>
-          <label htmlFor="name">Chore Name</label>
+    <div className="modal-container">
+      <form onSubmit={handleSubmit} className="modal-form">
+        <div className="floating-label-group">
           <input
             id="name"
             type="text"
+            className="floating-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="Enter chore name"
           />
+          <label htmlFor="name" className="floating-label">
+            Chore Name
+          </label>
         </div>
 
-        <div>
-          <label htmlFor="description">Description</label>
+        <div className="floating-label-group">
           <textarea
             id="description"
+            className="floating-input"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-            placeholder="Enter chore description"
           />
+          <label htmlFor="description" className="floating-label">
+            Description
+          </label>
         </div>
 
-        <div>
-          <label htmlFor="cadence">Cadence</label>
+        <div className="floating-label-group">
           <input
             id="cadence"
             type="text"
+            className="floating-input"
             value={cadence}
             onChange={(e) => setCadence(e.target.value)}
             required
-            placeholder="e.g., Daily, Weekly, Monthly"
           />
+          <label htmlFor="cadence" className="floating-label">
+            Cadence
+          </label>
         </div>
+
         <button type="submit">Create Chore</button>
       </form>
     </div>

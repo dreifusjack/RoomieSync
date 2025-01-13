@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Feature.module.css";
 
 export default function Home() {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./styles.css";
+import styles from "../../styles/Modal.module.css";
 import { useAuth } from "@/hooks/AuthenticationHooks";
 import { Button } from "@mui/material";
 
@@ -21,56 +21,56 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
+    <div className={styles.modalContainer}>
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
         <h2>{isSignup ? "Sign Up" : "Login"}</h2>
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className={styles.errorMessage}>{error}</div>}
 
         {isSignup && (
           <>
-            <div className="floating-label-group">
+            <div className={styles.floatingLabelGroup}>
               <input
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
-                className="floating-input"
+                className={styles.floatingInput}
               />
-              <label className="floating-label">First Name</label>
+              <label className={styles.floatingLabel}>First Name</label>
             </div>
-            <div className="floating-label-group">
+            <div className={styles.floatingLabelGroup}>
               <input
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
-                className="floating-input"
+                className={styles.floatingInput}
               />
-              <label className="floating-label">Last Name</label>
+              <label className={styles.floatingLabel}>Last Name</label>
             </div>
           </>
         )}
 
-        <div className="floating-label-group">
+        <div className={styles.floatingLabelGroup}>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="floating-input"
+            className={styles.floatingInput}
           />
-          <label className="floating-label">Email</label>
+          <label className={styles.floatingLabel}>Email</label>
         </div>
 
-        <div className="floating-label-group">
+        <div className={styles.floatingLabelGroup}>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="floating-input"
+            className={styles.floatingInput}
           />
-          <label className="floating-label">Password</label>
+          <label className={styles.floatingLabel}>Password</label>
         </div>
 
         <Button type="submit" disabled={loading}>

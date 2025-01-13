@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChoresList from "@/components/ChoresList/ChoresList";
 import CreateChoreForm from "@/components/ChoreForm/CreateChoreForm";
-import styles from "@/styles/Explore.module.css";
+import styles from "@/styles/Feature.module.css";
 import Sidebar from "@/components/Sidebar";
 import {
   uesRemindUser,
