@@ -92,3 +92,20 @@
   -webkit-box-shadow: 0 0 0px 1000px #000000 inset !important;
   -webkit-text-fill-color: #ffffff !important;
 }
+
+.floatingInput[type="time"] {
+  -webkit-appearance: textfield;
+  appearance: textfield;
+  background-color: transparent;
+  padding: 10px 0;
+}
+
+.floatingInput[type="time"]::-webkit-calendar-picker-indicator {
+  display: inline-block;
+  cursor: pointer;
+  filter: invert(1);
+}
+
+.floatingInput[type="time"]:focus {
+  border-bottom: 2px solid #007bff;
+}

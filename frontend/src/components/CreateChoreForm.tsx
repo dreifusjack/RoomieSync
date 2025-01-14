@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./style.css";
-
+import styles from "../styles/Modal.module.css";
 import { useCreateChore } from "@/hooks/ChoreHooks";
+import { Button } from "@mui/material";
 
 interface CreateChoreFormProps {
   onChoreCreated: () => void;
@@ -31,50 +31,49 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
   };
 
   return (
-    <div className="modal-container">
-      <form onSubmit={handleSubmit} className="modal-form">
-        <div className="floating-label-group">
+    <div className={styles.modalContainer}>
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <div className={styles.floatingLabelGroup}>
           <input
-            id="name"
             type="text"
-            className="floating-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            className={styles.floatingInput}
           />
-          <label htmlFor="name" className="floating-label">
+          <label htmlFor="name" className={styles.floatingLabel}>
             Chore Name
           </label>
         </div>
 
-        <div className="floating-label-group">
+        <div className={styles.floatingLabelGroup}>
           <textarea
             id="description"
-            className="floating-input"
+            className={styles.floatingInput}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
           />
-          <label htmlFor="description" className="floating-label">
+          <label htmlFor="description" className={styles.floatingLabel}>
             Description
           </label>
         </div>
 
-        <div className="floating-label-group">
+        <div className={styles.floatingLabelGroup}>
           <input
             id="cadence"
             type="text"
-            className="floating-input"
+            className={styles.floatingInput}
             value={cadence}
             onChange={(e) => setCadence(e.target.value)}
             required
           />
-          <label htmlFor="cadence" className="floating-label">
+          <label htmlFor="cadence" className={styles.floatingLabel}>
             Cadence
           </label>
         </div>
 
-        <button type="submit">Create Chore</button>
+        <Button type="submit">Create Chore</Button>
       </form>
     </div>
   );

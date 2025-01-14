@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./ChoreForm/style.css";
+import styles from "../styles/Modal.module.css";
+import { Button } from "@mui/material";
 
 interface CreateAlarmFormProps {
   createAlarm: (alarmName: string, alarmTime: string) => Promise<any>;
@@ -18,7 +19,6 @@ const CreateAlarmForm: React.FC<CreateAlarmFormProps> = ({
     try {
       await createAlarm(newAlarmName, newAlarmTime);
       onAlarmCreated();
-      // Reset fields after successful submission
       setNewAlarmName("");
       setNewAlarmTime("");
     } catch (error) {
@@ -27,36 +27,35 @@ const CreateAlarmForm: React.FC<CreateAlarmFormProps> = ({
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit} className="form-card">
-        <div>
-          <label htmlFor="alarmName">Alarm Name</label>
+    <div className={styles.modalContainer}>
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <div className={styles.floatingLabelGroup}>
           <input
             type="text"
-            id="alarmName"
             value={newAlarmName}
             onChange={(e) => setNewAlarmName(e.target.value)}
             required
+            className={styles.floatingInput}
           />
+          <label htmlFor="alarmName" className={styles.floatingLabel}>
+            Alarm Name
+          </label>
         </div>
-        <div>
-          <label htmlFor="alarmTime">Alarm Time</label>
+        <div className={styles.floatingLabelGroup}>
           <input
             type="time"
             id="alarmTime"
             value={newAlarmTime}
             onChange={(e) => setNewAlarmTime(e.target.value)}
             required
+            className={styles.floatingInput}
           />
+          <label htmlFor="alarmTime" className={styles.floatingLabel}>
+            Alarm Time
+          </label>
         </div>
 
-        <button
-          type="submit"
-          disabled={!newAlarmName || !newAlarmTime}
-          className="modal-button"
-        >
-          Create
-        </button>
+        <Button type="submit">Create</Button>
       </form>
     </div>
   );
