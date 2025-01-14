@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useAssignChore } from "@/hooks/ChoreHooks";
+import styles from "../styles/Modal.module.css";
+import { Button } from "@mui/material";
 
 type User = {
   id: string;
@@ -22,7 +24,7 @@ interface AssignChoreFormProps {
 const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   chore,
   users,
-  onChoreAssigned, // callback to update the chores
+  onChoreAssigned,
 }) => {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedDueDate, setSelectedDueDate] = useState("");
@@ -34,7 +36,6 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
     try {
       await assignChoreWithPayload(selectedUser, chore.id, selectedDueDate);
       onChoreAssigned();
-      // refresh selections
       setSelectedUser("");
     } catch (error) {
       console.error("Error assigning chore:", error);
@@ -42,38 +43,43 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit} className="form-card  ">
-        <div>
-          <label htmlFor="user">Select User</label>
+    <div className={styles.modalContainer}>
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <div className={styles.floatingLabelGroup}>
           <select
             id="user"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
             required
           >
-            <option value="">-- Select User --</option>
+            <option value="">Select User</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
                 {user.first_name + " " + user.last_name}
               </option>
             ))}
           </select>
+          <label htmlFor="user" className={styles.floatingLabel}>
+            User
+          </label>
         </div>
-        <div>
-          <label htmlFor="dueDate">Due Date</label>
+        <div className={styles.floatingLabelGroup}>
           <input
             type="date"
             id="dueDate"
             value={selectedDueDate}
             onChange={(e) => setSelectedDueDate(e.target.value)}
             required
+            className={styles.floatingInput}
           />
+          <label htmlFor="dueDate" className={styles.floatingLabel}>
+            Due Date
+          </label>
         </div>
 
-        <button type="submit" disabled={!selectedUser || !selectedDueDate}>
+        <Button type="submit">
           {isLoading ? "Assigning..." : "Assign Chore"}
-        </button>
+        </Button>
       </form>
     </div>
   );
