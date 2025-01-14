@@ -2,18 +2,21 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchUserDetails } from "./UserHooks";
 import { User } from "@/types/user-types";
-import { Alarm, GroupAlarm } from "@/types/alarm-types";
+import { Alarm, GroupAlarm, GroupAlarmsResponse } from "@/types/alarm-types";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
-type GroupAlarmsResponse = {
-  alarms: GroupAlarm[];
-};
+const extractErrorMessage = (error: unknown): string => 
+  axios.isAxiosError(error)
+    ? error.response?.data?.message || error.message
+    : "An unexpected error occurred";
+
 
 export const useAlarms = () => {
   const [userAlarms, setUserAlarms] = useState<Alarm[]>([]);
   const [groupAlarms, setGroupAlarms] = useState<Alarm[]>([]);
   const [user, setUser] = useState<User>({} as User);
+  const [error, setError] = useState<string | null>(null);
 
   const normalizeGroupAlarm = (groupAlarm: GroupAlarm): Alarm => {
     return {
@@ -45,7 +48,9 @@ export const useAlarms = () => {
         setGroupAlarms([]);
       }
     } catch (error) {
-      throw new Error("Error fetching data");
+      const message = extractErrorMessage(error);
+      setError(message);
+      throw message;
     }
   };
 
@@ -80,7 +85,9 @@ export const useAlarms = () => {
 
       return response.data;
     } catch (error) {
-      throw new Error("Failed to create alarm");
+      const message = extractErrorMessage(error);
+      setError(message);
+      throw message;
     }
   };
 
@@ -92,7 +99,9 @@ export const useAlarms = () => {
       fetchAlarms();
       return response.data;
     } catch (error) {
-      throw new Error("Failed to delete alarm")
+      const message = extractErrorMessage(error);
+      setError(message);
+      throw message;
     }
   }
 
@@ -101,6 +110,7 @@ export const useAlarms = () => {
     userAlarms,
     groupAlarms,
     createAlarm,
-    deleteAlarm
+    deleteAlarm,
+    error
   };
 };

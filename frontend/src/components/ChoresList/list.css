@@ -6,6 +6,11 @@
   padding-top: 5px;
 }
 
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+}
+
 .chore-card {
   background-color: #161616;
   border-radius: 8px;
@@ -28,20 +33,17 @@
   margin-top: 0.25rem;
 }
 
-/* Description styling */
 .chore-card p {
   font-size: 1rem;
   color: #a2a2a2;
   margin-top: 15px;
 }
 
-/* For Assignee and Due Date sections */
 .chore-card p:last-child {
   font-size: 0.9rem;
   color: #a2a2a2;
 }
 
-/* Button styles */
 .chore-card button {
   background-color: #007bff;
   color: white;
@@ -55,13 +57,11 @@
   margin-top: 10px;
 }
 
-/* Button hover effect */
 .chore-card button:hover {
   background-color: #0056b3;
-  transform: translateY(-2px); /* Lift button on hover */
+  transform: translateY(-2px);
 }
 
-/* Button focus effect for accessibility */
 .chore-card button:focus {
   outline: 2px solid #0056b3;
   outline-offset: 4px;

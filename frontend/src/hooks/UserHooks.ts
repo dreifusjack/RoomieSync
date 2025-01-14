@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
+const extractErrorMessage = (error: unknown): string => 
+  axios.isAxiosError(error)
+    ? error.response?.data?.message || error.message
+    : "An unexpected error occurred";
+
 export const fetchUserDetails = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
@@ -71,7 +76,7 @@ export const getAllUsersInGroup = async (groupId: string) => {
 
 export const useAllGroupUsers = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const getAllGroupUsers = async () => {
     setIsLoading(true);
@@ -82,8 +87,9 @@ export const useAllGroupUsers = () => {
       const data = await getAllUsersInGroup(user.group_id);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(error);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }

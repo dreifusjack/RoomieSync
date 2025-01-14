@@ -19,7 +19,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedDueDate, setSelectedDueDate] = useState("");
 
-  const { assignChoreWithPayload, isLoading } = useAssignChore();
+  const { assignChoreWithPayload, isLoading, error } = useAssignChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +34,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
 
   return (
     <div className={styles.modalContainer}>
+      {error && <div className={styles.errorMessage}>{error}</div>}
       <form onSubmit={handleSubmit} className={styles.modalForm}>
         <div className={styles.floatingLabelGroup}>
           <select

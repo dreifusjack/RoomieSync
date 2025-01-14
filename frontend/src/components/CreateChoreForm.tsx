@@ -13,7 +13,7 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [cadence, setCadence] = useState("");
-  const { createChoreWithPayload } = useCreateChore();
+  const { createChoreWithPayload, error } = useCreateChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +32,7 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
 
   return (
     <div className={styles.modalContainer}>
+      {error && <div className={styles.errorMessage}>{error}</div>}
       <form onSubmit={handleSubmit} className={styles.modalForm}>
         <div className={styles.floatingLabelGroup}>
           <input

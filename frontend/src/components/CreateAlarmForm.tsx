@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import styles from "../styles/Modal.module.css";
 import { Button } from "@mui/material";
+import { useAlarms } from "@/hooks/AlarmHooks";
 
 interface CreateAlarmFormProps {
-  createAlarm: (alarmName: string, alarmTime: string) => Promise<any>;
   onAlarmCreated: () => void;
 }
 
 const CreateAlarmForm: React.FC<CreateAlarmFormProps> = ({
   onAlarmCreated,
-  createAlarm,
 }) => {
   const [newAlarmName, setNewAlarmName] = useState("");
   const [newAlarmTime, setNewAlarmTime] = useState("");
+  const { createAlarm, error } = useAlarms();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +29,7 @@ const CreateAlarmForm: React.FC<CreateAlarmFormProps> = ({
   return (
     <div className={styles.modalContainer}>
       <form onSubmit={handleSubmit} className={styles.modalForm}>
+        {error && <div className={styles.errorMessage}>{error}</div>}
         <div className={styles.floatingLabelGroup}>
           <input
             type="text"

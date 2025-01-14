@@ -4,7 +4,7 @@ import CreateChoreForm from "@/components/CreateChoreForm";
 import styles from "@/styles/Feature.module.css";
 import Sidebar from "@/components/Sidebar";
 import {
-  uesRemindUser,
+  useRemindUser,
   useDeleteChore,
   useGetGroupChores,
 } from "@/hooks/ChoreHooks";
@@ -14,8 +14,8 @@ import { Chore } from "@/types/chore-types";
 const ChoresPage: React.FC = () => {
   const [chores, setChores] = useState<Chore[]>([]);
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
-  const { getAllGroupChores, isLoading } = useGetGroupChores();
-  const { remindUserWithId } = uesRemindUser();
+  const { getAllGroupChores, isLoading, error } = useGetGroupChores();
+  const { remindUserWithId } = useRemindUser();
   const { deleteChoreWithId } = useDeleteChore();
 
   const fetchChores = async () => {
@@ -57,6 +57,7 @@ const ChoresPage: React.FC = () => {
           </button>
         </div>
         <hr className={styles.horizontalLine} />
+        {error && <div className={styles.errorMessage}>{error}</div>}
         <div className="chores-list">
           <ChoresList
             chores={chores}

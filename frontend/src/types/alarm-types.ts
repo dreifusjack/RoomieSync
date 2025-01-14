@@ -15,3 +15,7 @@ export interface GroupAlarm {
   alarm_updated_at: string;
   user: UserDetails;
 };
+
+export interface GroupAlarmsResponse {
+  alarms: GroupAlarm[];
+};

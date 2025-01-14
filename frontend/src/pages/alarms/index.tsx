@@ -8,11 +8,12 @@ import CustomModal from "@/components/Modal";
 
 function AlarmsPage() {
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
-  const { userAlarms, groupAlarms, createAlarm, deleteAlarm } = useAlarms();
+  const { userAlarms, groupAlarms, deleteAlarm, error } = useAlarms();
 
   return (
     <div className={styles.container}>
       <Sidebar />
+      {error && <div className={styles.errorMessage}>{error}</div>}
       <div className={styles.mainContent}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.heading}>Alarms</h1>
@@ -40,7 +41,6 @@ function AlarmsPage() {
         <CustomModal
           form={
             <CreateAlarmForm
-              createAlarm={createAlarm}
               onAlarmCreated={() => setCreateFormVisible(false)}
             />
           }

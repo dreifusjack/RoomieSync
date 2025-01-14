@@ -5,6 +5,11 @@
   background-color: #000000;
 }
 
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+}
+
 .mainContent {
   flex: 1;
   margin-left: 200px;

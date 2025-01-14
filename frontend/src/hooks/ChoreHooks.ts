@@ -11,6 +11,11 @@ interface AssignChorePayload {
   due_date: string;
 }
 
+const extractErrorMessage = (error: unknown): string => 
+  axios.isAxiosError(error)
+    ? error.response?.data?.message || error.message
+    : "An unexpected error occurred";
+
 // api calls
 export const getGroupChores = async (groupId: string) => {
   try {
@@ -63,10 +68,19 @@ export const assignChore = async (
   }
 };
 
+export const getChoreAssignees = async (choreId: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/chores/assignees/${choreId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting chore assignees:", error);
+  }
+};
+
 // hooks
 export const useGetGroupChores = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const getAllGroupChores = async () => {
     setIsLoading(true);
@@ -77,8 +91,9 @@ export const useGetGroupChores = () => {
       const data = await getGroupChores(user.group_id);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(err);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }
@@ -87,9 +102,9 @@ export const useGetGroupChores = () => {
   return { getAllGroupChores, isLoading, error };
 };
 
-export const uesRemindUser = () => {
+export const useRemindUser = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const remindUserWithId = async (choreId: string) => {
     setIsLoading(true);
@@ -99,8 +114,9 @@ export const uesRemindUser = () => {
       const data = await remindUser(choreId);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(err);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }
@@ -111,7 +127,7 @@ export const uesRemindUser = () => {
 
 export const useDeleteChore = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const deleteChoreWithId = async (choreId: string) => {
     setIsLoading(true);
@@ -121,8 +137,9 @@ export const useDeleteChore = () => {
       const data = await deleteChore(choreId);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(err);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }
@@ -133,7 +150,7 @@ export const useDeleteChore = () => {
 
 export const useCreateChore = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const createChoreWithPayload = async (
     name: string,
@@ -154,8 +171,9 @@ export const useCreateChore = () => {
       const data = await createChore(payload);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(err);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +184,7 @@ export const useCreateChore = () => {
 
 export const useAssignChore = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const assignChoreWithPayload = async (
     userId: string,
@@ -184,8 +202,9 @@ export const useAssignChore = () => {
       const data = await assignChore(userId, payload);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(err);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }
@@ -194,18 +213,9 @@ export const useAssignChore = () => {
   return { assignChoreWithPayload, isLoading, error };
 };
 
-export const getChoreAssignees = async (choreId: string) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/chores/assignees/${choreId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error getting chore assignees:", error);
-  }
-};
-
 export const useGetChoreAssignees = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const getChoreAssigneesFromId = async (choreId: string) => {
     setIsLoading(true);
@@ -215,8 +225,9 @@ export const useGetChoreAssignees = () => {
       const data = await getChoreAssignees(choreId);
       return data;
     } catch (err) {
-      setError(err as Error);
-      throw err;
+      const message = extractErrorMessage(err);
+      setError(message);
+      throw message;
     } finally {
       setIsLoading(false);
     }
