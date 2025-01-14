@@ -24,10 +24,16 @@
   font-weight: bold;
 }
 
+.horizontalLine {
+  border: none;
+  border-top: 2px solid #ffffff; /* Adjust the color to match your theme */
+  height: 500p;
+}
+
 .subheading {
   font-size: 1.5rem;
   color: #ffffff;
-  margin-bottom: 10px;
+
   margin-top: 10px;
 }
 

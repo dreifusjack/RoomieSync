@@ -68,7 +68,7 @@ const Expenses: React.FC = () => {
       <Sidebar />
       <div className={styles.mainContent}>
         <h1 className={styles.heading}>Expenses</h1>
-
+        <hr className={styles.horizontalLine} />
         <h2 className={styles.subheading}>Create New Expense</h2>
         <form className={styles.form} onSubmit={handleCreateExpense}>
           <div>

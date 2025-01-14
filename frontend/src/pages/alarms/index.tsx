@@ -23,7 +23,7 @@ function AlarmsPage() {
             Create New Alarm
           </button>
         </div>
-
+        <hr className={styles.horizontalLine} />
         <h2 className={styles.subheading}>Your Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(userAlarms) ? userAlarms : []).map((alarm) => (

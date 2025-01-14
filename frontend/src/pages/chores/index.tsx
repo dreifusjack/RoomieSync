@@ -56,6 +56,7 @@ const ChoresPage: React.FC = () => {
             Create New Chore
           </button>
         </div>
+        <hr className={styles.horizontalLine} />
         <div className="chores-list">
           <ChoresList
             chores={chores}
