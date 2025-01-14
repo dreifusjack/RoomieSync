@@ -3,7 +3,6 @@ import Sidebar from "../../components/Sidebar";
 import styles from "@/styles/Feature.module.css";
 import { useAlarms } from "@/hooks/AlarmHooks";
 import AlarmCard from "@/components/AlarmCard";
-import { Box, Modal } from "@mui/material";
 import CreateAlarmForm from "@/components/CreateAlarmForm";
 import CustomModal from "@/components/Modal";
 

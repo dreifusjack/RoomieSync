@@ -1,18 +1,12 @@
 import { useUserById } from "@/hooks/UserHooks";
 import styles from "@/styles/Feature.module.css";
+import { Alarm } from "@/types/alarm-types";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface AlarmCardProps {
   alarm: Alarm;
   onDelete: (alarm_id: string) => Promise<any>;
   isGroup?: boolean;
-}
-
-interface Alarm {
-  id: string;
-  user_id: string;
-  name: string;
-  time: string;
 }
 
 const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, onDelete, isGroup }) => {

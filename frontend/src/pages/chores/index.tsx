@@ -8,18 +8,8 @@ import {
   useDeleteChore,
   useGetGroupChores,
 } from "@/hooks/ChoreHooks";
-import { Box, Modal } from "@mui/material";
 import CustomModal from "@/components/Modal";
-
-type Chore = {
-  id: string;
-  groupId: string;
-  name: string;
-  description: string;
-  cadence: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import { Chore } from "@/types/chore-types";
 
 const ChoresPage: React.FC = () => {
   const [chores, setChores] = useState<Chore[]>([]);

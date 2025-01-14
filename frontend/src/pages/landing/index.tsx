@@ -3,25 +3,8 @@ import styles from "../../styles/Modal.module.css";
 import { fetchUserDetails } from "@/hooks/UserHooks";
 import { Button } from "@mui/material";
 import { useGroup } from "@/hooks/GroupHooks";
-
-type User = {
-  id: string;
-  group_id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-};
-
-type GroupResponse = {
-  group: {
-    group_code: string;
-    id: string;
-    name: string;
-    created_at: string;
-    updated_at: string;
-  };
-  user: User;
-};
+import { User } from "@/types/user-types";
+import { GroupResponse } from "@/types/group-types";
 
 const LandingPage: React.FC = () => {
   const [user, setUser] = useState<User>({} as User);

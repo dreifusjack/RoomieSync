@@ -7,28 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import AssignChoreForm from "../AssignChoreForm";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomModal from "../Modal";
-
-interface Chore {
-  id: string;
-  groupId: string;
-  name: string;
-  description: string;
-  cadence: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ChoreAssignee {
-  user_id: string;
-  due_date: string;
-}
-
-interface User {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-}
+import { User } from "@/types/user-types";
+import { Chore, ChoreAssignee } from "@/types/chore-types";
 
 interface ChoreCardProps {
   chore: Chore;

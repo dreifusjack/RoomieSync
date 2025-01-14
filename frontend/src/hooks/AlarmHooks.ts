@@ -1,38 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchUserDetails } from "./UserHooks";
+import { User } from "@/types/user-types";
+import { Alarm, GroupAlarm } from "@/types/alarm-types";
 
 const BASE_URL = "http://127.0.0.1:5000";
-
-type Alarm = {
-  id: string;
-  time: string;
-  name: string;
-  user_id: string;
-};
-
-type User = {
-  id: string;
-  group_id: string;
-  name: string;
-  email: string;
-};
-
-type UserDetails = {
-  user_id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-};
-
-type GroupAlarm = {
-  alarm_id: string;
-  alarm_name: string;
-  alarm_time: string;
-  alarm_created_at: string;
-  alarm_updated_at: string;
-  user: UserDetails;
-};
 
 type GroupAlarmsResponse = {
   alarms: GroupAlarm[];

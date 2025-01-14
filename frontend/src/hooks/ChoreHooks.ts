@@ -1,15 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { fetchUserDetails } from "./UserHooks";
+import { ChoreAPI } from "@/types/chore-types";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
-type Chore = {
-  group_id: string;
-  name: string;
-  description: string;
-  cadence: string;
-};
 
 interface AssignChorePayload {
   chore_id: string;
@@ -44,7 +39,7 @@ export const deleteChore = async (choreId: string) => {
   }
 };
 
-export const createChore = async (payload: Chore) => {
+export const createChore = async (payload: ChoreAPI) => {
   try {
     const response = await axios.post(`${BASE_URL}/chores`, payload);
     return response.data;
@@ -150,7 +145,7 @@ export const useCreateChore = () => {
 
     try {
       const user = await fetchUserDetails();
-      const payload: Chore = {
+      const payload: ChoreAPI = {
         group_id: user.group_id,
         name,
         description,

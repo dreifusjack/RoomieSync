@@ -2,18 +2,8 @@ import React, { useState } from "react";
 import { useAssignChore } from "@/hooks/ChoreHooks";
 import styles from "../styles/Modal.module.css";
 import { Button } from "@mui/material";
-
-type User = {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-};
-
-interface Chore {
-  id: string;
-  name: string;
-}
+import { User } from "@/types/user-types";
+import { Chore } from "@/types/chore-types";
 
 interface AssignChoreFormProps {
   chore: Chore;
