@@ -4,9 +4,9 @@ import { useGetChoreAssignees } from "@/hooks/ChoreHooks";
 import { useAllGroupUsers, useUserById } from "@/hooks/UserHooks";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Box, Modal } from "@mui/material";
 import AssignChoreForm from "../AssignChoreForm";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CustomModal from "../Modal";
 
 interface Chore {
   id: string;
@@ -111,32 +111,17 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
         }}
         onClick={() => onDeletedChore(chore.id)}
       ></DeleteIcon>
-      <Modal
-        open={isAssignFormVisible}
-        onClose={() => setAssignFormVisible(false)}
-        aria-labelledby="assign-chore-modal-title"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4,
-            backgroundColor: "#000000",
-          }}
-        >
+      <CustomModal
+        form={
           <AssignChoreForm
             chore={chore}
             users={users}
             onChoreAssigned={onChoreAssigned}
           />
-        </Box>
-      </Modal>
+        }
+        open={isAssignFormVisible}
+        onClose={() => setAssignFormVisible(false)}
+      />
     </div>
   );
 };

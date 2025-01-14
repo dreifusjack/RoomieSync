@@ -9,6 +9,7 @@ import {
   useGetGroupChores,
 } from "@/hooks/ChoreHooks";
 import { Box, Modal } from "@mui/material";
+import CustomModal from "@/components/Modal";
 
 type Chore = {
   id: string;
@@ -75,33 +76,18 @@ const ChoresPage: React.FC = () => {
             }}
           />
         </div>
-        <Modal
-          open={isCreateFormVisible}
-          onClose={() => setCreateFormVisible(false)}
-          aria-labelledby="create-chore-modal-title"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-              backgroundColor: "#000000",
-            }}
-          >
+        <CustomModal
+          form={
             <CreateChoreForm
               onChoreCreated={() => {
                 fetchChores();
                 setCreateFormVisible(false);
               }}
             />
-          </Box>
-        </Modal>
+          }
+          open={isCreateFormVisible}
+          onClose={() => setCreateFormVisible(false)}
+        />
       </div>
     </div>
   );

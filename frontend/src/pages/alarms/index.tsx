@@ -5,6 +5,7 @@ import { useAlarms } from "@/hooks/AlarmHooks";
 import AlarmCard from "@/components/AlarmCard";
 import { Box, Modal } from "@mui/material";
 import CreateAlarmForm from "@/components/CreateAlarmForm";
+import CustomModal from "@/components/Modal";
 
 function AlarmsPage() {
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
@@ -37,31 +38,16 @@ function AlarmsPage() {
             <AlarmCard alarm={alarm} onDelete={deleteAlarm} isGroup={true} />
           ))}
         </div>
-        <Modal
-          open={isCreateFormVisible}
-          onClose={() => setCreateFormVisible(false)}
-          aria-labelledby="create-chore-modal-title"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-              backgroundColor: "#000000",
-            }}
-          >
+        <CustomModal
+          form={
             <CreateAlarmForm
               createAlarm={createAlarm}
               onAlarmCreated={() => setCreateFormVisible(false)}
             />
-          </Box>
-        </Modal>
+          }
+          open={isCreateFormVisible}
+          onClose={() => setCreateFormVisible(false)}
+        />
       </div>
     </div>
   );
