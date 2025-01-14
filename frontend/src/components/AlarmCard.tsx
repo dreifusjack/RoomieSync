@@ -5,11 +5,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 interface AlarmCardProps {
   alarm: Alarm;
-  onDelete: (alarm_id: string) => Promise<any>;
+  deleteAlarm: (alarm_id: string) => Promise<any>;
+  onDeleted: () => void;
   isGroup?: boolean;
 }
 
-const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, onDelete, isGroup }) => {
+const AlarmCard: React.FC<AlarmCardProps> = ({
+  alarm,
+  deleteAlarm,
+  onDeleted,
+  isGroup,
+}) => {
   const { userName, loading, error } = useUserById(alarm.user_id);
   const hour = parseInt(alarm?.time.substring(0, 2));
   const min = alarm?.time.substring(2, 5);
@@ -36,7 +42,10 @@ const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, onDelete, isGroup }) => {
                   color: "#ffffff",
                   cursor: "pointer",
                 }}
-                onClick={() => onDelete(alarm.id)}
+                onClick={() => {
+                  deleteAlarm(alarm.id);
+                  onDeleted();
+                }}
               ></DeleteIcon>
             )}
           </div>

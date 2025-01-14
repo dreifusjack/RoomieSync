@@ -46,7 +46,6 @@ const ChoresPage: React.FC = () => {
       <div className={styles.mainContent}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 className={styles.heading}>Chores</h1>
-
           <button
             className={styles.button}
             onClick={() => {

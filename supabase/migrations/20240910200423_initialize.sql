@@ -69,7 +69,7 @@ CREATE TABLE chore_assignments (
 CREATE TABLE alarms (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id uuid REFERENCES users(id),
-    name varchar(100) UNIQUE NOT NULL,
+    name varchar(100) NOT NULL,
     time time NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP

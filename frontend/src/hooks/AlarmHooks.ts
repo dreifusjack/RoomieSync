@@ -6,16 +6,12 @@ import { Alarm, GroupAlarm, GroupAlarmsResponse } from "@/types/alarm-types";
 
 const BASE_URL = "http://127.0.0.1:5000";
 
-const extractErrorMessage = (error: unknown): string => 
+const extractErrorMessage = (error: unknown): string =>
   axios.isAxiosError(error)
     ? error.response?.data?.message || error.message
     : "An unexpected error occurred";
 
-
 export const useAlarms = () => {
-  const [userAlarms, setUserAlarms] = useState<Alarm[]>([]);
-  const [groupAlarms, setGroupAlarms] = useState<Alarm[]>([]);
-  const [user, setUser] = useState<User>({} as User);
   const [error, setError] = useState<string | null>(null);
 
   const normalizeGroupAlarm = (groupAlarm: GroupAlarm): Alarm => {
@@ -29,24 +25,19 @@ export const useAlarms = () => {
 
   const fetchAlarms = async () => {
     try {
-      const userData = await fetchUserDetails();
-      setUser(userData);
-
+      const user = await fetchUserDetails();
       const [userAlarmsResponse, groupAlarmsResponse] = await Promise.all([
-        axios.get(`${BASE_URL}/alarm/user/${userData.id}`),
-        axios.get(`${BASE_URL}/alarm/groups/${userData.group_id}`),
+        axios.get(`${BASE_URL}/alarm/user/${user.id}`),
+        axios.get(`${BASE_URL}/alarm/groups/${user.group_id}`),
       ]);
 
-      setUserAlarms(userAlarmsResponse.data);
-
+      const userAlarms = userAlarmsResponse.data;
       const groupAlarmsData = groupAlarmsResponse.data as GroupAlarmsResponse;
-      if (groupAlarmsData && Array.isArray(groupAlarmsData.alarms)) {
-        const normalizedGroupAlarms =
-          groupAlarmsData.alarms.map(normalizeGroupAlarm);
-        setGroupAlarms(normalizedGroupAlarms);
-      } else {
-        setGroupAlarms([]);
-      }
+      const groupAlarms = Array.isArray(groupAlarmsData.alarms)
+        ? groupAlarmsData.alarms.map(normalizeGroupAlarm)
+        : [];
+
+      return { userAlarms, groupAlarms };
     } catch (error) {
       const message = extractErrorMessage(error);
       setError(message);
@@ -54,35 +45,18 @@ export const useAlarms = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAlarms();
-  }, []);
-
   const createAlarm = async (alarmName: string, alarmTime: string) => {
     try {
       const newAlarm = {
         time: alarmTime,
         name: alarmName,
       };
+      const user = await fetchUserDetails();
 
       const response = await axios.post(
         `${BASE_URL}/alarm/user/${user.id}`,
         newAlarm
       );
-
-      if (response.data[0]) {
-        setUserAlarms((currentUserAlarms) =>
-          Array.isArray(currentUserAlarms)
-            ? [...currentUserAlarms, response.data[0]]
-            : [response.data[0]]
-        );
-        setGroupAlarms((currentGroupAlarms) =>
-          Array.isArray(currentGroupAlarms)
-            ? [...currentGroupAlarms, response.data[0]]
-            : [response.data[0]]
-        );
-      }
-
       return response.data;
     } catch (error) {
       const message = extractErrorMessage(error);
@@ -96,21 +70,18 @@ export const useAlarms = () => {
       const response = await axios.delete(
         `${BASE_URL}/alarm/${alarm_id}/delete`
       );
-      fetchAlarms();
       return response.data;
     } catch (error) {
       const message = extractErrorMessage(error);
       setError(message);
       throw message;
     }
-  }
+  };
 
   return {
-    user,
-    userAlarms,
-    groupAlarms,
+    fetchAlarms,
     createAlarm,
     deleteAlarm,
-    error
+    error,
   };
 };
