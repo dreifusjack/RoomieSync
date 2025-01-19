@@ -13,6 +13,7 @@ CREATE TABLE examples (
 CREATE TABLE groups (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name varchar(100) NOT NULL,
+    group_code varchar(10) UNIQUE NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
@@ -26,7 +27,6 @@ CREATE TABLE users (
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
-
 
 CREATE TABLE expenses (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -69,8 +69,8 @@ CREATE TABLE chore_assignments (
 CREATE TABLE alarms (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id uuid REFERENCES users(id),
-    name varchar(100) UNIQUE NOT NULL,
-    time timestamp NOT NULL,
+    name varchar(100) NOT NULL,
+    time time NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP
 );

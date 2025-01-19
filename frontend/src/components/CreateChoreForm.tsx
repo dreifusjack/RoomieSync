@@ -1,31 +1,27 @@
 import React, { useState } from "react";
-import axios from "axios";
+import styles from "../styles/Modal.module.css";
+import { useCreateChore } from "@/hooks/ChoreHooks";
+import { Button } from "@mui/material";
 
 interface CreateChoreFormProps {
-  groupId: string;
-  onChoreCreated: () => void; // callback to update the chores
+  onChoreCreated: () => void;
 }
 
 const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
-  groupId,
   onChoreCreated,
 }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [cadence, setCadence] = useState("");
+  const { createChoreWithPayload, error } = useCreateChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await axios.post("/chores", {
-        group_id: groupId,
-        name,
-        description,
-        cadence,
-      });
+      await createChoreWithPayload(name, description, cadence);
+
       onChoreCreated();
-      // refresh selections
       setName("");
       setDescription("");
       setCadence("");
@@ -35,44 +31,50 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit} className="form-card">
-        <div>
-          <label htmlFor="name">Chore Name</label>
+    <div className={styles.modalContainer}>
+      {error && <div className={styles.errorMessage}>{error}</div>}
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <div className={styles.floatingLabelGroup}>
           <input
-            id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="Enter chore name"
+            className={styles.floatingInput}
           />
+          <label htmlFor="name" className={styles.floatingLabel}>
+            Chore Name
+          </label>
         </div>
 
-        <div>
-          <label htmlFor="description">Description</label>
+        <div className={styles.floatingLabelGroup}>
           <textarea
             id="description"
+            className={styles.floatingInput}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-            placeholder="Enter chore description"
           />
+          <label htmlFor="description" className={styles.floatingLabel}>
+            Description
+          </label>
         </div>
 
-        <div>
-          <label htmlFor="cadence">Cadence</label>
+        <div className={styles.floatingLabelGroup}>
           <input
             id="cadence"
             type="text"
+            className={styles.floatingInput}
             value={cadence}
             onChange={(e) => setCadence(e.target.value)}
             required
-            placeholder="e.g., Daily, Weekly, Monthly"
           />
+          <label htmlFor="cadence" className={styles.floatingLabel}>
+            Cadence
+          </label>
         </div>
 
-        <button type="submit">Create Chore</button>
+        <Button type="submit">Create Chore</Button>
       </form>
     </div>
   );

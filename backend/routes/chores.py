@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from utils.email import send_email
 from supabase import Client
+from datetime import datetime
 
 
 def ChoresRoutes(app: Flask, supabase: Client):
@@ -20,7 +21,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
                 'description': description,
                 'cadence': cadence
             }).execute()
-            return jsonify(insert_response.data), insert_response.status_code
+            return jsonify(insert_response.data)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
@@ -32,12 +33,14 @@ def ChoresRoutes(app: Flask, supabase: Client):
         due_date = data['due_date']
 
         try:
-            insert_response = supabase.table('chore_assignments').insert({
+            # Use upsert to replace the record if it exists
+            upsert_response = supabase.table('chore_assignments').upsert({
                 'chore_id': chore_id,
                 'user_id': user_id,
                 'due_date': due_date
             }).execute()
-            return jsonify(insert_response.data), insert_response.status_code
+
+            return jsonify(upsert_response.data)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
@@ -47,7 +50,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
         try:
             response = supabase.table('chores').select(
                 '*').eq('group_id', group_id).execute()
-            return jsonify(response.data), response.status_code
+            return jsonify(response.data)
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
 
@@ -57,7 +60,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
         try:
             response = supabase.table('chore_assignments').select(
                 'user_id, due_date').eq('chore_id', chore_id).execute()
-            return jsonify(response.data), response.status_code
+            return jsonify(response.data)
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
 
@@ -70,7 +73,7 @@ def ChoresRoutes(app: Flask, supabase: Client):
             if delete_response.count == 0:
                 return jsonify({'message': 'Chore not found'}), 404
 
-            return jsonify({'message': 'Chore successfully deleted'}), delete_response.status
+            return jsonify({'message': 'Chore successfully deleted'})
         except Exception as e:
             return jsonify({'error:': str(e)}), 500
 
@@ -94,20 +97,23 @@ def ChoresRoutes(app: Flask, supabase: Client):
 
             for assignment in assignments.data:
                 user_id = assignment['user_id']
-                due_date = assignment['due_date']
+
+                # Parsing the data
+                raw_date = str(assignment['due_date']).split('.')[0]  # Removing microseconds 
+                due_date_obj = datetime.strptime(raw_date, '%Y-%m-%dT%H:%M:%S')
+                formatted_date = due_date_obj.strftime("%A, %B %d, %Y")
 
                 user = supabase.table('users').select(
                     'email').eq('id', user_id).execute()
-
                 if user.data:
                     user_email = user.data[0]['email']
                     subject = f"Chore Reminder: {chore_data['name']}"
-                    body = f"Reminder: You are assigned the chore '{chore_data['name']}'.\n" \
-                        f"Description: {chore_data['description']}\n" \
-                        f"Due date: {due_date}"
+                    body = f"Reminder: You are assigned to the chore \"{chore_data['name']}\".\n" \
+                        f"Description: {chore_data['description']}.\n" \
+                        f"Due date: {formatted_date}."
 
                     send_email(user_email, subject, body)
 
             return jsonify({'message': 'Reminder sent successfully.'}), 200
         except Exception as e:
-            return jsonify({'error': 'An error occured while sending reminders'}), 500
+            return jsonify({'error': f'An error occurred while sending reminders: {str(e)}'}), 500

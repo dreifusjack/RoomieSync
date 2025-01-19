@@ -6,11 +6,26 @@ from auth.authenticate_user import authenticate_user
 
 def ExpensesRoutes(app: Flask, supabase: Client):
     # Route to add a new expense
-    @app.route('/add_expense', methods=['POST'])
-    def add_expense():
-        data = request.json
-        response = supabase.table('expenses').insert(data).execute()
-        return jsonify(response.data), response.status_code
+    @app.route('/add_expense/user/<user_id>', methods=['POST'])
+    def create_expense(user_id):
+        try:
+            data = request.json
+            group_id = data["group_id"]
+            amount = float(data["amount"]) 
+            description = data["description"]
+            is_paid = data.get("is_paid", False)  # Default to False if not provided
+
+            insert_response = supabase.table("expenses").insert({
+                "group_id": group_id,
+                "paid_by": user_id,
+                "amount": amount,
+                "description": description,
+                "is_paid": is_paid,
+            }).execute()
+
+            return jsonify(insert_response.data), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
     @app.route('/calculate_expenses/<group_id>', methods=['GET'])
     def calculate_expenses(group_id):

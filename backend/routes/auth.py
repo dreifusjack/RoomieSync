@@ -15,16 +15,9 @@ def AuthRoutes(app: Flask, supabase: Client):
             })
             user_id = auth_response.user.id
 
-            # Create a new group for the user
-            insert_response = supabase.table("groups").insert({
-                "name": f"{data['first_name']}'s Group",
-            }).execute()
-            group_id = insert_response.data[0]["id"]
-
             # Insert the user into the users table
             insert_response = supabase.table("users").insert({
                 "id": user_id,
-                "group_id": group_id,
                 "email": data["email"],
                 "first_name": data["first_name"],
                 "last_name": data["last_name"],
@@ -88,4 +81,4 @@ def AuthRoutes(app: Flask, supabase: Client):
                 "*").eq("id", response.user.id).single().execute()
             return jsonify(user_response.data), 200
         except Exception as e:
-            return jsonify({'error': str(e)}), 400
+            return jsonify({'error eee': str(e)}), 400

@@ -1,41 +1,31 @@
 import React, { useState } from "react";
-import axios from "axios";
-
-interface User {
-  id: string;
-  name: string;
-}
-
-interface Chore {
-  id: string;
-  name: string;
-}
+import { useAssignChore } from "@/hooks/ChoreHooks";
+import styles from "../styles/Modal.module.css";
+import { Button } from "@mui/material";
+import { User } from "@/types/user-types";
+import { Chore } from "@/types/chore-types";
 
 interface AssignChoreFormProps {
-  chores: Chore[];
+  chore: Chore;
   users: User[];
   onChoreAssigned: () => void;
 }
 
 const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
-  chores,
+  chore,
   users,
-  onChoreAssigned, // callback to update the chores
+  onChoreAssigned,
 }) => {
-  const [selectedChore, setSelectedChore] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedDueDate, setSelectedDueDate] = useState("");
+
+  const { assignChoreWithPayload, isLoading, error } = useAssignChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(`/chores/user/${selectedUser}`, {
-        chore_id: selectedChore,
-        due_date: selectedDueDate,
-      });
+      await assignChoreWithPayload(selectedUser, chore.id, selectedDueDate);
       onChoreAssigned();
-      // refresh selections
-      setSelectedChore("");
       setSelectedUser("");
     } catch (error) {
       console.error("Error assigning chore:", error);
@@ -43,58 +33,44 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit} className="form-card  ">
-        <div>
-          <label>Select Chore</label>
-          <select
-            id="chore"
-            value={selectedChore}
-            onChange={(e) => setSelectedChore(e.target.value)}
-            required
-          >
-            <option value="">-- Select Chore --</option>
-            {chores.map((chore) => (
-              <option key={chore.id} value={chore.id}>
-                {chore.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="user">Select User</label>
+    <div className={styles.modalContainer}>
+      {error && <div className={styles.errorMessage}>{error}</div>}
+      <form onSubmit={handleSubmit} className={styles.modalForm}>
+        <div className={styles.floatingLabelGroup}>
           <select
             id="user"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
             required
           >
-            <option value="">-- Select User --</option>
+            <option value="">Select User</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
-                {user.name}
+                {user.first_name + " " + user.last_name}
               </option>
             ))}
           </select>
+          <label htmlFor="user" className={styles.floatingLabel}>
+            User
+          </label>
         </div>
-        <div>
-          <label htmlFor="dueDate">Due Date</label>
+        <div className={styles.floatingLabelGroup}>
           <input
             type="date"
             id="dueDate"
             value={selectedDueDate}
             onChange={(e) => setSelectedDueDate(e.target.value)}
             required
+            className={styles.floatingInput}
           />
+          <label htmlFor="dueDate" className={styles.floatingLabel}>
+            Due Date
+          </label>
         </div>
 
-        <button
-          type="submit"
-          disabled={!selectedChore || !selectedUser || !selectedDueDate}
-        >
-          Assign Chore
-        </button>
+        <Button type="submit">
+          {isLoading ? "Assigning..." : "Assign Chore"}
+        </Button>
       </form>
     </div>
   );

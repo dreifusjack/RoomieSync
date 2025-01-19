@@ -13,18 +13,17 @@ def AlarmRoutes(app: Flask, supabase: Client):
         try:
             data = request.json
             name = data["name"]
-            timestamp = datetime.datetime.strptime(
-                data["time"], "%H:%M")
+            time = datetime.datetime.strptime(data["time"], "%H:%M").time()
 
             insert_response = supabase.table("alarms").insert({
-                "time": timestamp.isoformat(),
+                "time": time.isoformat(),
                 "name": name,
                 "user_id": user_id,
             }).execute()
 
             return jsonify(insert_response.data), 200
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            return jsonify({"error": str(e)}), 500  
 
     # Get all alarms in a group
     @app.route("/alarm/groups/<group_id>", methods=["GET"])
@@ -81,3 +80,18 @@ def AlarmRoutes(app: Flask, supabase: Client):
             return jsonify(alarms_response.data), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        
+    # Delete an alarm 
+    @app.route("/alarm/<alarm_id>/delete", methods=["DELETE"])
+    def delete_alarm(alarm_id):
+        try:
+            delete_response = supabase.table(
+                "alarms").delete().eq("id", alarm_id).execute()
+            if delete_response.count == 0:
+                return jsonify({'message': 'Alarm not found'}), 404
+
+            return jsonify({'message': 'Alarm successfully deleted'})
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+

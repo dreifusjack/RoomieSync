@@ -1,41 +1,35 @@
-import React from "react";
 import "./list.css";
-
-interface Chore {
-  id: string;
-  groupId: string;
-  name: string;
-  description: string;
-  cadence: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Chore } from "@/types/chore-types";
+import ChoreCard from "./ChoreCard";
 
 interface ChoresListProps {
   chores: Chore[];
-  assigneeName: string;
   onRemindUser: (choreId: string) => void;
   onDeletedChore: (choreId: string) => void;
+  onChoreAssigned: () => void;
 }
 
 const ChoresList: React.FC<ChoresListProps> = ({
   chores,
-  assigneeName,
   onRemindUser,
   onDeletedChore,
+  onChoreAssigned,
 }) => {
   return (
-    <div className="chores-list">
-      {chores.map((chore) => (
-        <div key={chore.id} className="chore-card">
-          <h3>{chore.name}</h3>
-          <p>{chore.description}</p>
-          <p>Created on: {chore.createdAt}</p>
-          <p>Assignees: {assigneeName}</p>
-          <button onClick={() => onRemindUser(chore.id)}>Send Reminder</button>
-          <button onClick={() => onDeletedChore(chore.id)}>Remove Chore</button>
-        </div>
-      ))}
+    <div>
+      <ToastContainer />
+      <div className="chores-list">
+        {chores.map((chore) => (
+          <ChoreCard
+            chore={chore}
+            onRemindUser={onRemindUser}
+            onDeletedChore={onDeletedChore}
+            onChoreAssigned={onChoreAssigned}
+          />
+        ))}
+      </div>
     </div>
   );
 };
