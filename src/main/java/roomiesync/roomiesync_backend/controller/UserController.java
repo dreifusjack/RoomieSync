@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.UserDto;
@@ -22,18 +23,18 @@ import roomiesync.roomiesync_backend.service.UserService;
 public class UserController {
   private UserService userService;
 
-  @PostMapping
-  public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-    UserDto savedUser = userService.createUser(userDto);
-    return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+  @PostMapping("/register")
+  public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
+    UserDto registeredUser = userService.registerUser(userDto);
+    return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId) {
+  public ResponseEntity<UserDto> getUserById(@PathVariable("id") UUID userId) {
     UserDto userDto = userService.getUserById(userId);
     return new ResponseEntity<>(userDto, HttpStatus.OK);
   }
-  
+
   @GetMapping
   public ResponseEntity<List<UserDto>> getAllUsers() {
     List<UserDto> userDtos = userService.getAllUsers();
@@ -41,7 +42,7 @@ public class UserController {
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId) {
+  public ResponseEntity<String> deleteUser(@PathVariable("id") UUID userId) {
     userService.deleteUserById(userId);
     return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
   }

@@ -1,8 +1,10 @@
 package roomiesync.roomiesync_backend.service.impl;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.UserDto;
@@ -16,16 +18,18 @@ import roomiesync.roomiesync_backend.service.UserService;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
   private UserRepository userRepository;
+  private BCryptPasswordEncoder passwordEncoder;
 
   @Override
-  public UserDto createUser(UserDto userDto) {
+  public UserDto registerUser(UserDto userDto) {
     User user = UserMapper.mapToUser(userDto);
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     User savedUser = userRepository.save(user);
     return UserMapper.mapToUserDto(savedUser);
   }
 
   @Override
-  public UserDto getUserById(Long id) {
+  public UserDto getUserById(UUID id) {
     User user = userRepository.findById(id).orElseThrow(() ->
             new ResourceNotFoundException("User with id " + id + " not found"));
     return UserMapper.mapToUserDto(user);
@@ -37,7 +41,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void deleteUserById(Long id) {
+  public void deleteUserById(UUID id) {
     userRepository.findById(id).orElseThrow(() ->
             new ResourceNotFoundException("User with id " + id + " not found"));
     userRepository.deleteById(id);
