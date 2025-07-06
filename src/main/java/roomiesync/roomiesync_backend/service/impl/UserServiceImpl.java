@@ -17,7 +17,6 @@ import roomiesync.roomiesync_backend.service.UserService;
 public class UserServiceImpl implements UserService {
   private UserRepository userRepository;
 
-
   @Override
   public UserDto createUser(UserDto userDto) {
     User user = UserMapper.mapToUser(userDto);
