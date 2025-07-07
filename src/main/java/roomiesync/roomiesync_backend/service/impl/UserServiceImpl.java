@@ -1,6 +1,5 @@
 package roomiesync.roomiesync_backend.service.impl;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,15 +17,6 @@ import roomiesync.roomiesync_backend.service.UserService;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
   private UserRepository userRepository;
-  private BCryptPasswordEncoder passwordEncoder;
-
-  @Override
-  public UserDto registerUser(UserDto userDto) {
-    User user = UserMapper.mapToUser(userDto);
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    User savedUser = userRepository.save(user);
-    return UserMapper.mapToUserDto(savedUser);
-  }
 
   @Override
   public UserDto getUserById(UUID id) {
