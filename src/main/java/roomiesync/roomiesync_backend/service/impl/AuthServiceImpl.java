@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.UserDto;
 import roomiesync.roomiesync_backend.entity.User;
+import roomiesync.roomiesync_backend.exception.ResourceNotFoundException;
 import roomiesync.roomiesync_backend.mapper.UserMapper;
 import roomiesync.roomiesync_backend.repository.UserRepository;
 import roomiesync.roomiesync_backend.service.AuthService;
@@ -40,11 +41,19 @@ public class AuthServiceImpl implements AuthService {
             new UsernamePasswordAuthenticationToken(userEmail, user.getPassword()));
     User verifiedUser = userRepository.findByEmail(userEmail).orElse(null);
 
-    if (!authentication.isAuthenticated()) {
+    if (!authentication.isAuthenticated() || verifiedUser == null) {
       throw new BadCredentialsException("Invalid username or password");
     }
 
     return authResponse(verifiedUser, jwtService.generateToken(userEmail));
+  }
+
+  @Override
+  public UserDto getCurrentUser(String email) {
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+    return UserMapper.mapToUserDto(user);
   }
 
   private UserDto authResponse(User savedUser, String token) {

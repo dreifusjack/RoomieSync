@@ -6,4 +6,6 @@ public interface AuthService {
   UserDto registerUser(UserDto userDto);
 
   UserDto verifyUser(UserDto userDto);
+
+  UserDto getCurrentUser(String email);
 }
