@@ -1,5 +1,5 @@
 package roomiesync.roomiesync_backend.service;
 
 public interface JWTService {
-  String generateToken();
+  String generateToken(String email);
 }

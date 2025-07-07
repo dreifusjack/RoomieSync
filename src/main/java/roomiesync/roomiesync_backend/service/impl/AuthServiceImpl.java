@@ -13,6 +13,7 @@ import roomiesync.roomiesync_backend.entity.User;
 import roomiesync.roomiesync_backend.mapper.UserMapper;
 import roomiesync.roomiesync_backend.repository.UserRepository;
 import roomiesync.roomiesync_backend.service.AuthService;
+import roomiesync.roomiesync_backend.service.JWTService;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
   private UserRepository userRepository;
   private BCryptPasswordEncoder passwordEncoder;
   private AuthenticationManager authManager;
+  private JWTService jwtService;
 
   @Override
   public UserDto registerUser(UserDto userDto) {
@@ -32,13 +34,14 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public String verifyUser(UserDto userDto) {
     User user = UserMapper.mapToUser(userDto);
+    String userEmail = user.getEmail();
     Authentication authentication = authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+            new UsernamePasswordAuthenticationToken(userEmail, user.getPassword()));
 
     if (!authentication.isAuthenticated()) {
       throw new BadCredentialsException("Invalid username or password");
     }
 
-    return "success";
+    return jwtService.generateToken(userEmail);
   }
 }
