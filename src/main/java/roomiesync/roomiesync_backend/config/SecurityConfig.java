@@ -15,13 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.filter.JwtFilter;
-import roomiesync.roomiesync_backend.service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-  private CustomUserDetailsService customUserDetailsService;
   private JwtFilter jtwFilter;
 
   @Bean
@@ -38,7 +36,7 @@ public class SecurityConfig {
             .addFilterBefore(jtwFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
   }
-  
+
   @Bean
   public AuthenticationManager authenticationManager(
           AuthenticationConfiguration authenticationConfig) throws Exception {

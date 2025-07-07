@@ -23,6 +23,7 @@ import roomiesync.roomiesync_backend.service.JWTService;
 @AllArgsConstructor
 public class JWTServiceImpl implements JWTService {
   private SecretKey key;
+  public static long EXPIRATION_TIME = 12 * 60 * 60L;
 
   public JWTServiceImpl() {
     try {
@@ -42,7 +43,7 @@ public class JWTServiceImpl implements JWTService {
             .add(claims)
             .subject(email)
             .issuedAt(Date.from(Instant.now()))
-            .expiration(Date.from(Instant.now().plus(Duration.ofHours(12))))
+            .expiration(Date.from(Instant.now().plus(Duration.ofSeconds(EXPIRATION_TIME))))
             .and()
             .signWith(key)
             .compact();

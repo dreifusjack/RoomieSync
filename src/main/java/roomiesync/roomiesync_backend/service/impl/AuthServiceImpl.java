@@ -28,20 +28,31 @@ public class AuthServiceImpl implements AuthService {
     User user = UserMapper.mapToUser(userDto);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     User savedUser = userRepository.save(user);
-    return UserMapper.mapToUserDto(savedUser);
+
+    return authResponse(savedUser, jwtService.generateToken(savedUser.getEmail()));
   }
 
   @Override
-  public String verifyUser(UserDto userDto) {
+  public UserDto verifyUser(UserDto userDto) {
     User user = UserMapper.mapToUser(userDto);
     String userEmail = user.getEmail();
     Authentication authentication = authManager.authenticate(
             new UsernamePasswordAuthenticationToken(userEmail, user.getPassword()));
+    User verifiedUser = userRepository.findByEmail(userEmail).orElse(null);
 
     if (!authentication.isAuthenticated()) {
       throw new BadCredentialsException("Invalid username or password");
     }
 
-    return jwtService.generateToken(userEmail);
+    return authResponse(verifiedUser, jwtService.generateToken(userEmail));
+  }
+
+  private UserDto authResponse(User savedUser, String token) {
+    UserDto response = UserMapper.mapToUserDto(savedUser);
+    response.setToken(token);
+    response.setTokenType("Bearer");
+    response.setExpiresIn(JWTServiceImpl.EXPIRATION_TIME);
+
+    return response;
   }
 }

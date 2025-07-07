@@ -1,6 +1,5 @@
 package roomiesync.roomiesync_backend.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +23,18 @@ public class UserController {
   @GetMapping("{id}")
   public ResponseEntity<UserDto> getUserById(@PathVariable("id") UUID userId) {
     UserDto userDto = userService.getUserById(userId);
-    return new ResponseEntity<>(userDto, HttpStatus.OK);
+    return ResponseEntity.ok(userDto);
   }
 
   @GetMapping
   public ResponseEntity<List<UserDto>> getAllUsers() {
     List<UserDto> userDtos = userService.getAllUsers();
-    return new ResponseEntity<>(userDtos, HttpStatus.OK);
+    return ResponseEntity.ok(userDtos);
   }
 
   @DeleteMapping("{id}")
   public ResponseEntity<String> deleteUser(@PathVariable("id") UUID userId) {
     userService.deleteUserById(userId);
-    return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
+    return ResponseEntity.ok("User successfully deleted");
   }
 }

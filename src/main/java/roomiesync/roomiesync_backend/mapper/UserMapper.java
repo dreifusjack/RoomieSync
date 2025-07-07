@@ -5,22 +5,22 @@ import roomiesync.roomiesync_backend.entity.User;
 
 public class UserMapper {
   public static UserDto mapToUserDto(User user) {
-    return new UserDto(
-            user.getId(),
-            user.getFirstName(),
-            user.getLastName(),
-            user.getEmail(),
-            user.getPassword()
-    );
+    // excludes password
+    return UserDto.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .build();
   }
 
   public static User mapToUser(UserDto userDto) {
-    return new User(
-            userDto.getId(),
-            userDto.getFirstName(),
-            userDto.getLastName(),
-            userDto.getEmail(),
-            userDto.getPassword()
-    );
+    return User.builder()
+            .id(userDto.getId())
+            .email(userDto.getEmail())
+            .firstName(userDto.getFirstName())
+            .lastName(userDto.getLastName())
+            .password(userDto.getPassword())
+            .build();
   }
 }
