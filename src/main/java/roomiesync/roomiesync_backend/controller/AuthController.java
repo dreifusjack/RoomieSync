@@ -22,4 +22,9 @@ public class AuthController {
     UserDto registeredUser = authService.registerUser(userDto);
     return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
   }
+
+  @PostMapping("/login")
+  public String loginUser(@RequestBody UserDto userDto) {
+    return authService.verifyUser(userDto);
+  }
 }
