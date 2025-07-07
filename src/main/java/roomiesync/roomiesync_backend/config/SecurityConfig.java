@@ -13,8 +13,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lombok.AllArgsConstructor;
+import roomiesync.roomiesync_backend.filter.JwtFilter;
 import roomiesync.roomiesync_backend.service.impl.CustomUserDetailsService;
 
 @Configuration
@@ -22,20 +24,21 @@ import roomiesync.roomiesync_backend.service.impl.CustomUserDetailsService;
 @AllArgsConstructor
 public class SecurityConfig {
   private CustomUserDetailsService customUserDetailsService;
+  private JwtFilter jtwFilter;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
+    return http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request -> request.
-                    requestMatchers("api/auth/register", "/api/auth/login").
+                    requestMatchers("/api/auth/register", "/api/auth/login").
                     permitAll().
                     anyRequest().
                     authenticated())
             .httpBasic(Customizer.withDefaults())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-    return http.build();
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jtwFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
   }
 
   @Bean
