@@ -20,6 +20,9 @@ public class UserDto {
   private String firstName;
   private String lastName;
 
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private UUID groupId;
+
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 

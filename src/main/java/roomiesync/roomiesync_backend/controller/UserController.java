@@ -20,8 +20,8 @@ import roomiesync.roomiesync_backend.service.UserService;
 public class UserController {
   private UserService userService;
 
-  @GetMapping("{id}")
-  public ResponseEntity<UserDto> getUserById(@PathVariable("id") UUID userId) {
+  @GetMapping("{userId}")
+  public ResponseEntity<UserDto> getUserById(@PathVariable UUID userId) {
     UserDto userDto = userService.getUserById(userId);
     return ResponseEntity.ok(userDto);
   }
@@ -32,8 +32,8 @@ public class UserController {
     return ResponseEntity.ok(userDtos);
   }
 
-  @DeleteMapping("{id}")
-  public ResponseEntity<String> deleteUser(@PathVariable("id") UUID userId) {
+  @DeleteMapping("{userId}")
+  public ResponseEntity<String> deleteUser(@PathVariable UUID userId) {
     userService.deleteUserById(userId);
     return ResponseEntity.ok("User successfully deleted");
   }

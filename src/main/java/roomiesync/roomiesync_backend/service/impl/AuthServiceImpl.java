@@ -4,8 +4,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.UserDto;
@@ -49,11 +52,20 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public UserDto getCurrentUser(String email) {
+  public UserDto getCurrentUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String email = auth.getName();
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
     return UserMapper.mapToUserDto(user);
+  }
+
+  @Override
+  public User getCurrentUserEntity() {
+    UUID userId = getCurrentUser().getId();
+    return userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
   }
 
   private UserDto authResponse(User savedUser, String token) {
