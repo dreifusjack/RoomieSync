@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.GroupDto;
 import roomiesync.roomiesync_backend.dto.UserDto;
-import roomiesync.roomiesync_backend.dto.requests.JoinGroupReq;
 import roomiesync.roomiesync_backend.service.GroupService;
 
 @AllArgsConstructor
@@ -32,8 +32,8 @@ public class GroupController {
   }
 
   @PostMapping("/join")
-  public ResponseEntity<GroupDto> joinGroup(@RequestBody JoinGroupReq req) {
-    GroupDto joinedGroup = groupService.joinGroup(req.getCode());
+  public ResponseEntity<GroupDto> joinGroup(@RequestBody Map<String, Object> request) {
+    GroupDto joinedGroup = groupService.joinGroup((String) request.get("groupCode"));
     return ResponseEntity.ok(joinedGroup);
   }
 
