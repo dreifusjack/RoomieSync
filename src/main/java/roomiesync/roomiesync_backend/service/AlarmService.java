@@ -13,4 +13,7 @@ public interface AlarmService {
   List<AlarmDto> getUserAlarms();
 
   void deleteAlarm(UUID alarmId);
+
+  @SuppressWarnings("unused")
+  void cleanupExpiredAlarms();
 }

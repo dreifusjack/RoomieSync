@@ -1,5 +1,11 @@
 package roomiesync.roomiesync_backend.entity;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -16,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import roomiesync.roomiesync_backend.valueobject.RecentAlarmData;
 
 @Getter
 @Setter
@@ -44,4 +51,28 @@ public class User {
 
   @Column(nullable = false)
   private String password;
+
+  @Column(name = "recent_alarms", columnDefinition = "JSON")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private List<RecentAlarmData> recentAlarms = new ArrayList<>();
+
+  private static final int MAX_RECENT_ALARMS = 3;
+
+  public void addRecentAlarm(Alarm alarm) {
+    try {
+      RecentAlarmData recentAlarm = RecentAlarmData.builder()
+              .name(alarm.getName())
+              .time(alarm.getTime())
+              .cachedAt(LocalDateTime.now())
+              .build();
+
+      if (recentAlarms.size() >= MAX_RECENT_ALARMS) {
+        recentAlarms.remove(recentAlarms.size() - 1);
+      }
+      recentAlarms.add(0, recentAlarm);
+
+    } catch (Exception e) {
+      throw new RuntimeException("failed to add recent alarm", e);
+    }
+  }
 }

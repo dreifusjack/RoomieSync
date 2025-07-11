@@ -1,6 +1,6 @@
 package roomiesync.roomiesync_backend.entity;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,5 +39,18 @@ public class Alarm {
   private String name;
 
   @Column(nullable = false)
-  private LocalTime time;
+  private LocalDateTime time;
+
+  @Column(name = "is_consecutive")
+  private boolean isConsecutive;
+
+  @Column(name = "expiration_date")
+  private LocalDateTime expirationDate;
+
+  @PrePersist
+  protected void onCreate() {
+    if (!isConsecutive && expirationDate == null) {
+      expirationDate = LocalDateTime.now().plusDays(1);
+    }
+  }
 }
