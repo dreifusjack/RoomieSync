@@ -1,6 +1,5 @@
 package roomiesync.roomiesync_backend.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,6 +7,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.GroupDto;
 import roomiesync.roomiesync_backend.dto.UserDto;
 import roomiesync.roomiesync_backend.entity.Group;
@@ -21,15 +21,10 @@ import roomiesync.roomiesync_backend.service.AuthService;
 import roomiesync.roomiesync_backend.service.GroupService;
 
 @Service
+@AllArgsConstructor
 public class GroupServiceImpl implements GroupService {
-
-  @Autowired
   private GroupRepository groupRepository;
-
-  @Autowired
   private UserRepository userRepository;
-
-  @Autowired
   private AuthService authService;
 
   @Override
