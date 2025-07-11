@@ -54,4 +54,10 @@ public class ChoreController {
     choreService.deleteChore(choreId);
     return ResponseEntity.ok("Chore successfully deleted");
   }
+
+  @PostMapping("/chores/{choreId}/reminders")
+  public ResponseEntity<String> sendReminder(@PathVariable UUID choreId) {
+    choreService.sendReminder(choreId);
+    return ResponseEntity.ok("Reminder successfully sent");
+  }
 }

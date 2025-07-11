@@ -1,12 +1,16 @@
 package roomiesync.roomiesync_backend.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import roomiesync.roomiesync_backend.dto.ChoreAssignmentDto;
 import roomiesync.roomiesync_backend.dto.ChoreDto;
 import roomiesync.roomiesync_backend.entity.Chore;
@@ -23,19 +27,16 @@ import roomiesync.roomiesync_backend.repository.UserRepository;
 import roomiesync.roomiesync_backend.service.ChoreService;
 
 @Service
+@RequiredArgsConstructor
 public class ChoreServiceImpl implements ChoreService {
+  private final ChoreRepository choreRepository;
+  private final ChoreAssignmentRepository choreAssignmentRepository;
+  private final GroupRepository groupRepository;
+  private final UserRepository userRepository;
+  private final JavaMailSender mailSender;
 
-  @Autowired
-  private ChoreRepository choreRepository;
-
-  @Autowired
-  private ChoreAssignmentRepository choreAssignmentRepository;
-
-  @Autowired
-  private GroupRepository groupRepository;
-
-  @Autowired
-  private UserRepository userRepository;
+  @Value("${spring.mail.username}")
+  private String fromEmail;
 
   @Override
   public ChoreDto createChore(UUID groupId, ChoreDto choreDto) {
@@ -90,5 +91,33 @@ public class ChoreServiceImpl implements ChoreService {
     Chore chore = choreRepository.findById(choreId)
             .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
     choreRepository.delete(chore);
+  }
+
+  @Override
+  public void sendReminder(UUID choreId) {
+    Chore chore = choreRepository.findById(choreId)
+            .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
+
+    List<ChoreAssignment> assignments = chore.getAssignments();
+    if (assignments.isEmpty()) {
+      throw new RuntimeException("This chore has no assignments");
+    }
+
+    List<String> recipients = new ArrayList<>();
+    for (ChoreAssignment assignment : assignments) {
+      recipients.add(assignment.getUser().getEmail());
+    }
+
+    try {
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(fromEmail);
+      message.setTo(recipients.toArray(new String[0]));
+      message.setSubject("test");
+      message.setText("body");
+
+      mailSender.send(message);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to send email", e);
+    }
   }
 }

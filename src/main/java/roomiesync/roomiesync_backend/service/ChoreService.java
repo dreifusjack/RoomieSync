@@ -16,4 +16,6 @@ public interface ChoreService {
   List<ChoreAssignmentDto> getAssignments(UUID choreId);
 
   void deleteChore(UUID choreId);
+
+  void sendReminder(UUID choreId);
 }
