@@ -18,4 +18,7 @@ public interface ChoreService {
   void deleteChore(UUID choreId);
 
   void sendReminder(UUID choreId);
+
+  @SuppressWarnings("unused")
+  void cleanupExpiredAssignments();
 }

@@ -3,11 +3,14 @@ package roomiesync.roomiesync_backend.service.impl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -118,6 +121,17 @@ public class ChoreServiceImpl implements ChoreService {
       mailSender.send(message);
     } catch (Exception e) {
       throw new RuntimeException("Failed to send email", e);
+    }
+  }
+
+  @Override
+  @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
+  public void cleanupExpiredAssignments() {
+    try {
+      LocalDateTime now = LocalDateTime.now();
+      choreAssignmentRepository.deleteExpiredAssignments(now);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to delete expired assignments", e);
     }
   }
 }
