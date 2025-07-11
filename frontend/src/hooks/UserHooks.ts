@@ -67,7 +67,7 @@ export const useUserById = (userId: string) => {
 
 export const getAllUsersInGroup = async (groupId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/group/${groupId}/users`);
+    const response = await axios.get(`${BASE_URL}/groups/${groupId}/users`);
     return response.data.users;
   } catch (error) {
     throw error;

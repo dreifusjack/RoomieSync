@@ -15,17 +15,17 @@ type JoinGroupPayload = {
 
 // api calls
 const createGroup = async (payload: CreateGroupPayload) => {
-  const response = await axios.post(`${BASE_URL}/group`, payload);
+  const response = await axios.post(`${BASE_URL}/groups`, payload);
   return response.data;
 };
 
 const joinGroup = async (payload: JoinGroupPayload) => {
-  const response = await axios.post(`${BASE_URL}/group/join`, payload);
+  const response = await axios.post(`${BASE_URL}/groups/join`, payload);
   return response.data;
 };
 
 const getGroup = async (group_id: string) => {
-  const response = await axios.get(`${BASE_URL}/group/${group_id}`);
+  const response = await axios.get(`${BASE_URL}/groups/${group_id}`);
   return response.data;
 };
 

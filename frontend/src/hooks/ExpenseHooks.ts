@@ -12,6 +12,8 @@ type Expense = {
   is_paid: boolean;
 };
 
+//TODO: build expense api/hooks
+
 export const createExpense = async (newExpense: Expense) => {
   const response = await axios.post(
     `${BASE_URL}/add_expense/user/${newExpense.paid_by}`,

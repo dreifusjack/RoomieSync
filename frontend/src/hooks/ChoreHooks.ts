@@ -7,8 +7,14 @@ const BASE_URL = "http://127.0.0.1:5000";
 
 
 interface AssignChorePayload {
-  chore_id: string;
+  user_id: string;
   due_date: string;
+}
+
+interface CreateChorePayload {
+  name: string;
+  description: string;
+  cadence: string;
 }
 
 const extractErrorMessage = (error: unknown): string => 
@@ -19,7 +25,7 @@ const extractErrorMessage = (error: unknown): string =>
 // api calls
 export const getGroupChores = async (groupId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/chores/group/${groupId}`);
+    const response = await axios.get(`${BASE_URL}/groups/${groupId}/chores`);
     return response.data;
   } catch (error) {
     console.log("Error getting groups chores:", error);
@@ -28,7 +34,7 @@ export const getGroupChores = async (groupId: string) => {
 
 export const remindUser = async (choreId: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/chores/${choreId}/reminder`);
+    const response = await axios.post(`${BASE_URL}/chores/${choreId}/reminders`);
     return response.data;
   } catch (error) {
     console.error("Error sending reminder:", error);
@@ -44,9 +50,9 @@ export const deleteChore = async (choreId: string) => {
   }
 };
 
-export const createChore = async (payload: ChoreAPI) => {
+export const createChore = async (groupId: string, payload: CreateChorePayload) => {
   try {
-    const response = await axios.post(`${BASE_URL}/chores`, payload);
+    const response = await axios.post(`${BASE_URL}/groups/${groupId}/chores`, payload);
     return response.data;
   } catch (error) {
     console.error("Error creating chore:", error);
@@ -54,12 +60,12 @@ export const createChore = async (payload: ChoreAPI) => {
 };
 
 export const assignChore = async (
-  userId: string,
+  choreId: string,
   payload: AssignChorePayload
 ) => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/chores/user/${userId}`,
+      `${BASE_URL}/chores/${choreId}/assignments`,
       payload
     );
     return response.data;
@@ -70,7 +76,7 @@ export const assignChore = async (
 
 export const getChoreAssignees = async (choreId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/chores/assignees/${choreId}`);
+    const response = await axios.get(`${BASE_URL}/chores/${choreId}/assignments`);
     return response.data;
   } catch (error) {
     console.error("Error getting chore assignees:", error);
@@ -162,13 +168,12 @@ export const useCreateChore = () => {
 
     try {
       const user = await fetchUserDetails();
-      const payload: ChoreAPI = {
-        group_id: user.group_id,
+      const payload: CreateChorePayload = {
         name,
         description,
         cadence,
       };
-      const data = await createChore(payload);
+      const data = await createChore(user.group_id, payload);
       return data;
     } catch (err) {
       const message = extractErrorMessage(err);
@@ -196,10 +201,10 @@ export const useAssignChore = () => {
 
     try {
       const payload: AssignChorePayload = {
-        chore_id: choreId,
+        user_id: userId,
         due_date: dueDate,
       };
-      const data = await assignChore(userId, payload);
+      const data = await assignChore(choreId, payload);
       return data;
     } catch (err) {
       const message = extractErrorMessage(err);
