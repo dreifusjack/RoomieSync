@@ -1,4 +1,39 @@
+version: '3.8'
+
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: next-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - BASE_URL=http://127.0.0.1:8080
+    depends_on:
+      - app
+    networks:
+      - roomiesync-network
+
+  app:
+    build:
+      context: ./roomiesync-backend
+      dockerfile: Dockerfile
+    container_name: roomiesync-springboot-app
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - roomiesync-network
+
   postgres:
     image: postgres:17-alpine
     container_name: roomiesync-postgres-db
@@ -10,23 +45,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    networks:
-      - roomiesync-network
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: roomiesync-springboot-app
-    depends_on:
-      - postgres
-    environment:
-      DB_URL: ${DB_URL}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    ports:
-      - "8080:8080"
     networks:
       - roomiesync-network
 
