@@ -22,7 +22,6 @@ import roomiesync.roomiesync_backend.service.GroupService;
 @RestController
 @RequestMapping("/api/groups")
 public class GroupController {
-
   private GroupService groupService;
 
   @PostMapping

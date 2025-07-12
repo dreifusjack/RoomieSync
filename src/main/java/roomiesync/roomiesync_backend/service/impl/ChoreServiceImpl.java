@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -106,22 +105,31 @@ public class ChoreServiceImpl implements ChoreService {
       throw new RuntimeException("This chore has no assignments");
     }
 
-    List<String> recipients = new ArrayList<>();
+    String subject = "Chore Reminder: " + chore.getName();
+    String body;
+    User recipient;
     for (ChoreAssignment assignment : assignments) {
-      recipients.add(assignment.getUser().getEmail());
+      try {
+        recipient = assignment.getUser();
+        body = "Reminder: You are assigned to the chore \"" + chore.getName() + "\".\n" +
+                "Description: " + chore.getDescription() + ".\n" +
+                "Due date: " + assignment.getDueDate() + "\n" + "\n" +
+                "Best," + "\n" +
+                "RoomieSync";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(recipient.getEmail());
+        message.setSubject(subject);
+        message.setText(body);
+
+        mailSender.send(message);
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to send email", e);
+      }
     }
 
-    try {
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setFrom(fromEmail);
-      message.setTo(recipients.toArray(new String[0]));
-      message.setSubject("test");
-      message.setText("body");
 
-      mailSender.send(message);
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to send email", e);
-    }
   }
 
   @Override
