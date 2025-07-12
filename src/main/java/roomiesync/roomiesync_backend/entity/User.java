@@ -54,6 +54,7 @@ public class User {
 
   @Column(name = "recent_alarms", columnDefinition = "JSON")
   @JdbcTypeCode(SqlTypes.JSON)
+  @Builder.Default
   private List<RecentAlarmData> recentAlarms = new ArrayList<>();
 
   private static final int MAX_RECENT_ALARMS = 3;
@@ -61,10 +62,10 @@ public class User {
   public void addRecentAlarm(Alarm alarm) {
     try {
       RecentAlarmData recentAlarm = RecentAlarmData.builder()
-              .name(alarm.getName())
-              .time(alarm.getTime())
-              .cachedAt(LocalDateTime.now())
-              .build();
+          .name(alarm.getName())
+          .time(alarm.getTime())
+          .cachedAt(LocalDateTime.now())
+          .build();
 
       if (recentAlarms.size() >= MAX_RECENT_ALARMS) {
         recentAlarms.remove(recentAlarms.size() - 1);
