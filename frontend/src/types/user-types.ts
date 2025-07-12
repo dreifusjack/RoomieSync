@@ -1,9 +1,9 @@
 export interface User {
   id: string;
   email: string;
-  group_id: string
-  first_name: string;
-  last_name: string;
+  groupId: string
+  firstName: string;
+  lastName: string;
 }
 
 export interface UserDetails {
