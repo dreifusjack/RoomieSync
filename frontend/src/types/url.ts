@@ -1,0 +1,1 @@
+export const BASE_URL = process.env.BASE_URL || "failure to load url";
