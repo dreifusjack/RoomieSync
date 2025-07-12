@@ -1,4 +1,42 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.DS_STORE.`
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+
+### environment files ###
+.env
+*.env# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 */node_modules
