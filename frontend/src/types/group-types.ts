@@ -1,5 +1,12 @@
 import { User } from "./user-types";
 
+export interface Group {
+  id: string,
+  name: string,
+  groupCode: string,
+  users: User[]
+}
+
 export interface GroupResponse {
   group: {
     group_code: string;

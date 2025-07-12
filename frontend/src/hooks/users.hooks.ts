@@ -3,7 +3,7 @@ import { User } from "@/types/user-types"
 import { useQuery } from "@tanstack/react-query"
 
 export const useAllUsers = () => {
-  return useQuery<User, Error>({
+  return useQuery<User[], Error>({
     queryKey: ['users'],
     queryFn: async () => {
       const { data } = await getAllUsers();
@@ -14,7 +14,7 @@ export const useAllUsers = () => {
 
 export const useUserById = (id: string) => {
   return useQuery<User, Error>({
-    queryKey: ['users'],
+    queryKey: ['users', id],
     queryFn: async () => {
       const {data } = await getUserById(id);
       return data
