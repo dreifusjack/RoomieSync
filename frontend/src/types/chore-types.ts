@@ -4,8 +4,7 @@ export interface Chore {
   name: string;
   description: string;
   cadence: string;
-  createdAt: string;
-  updatedAt: string;
+  assignments: ChoreAssignment[]
 }
 
 export interface ChoreAssignee {
@@ -19,3 +18,9 @@ export interface ChoreAPI {
   description: string;
   cadence: string;
 };
+
+export interface ChoreAssignment {
+  choreId: string;
+  userId: string;
+  dueDate: string;
+}
