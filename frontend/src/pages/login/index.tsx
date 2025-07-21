@@ -1,22 +1,29 @@
 import React, { useState } from "react";
 import styles from "../../styles/Modal.module.css";
-import { useAuth } from "@/hooks/AuthenticationHooks";
 import { Button } from "@mui/material";
+import { useLogin, useRegister } from "@/hooks/auth.hooks";
 
 const LoginForm: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { handleLogin, handleSignUp, error, loading, isSignup, setIsSignup } =
-    useAuth();
+  const [isSignup, setIsSignup] = useState(false);
+
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
+
+  const activeMutation = isSignup ? registerMutation : loginMutation;
+  const loading = activeMutation.isPending;
+  const error = activeMutation.error?.message || null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (isSignup) {
-      await handleSignUp(email, password, firstName, lastName);
+      registerMutation.mutate({ email, password, firstName, lastName });
     } else {
-      await handleLogin(email, password);
+      loginMutation.mutate({ email, password });
     }
   };
 

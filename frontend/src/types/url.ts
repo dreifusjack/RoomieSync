@@ -1,1 +1,1 @@
-export const BASE_URL = process.env.BASE_URL || "failure to load url";
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "failure to load url";

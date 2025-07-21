@@ -12,6 +12,7 @@ export const useRegister = () => {
     },
     onSuccess: (user) => {
       queryClient.setQueryData(['auth', 'currentUser'], user);
+      handlePostAuthNavigation(user);
     }
   });
 };
@@ -26,6 +27,7 @@ export const useLogin = () => {
     },
     onSuccess: (user) => {
       queryClient.setQueryData(['auth', 'currentUser'], user);
+      handlePostAuthNavigation(user);
     }
   });
 };
@@ -41,3 +43,13 @@ export const useCurrentUser = () => {
     staleTime: 5 * 60 * 1000, 
   });
 };
+
+const handlePostAuthNavigation = (user: User) => {
+  setTimeout(() => {
+    if (user.groupId) {
+      window.location.href = "/alarms"
+    } else {
+      window.location.href = "/landing"
+    }
+  }, 100)
+}
