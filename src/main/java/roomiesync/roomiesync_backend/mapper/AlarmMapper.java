@@ -10,6 +10,8 @@ public class AlarmMapper {
             .userId(alarm.getUser().getId())
             .name(alarm.getName())
             .time(alarm.getTime())
+            .consecutiveDays(alarm.getConsecutiveDays())
+            .expirationDate(alarm.getExpirationDate())
             .build();
   }
 
@@ -19,6 +21,8 @@ public class AlarmMapper {
             .userId(alarm.getUser().getId())
             .name(alarm.getName())
             .time(alarm.getTime())
+            .consecutiveDays(alarm.getConsecutiveDays())
+            .expirationDate(alarm.getExpirationDate())
             .user(UserMapper.mapToUserDto(alarm.getUser()))
             .build();
   }
@@ -28,6 +32,8 @@ public class AlarmMapper {
             .id(alarmDto.getId())
             .name(alarmDto.getName())
             .time(alarmDto.getTime())
+            .consecutiveDays(alarmDto.getConsecutiveDays())
+            .expirationDate(alarmDto.getExpirationDate())
             .build();
   }
 }

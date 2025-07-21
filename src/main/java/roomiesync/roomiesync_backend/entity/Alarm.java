@@ -41,16 +41,26 @@ public class Alarm {
   @Column(nullable = false)
   private LocalDateTime time;
 
-  @Column(name = "is_consecutive")
-  private boolean isConsecutive;
+  @Column(name = "consecutive_days")
+  private Integer consecutiveDays;
 
   @Column(name = "expiration_date")
   private LocalDateTime expirationDate;
 
   @PrePersist
   protected void onCreate() {
-    if (!isConsecutive && expirationDate == null) {
-      expirationDate = LocalDateTime.now().plusDays(1);
+    if (isConsecutive() && consecutiveDays <= 0) {
+      throw new IllegalArgumentException("Consecutive days must be positive");
     }
+
+    if (expirationDate == null) {
+      expirationDate = (isConsecutive()) ?
+              LocalDateTime.now().plusDays(consecutiveDays) :
+              LocalDateTime.now().plusDays(1);
+    }
+  }
+
+  private boolean isConsecutive() {
+    return consecutiveDays != null;
   }
 }

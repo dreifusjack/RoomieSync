@@ -6,19 +6,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import roomiesync.roomiesync_backend.dto.AlarmDto;
-import roomiesync.roomiesync_backend.dto.UserDto;
 import roomiesync.roomiesync_backend.entity.Alarm;
 import roomiesync.roomiesync_backend.entity.User;
 import roomiesync.roomiesync_backend.exception.ResourceNotFoundException;
 import roomiesync.roomiesync_backend.mapper.AlarmMapper;
-import roomiesync.roomiesync_backend.mapper.UserMapper;
 import roomiesync.roomiesync_backend.repository.AlarmRepository;
 import roomiesync.roomiesync_backend.repository.UserRepository;
 import roomiesync.roomiesync_backend.service.AlarmService;
@@ -33,15 +30,20 @@ public class AlarmServiceImpl implements AlarmService {
 
   @Override
   public AlarmDto createAlarm(AlarmDto alarmDto) {
-    UserDto user = authService.getCurrentUser();
+    User user = authService.getCurrentUserEntity();
 
     Alarm alarm = Alarm.builder()
             .name(alarmDto.getName())
             .time(alarmDto.getTime())
-            .user(UserMapper.mapToUser(user))
+            .consecutiveDays(alarmDto.getConsecutiveDays())
+            .expirationDate(alarmDto.getExpirationDate())
+            .user(user)
             .build();
 
     Alarm savedAlarm = alarmRepository.save(alarm);
+
+    user.addRecentAlarm(savedAlarm);
+    userRepository.save(user);
 
     return AlarmMapper.mapToAlarmDto(savedAlarm);
   }
@@ -76,28 +78,11 @@ public class AlarmServiceImpl implements AlarmService {
   @Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
   @Transactional
   public void cleanupExpiredAlarms() {
-    LocalDateTime now = LocalDateTime.now();
-    List<Alarm> expiredAlarms = alarmRepository.findByExpirationDate(now);
-
-    if (expiredAlarms.isEmpty()) {
-      return;
+    try {
+      LocalDateTime now = LocalDateTime.now();
+      alarmRepository.deleteExpiredAlarms(now);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to delete expired alarms", e);
     }
-
-    // map user paired with their expired alarm
-    Map<User, List<Alarm>> alarmsByUser = expiredAlarms.stream()
-            .collect(Collectors.groupingBy(Alarm::getUser));
-
-    for (Map.Entry<User, List<Alarm>> entry : alarmsByUser.entrySet()) {
-      User user = entry.getKey();
-      List<Alarm> userExpiredAlarms = entry.getValue();
-
-      for (Alarm alarm : userExpiredAlarms) {
-        user.addRecentAlarm(alarm);
-      }
-
-      userRepository.save(user);
-    }
-
-    alarmRepository.deleteAll(expiredAlarms);
   }
 }

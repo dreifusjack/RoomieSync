@@ -21,5 +21,11 @@ public class AlarmDto {
   private LocalDateTime time;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Integer consecutiveDays;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private LocalDateTime expirationDate;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private UserDto user;
 }
