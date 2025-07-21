@@ -19,7 +19,7 @@ export const useAlarms = () => {
       id: groupAlarm.alarm_id,
       name: groupAlarm.alarm_name,
       time: groupAlarm.alarm_time,
-      user_id: groupAlarm.user.user_id,
+      userId: groupAlarm.user.user_id,
     };
   };
 

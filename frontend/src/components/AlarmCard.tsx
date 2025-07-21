@@ -16,7 +16,7 @@ const AlarmCard: React.FC<AlarmCardProps> = ({
   onDeleted,
   isGroup,
 }) => {
-  const { userName, loading, error } = useUserById(alarm.user_id);
+  const { userName, loading, error } = useUserById(alarm.userId);
   const hour = parseInt(alarm?.time.substring(0, 2));
   const min = alarm?.time.substring(2, 5);
   const ampm = hour >= 12 ? "PM" : "AM";

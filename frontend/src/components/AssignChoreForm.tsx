@@ -46,7 +46,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
             <option value="">Select User</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
-                {user.first_name + " " + user.last_name}
+                {user.firstName + " " + user.lastName}
               </option>
             ))}
           </select>

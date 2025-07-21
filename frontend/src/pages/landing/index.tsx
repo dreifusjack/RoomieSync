@@ -62,7 +62,7 @@ const LandingPage: React.FC = () => {
   return (
     <div className={styles.modalContainer}>
       <form onSubmit={handleSubmit} className={styles.modalForm}>
-        <h2>Welcome to RoomieSync, {user.first_name}!</h2>
+        <h2>Welcome to RoomieSync, {user.firstName}!</h2>
 
         {showGroupCode ? (
           <div>
