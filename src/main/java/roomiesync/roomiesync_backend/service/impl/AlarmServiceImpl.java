@@ -36,7 +36,6 @@ public class AlarmServiceImpl implements AlarmService {
             .name(alarmDto.getName())
             .time(alarmDto.getTime())
             .consecutiveDays(alarmDto.getConsecutiveDays())
-            .expirationDate(alarmDto.getExpirationDate())
             .user(user)
             .build();
 
