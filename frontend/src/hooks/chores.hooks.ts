@@ -5,8 +5,8 @@ import {
   getAssignments, 
   deleteChore, 
   sendReminder,
-  CreateChoreRequestPayload,
-  AssignChoreRequestPayload,
+  CreateChorePayload,
+  AssignChorePayload,
 } from "@/apis/chores.api"
 import { Chore, ChoreAssignment } from "@/types/chore-types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -14,7 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 export const useCreateChore = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Chore, Error, { groupId: string; payload: CreateChoreRequestPayload }>({
+  return useMutation<Chore, Error, { groupId: string; payload: CreateChorePayload }>({
     mutationFn: async ({ groupId, payload }) => {
       const { data } = await createChore(groupId, payload);
       return data;
@@ -29,7 +29,7 @@ export const useCreateChore = () => {
 export const useAssignChore = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<ChoreAssignment, Error, { choreId: string; payload: AssignChoreRequestPayload }>({
+  return useMutation<ChoreAssignment, Error, { choreId: string; payload: AssignChorePayload }>({
     mutationFn: async ({ choreId, payload }) => {
       const { data } = await assignChore(choreId, payload);
       return data;

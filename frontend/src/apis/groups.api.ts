@@ -15,10 +15,10 @@ export const getAllGroups = () => {
   return axios.get<Group[]>(`${BASE_URL}/api/groups`)
 }
 
-export const getGroupUsers = (id: string) => {
-  return axios.get<User[]>(`${BASE_URL}/api/groups/${id}/user`)
+export const getGroupUsers = (groupdId: string) => {
+  return axios.get<User[]>(`${BASE_URL}/api/groups/${groupdId}/user`)
 }
 
-export const getGroupById = (id: string) => {
-  return axios.get<Group>(`${BASE_URL}/api/groups/${id}`)
+export const getGroupById = (groupdId: string) => {
+  return axios.get<Group>(`${BASE_URL}/api/groups/${groupdId}`)
 }

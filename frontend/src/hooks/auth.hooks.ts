@@ -1,12 +1,12 @@
-import { registerUser, loginUser, getCurrentUser, RegisterRequestPayload, LoginRequestPayload } from "@/apis/auth.api"
+import { registerUser, loginUser, getCurrentUser, RegisterPayload, LoginPayload } from "@/apis/auth.api"
 import { User } from "@/types/user-types"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const useRegister = () => {
   const queryClient = useQueryClient();
   
-  return useMutation<User, Error, RegisterRequestPayload>({
-    mutationFn: async (userData: RegisterRequestPayload) => {
+  return useMutation<User, Error, RegisterPayload>({
+    mutationFn: async (userData: RegisterPayload) => {
       const { data } = await registerUser(userData);
       return data;
     },
@@ -19,8 +19,8 @@ export const useRegister = () => {
 export const useLogin = () => {
   const queryClient = useQueryClient();
   
-  return useMutation<User, Error, LoginRequestPayload>({
-    mutationFn: async (credentials: LoginRequestPayload) => {
+  return useMutation<User, Error, LoginPayload>({
+    mutationFn: async (credentials: LoginPayload) => {
       const { data } = await loginUser(credentials);
       return data;
     },

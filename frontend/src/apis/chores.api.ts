@@ -5,15 +5,14 @@ import axios from "axios"
 export interface CreateChorePayload {
   name: string;
   description: string;
+  cadence: string 
 }
 
 export interface AssignChorePayload {
   userId: string;
   dueDate: string;
-  // Add other properties needed for assignment
 }
 
-// API functions
 export const createChore = (groupId: string, payload: CreateChorePayload) => {
   return axios.post<Chore>(`${BASE_URL}/api/groups/${groupId}/chores`, payload);
 }
