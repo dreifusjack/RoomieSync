@@ -2,24 +2,23 @@ import { Chore, ChoreAssignment } from "@/types/chore-types";
 import { BASE_URL } from "@/types/url"
 import axios from "axios"
 
-export interface CreateChoreRequestPayload {
+export interface CreateChorePayload {
   name: string;
   description: string;
-  // Add other properties needed for creation
 }
 
-export interface AssignChoreRequestPayload {
+export interface AssignChorePayload {
   userId: string;
   dueDate: string;
   // Add other properties needed for assignment
 }
 
 // API functions
-export const createChore = (groupId: string, payload: CreateChoreRequestPayload) => {
+export const createChore = (groupId: string, payload: CreateChorePayload) => {
   return axios.post<Chore>(`${BASE_URL}/api/groups/${groupId}/chores`, payload);
 }
 
-export const assignChore = (choreId: string, payload: AssignChoreRequestPayload) => {
+export const assignChore = (choreId: string, payload: AssignChorePayload) => {
   return axios.post<ChoreAssignment>(`${BASE_URL}/api/chores/${choreId}/assignments`, payload);
 }
 
