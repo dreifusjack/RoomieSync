@@ -1,12 +1,14 @@
-import { UserDetails } from "./user-types";
+import { User, UserDetails } from "./user-types";
 
 export interface Alarm {
   id: string;
-  time: string;
+  userId: string;
   name: string;
-  user_id: string;
-};
-
+  time: string;
+  consecutiveDays?: number;
+  expirationDate?: string;
+  user?: User;
+}
 export interface GroupAlarm {
   alarm_id: string;
   alarm_name: string;
