@@ -1,6 +1,7 @@
 package roomiesync.roomiesync_backend.entity;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -39,7 +40,7 @@ public class Alarm {
   private String name;
 
   @Column(nullable = false)
-  private LocalDateTime time;
+  private LocalTime time;
 
   @Column(name = "consecutive_days")
   private Integer consecutiveDays;

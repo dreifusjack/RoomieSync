@@ -1,6 +1,7 @@
 package roomiesync.roomiesync_backend.valueobject;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ public class RecentAlarmData {
   private final String name;
 
   @NonNull
-  private final LocalDateTime time;
+  private final LocalTime time;
 
   @NonNull
   private final LocalDateTime cachedAt;
