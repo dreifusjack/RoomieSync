@@ -10,12 +10,9 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +33,6 @@ public class User {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "group_id")
-  private Group group;
-
   @Column(name = "first_name", nullable = false)
   private String firstName;
 
@@ -52,6 +45,9 @@ public class User {
   @Column(nullable = false)
   private String password;
 
+  @Column(name = "group _id")
+  private UUID groupId;
+
   @Column(name = "recent_alarms", columnDefinition = "JSON")
   @JdbcTypeCode(SqlTypes.JSON)
   @Builder.Default
@@ -62,10 +58,10 @@ public class User {
   public void addRecentAlarm(Alarm alarm) {
     try {
       RecentAlarmData recentAlarm = RecentAlarmData.builder()
-          .name(alarm.getName())
-          .time(alarm.getTime())
-          .cachedAt(LocalDateTime.now())
-          .build();
+              .name(alarm.getName())
+              .time(alarm.getTime())
+              .cachedAt(LocalDateTime.now())
+              .build();
 
       if (recentAlarms.size() >= MAX_RECENT_ALARMS) {
         recentAlarms.remove(recentAlarms.size() - 1);

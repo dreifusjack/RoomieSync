@@ -15,9 +15,9 @@ import roomiesync.roomiesync_backend.entity.Alarm;
 public interface AlarmRepository extends JpaRepository<Alarm, UUID> {
   List<Alarm> findByUserId(UUID userId);
 
-  @Query("SELECT a FROM Alarm a WHERE a.user.group.id = :groupId")
+  @Query("SELECT a FROM Alarm a WHERE a.user.groupId = :groupId")
   List<Alarm> findByGroupId(@Param("groupId") UUID groupId);
-  
+
   @Transactional
   @Modifying
   @Query("DELETE FROM Alarm a WHERE a.expirationDate < :now")

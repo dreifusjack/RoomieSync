@@ -30,10 +30,7 @@ public class GroupServiceImpl implements GroupService {
   @Override
   public GroupDto createGroup(String name) {
     User user = authService.getCurrentUserEntity();
-
-    if (user.getGroup() != null) {
-      throw new RuntimeException("User already has a group");
-    }
+    isAlreadyInGroup(user);
 
     // Generate unique group code
     String groupCode = generateGroupCode();
@@ -47,28 +44,31 @@ public class GroupServiceImpl implements GroupService {
             .build();
     Group savedGroup = groupRepository.save(group);
 
-    user.setGroup(savedGroup);
-    User updatedUser = userRepository.save(user);
+    user.setGroupId(savedGroup.getId());
+    userRepository.save(user);
 
-    GroupDto groupDto = GroupMapper.mapToGroupDtoWithoutUsers(savedGroup);
-    groupDto.setUsers(List.of(UserMapper.mapToUserDto(updatedUser)));
-    return groupDto;
+    return GroupMapper.mapToGroupDto(savedGroup);
   }
+
 
   @Override
   public GroupDto joinGroup(String groupCode) {
     User user = authService.getCurrentUserEntity();
-    if (user.getGroup() != null) {
-      throw new RuntimeException("User already has a group");
-    }
+    isAlreadyInGroup(user);
 
     Group group = groupRepository.findByGroupCode(groupCode)
             .orElseThrow(() -> new ResourceNotFoundException("Group not found with code: " + groupCode));
 
-    user.setGroup(group);
+    user.setGroupId(group.getId());
     userRepository.save(user);
 
     return GroupMapper.mapToGroupDto(group);
+  }
+
+  private static void isAlreadyInGroup(User user) {
+    if (user.getGroupId() != null) {
+      throw new RuntimeException("User already has a group");
+    }
   }
 
   @Override
