@@ -25,26 +25,40 @@ public class JwtFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-      FilterChain filterChain) throws ServletException, IOException {
+                                  FilterChain filterChain) throws ServletException, IOException {
+
+    // Skip JWT processing for sign in endpoints
+    String requestPath = request.getRequestURI();
+    String authURL = "/api/auth/";
+    if (requestPath.startsWith(authURL + "l") || requestPath.startsWith(authURL + "r")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     String authHeader = request.getHeader("Authorization");
     String token = null;
     String email = null;
-
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      token = authHeader.substring(7);
-      email = jwtService.extractEmail(token);
-    }
-
-    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-
-      if (jwtService.validateToken(token, userDetails)) {
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-            userDetails, null, userDetails.getAuthorities());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    try {
+      if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        token = authHeader.substring(7);
+        email = jwtService.extractEmail(token);
       }
+
+      if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+
+        if (jwtService.validateToken(token, userDetails)) {
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+      }
+    } catch (Exception e) {
+      logger.error(e.getMessage());
+      SecurityContextHolder.clearContext();
     }
+
     filterChain.doFilter(request, response);
   }
 }
