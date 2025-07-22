@@ -3,8 +3,8 @@ import { BASE_URL } from "@/types/url";
 import api from "./api.config";
 
 export interface CreateAlarmPayload {
-  name: string;
-  time: string;
+  name: string;  
+  time: string;  
   consecutiveDays?: number
 }
 

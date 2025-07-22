@@ -1,27 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import styles from "@/styles/Feature.module.css";
-import { useAlarms } from "@/hooks/AlarmHooks";
 import AlarmCard from "@/components/AlarmCard";
 import CreateAlarmForm from "@/components/CreateAlarmForm";
 import CustomModal from "@/components/Modal";
-import { Alarm } from "@/types/alarm-types";
+import { useGroupAlarms, useUserAlarms } from "@/hooks/alarms.hooks";
+import { useCurrentUser } from "@/hooks/auth.hooks";
 
 function AlarmsPage() {
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
-  const [userAlarms, setUserAlarms] = useState<Alarm[]>([]);
-  const [groupAlarms, setGroupAlarms] = useState<Alarm[]>([]);
-  const { deleteAlarm, fetchAlarms, error } = useAlarms();
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useCurrentUser();
 
-  const loadAlarms = async () => {
-    const alarms = await fetchAlarms();
-    setUserAlarms(alarms.userAlarms || []);
-    setGroupAlarms(alarms.groupAlarms || []);
-  };
+  const {
+    data: groupAlarms,
+    isLoading: groupAlarmsLoading,
+    error: groupAlarmsError,
+  } = useGroupAlarms(user?.groupId || "");
 
-  useEffect(() => {
-    loadAlarms();
-  }, []);
+  const {
+    data: userAlarms,
+    isLoading: userAlarmsLoading,
+    error: userAlarmsError,
+  } = useUserAlarms();
+
+  if (userLoading) {
+    return (
+      <div className={styles.modalContainer}>
+        <div className={styles.modalForm}>
+          <div>Loading user data...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (userError || !user) {
+    return (
+      <div className={styles.modalContainer}>
+        <div className={styles.modalForm}>
+          <div>Error loading user data. Please try refreshing the page.</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user?.groupId) {
+    return (
+      <div className={styles.modalContainer}>
+        <div className={styles.modalForm}>
+          <div>User must have a group. Please logout.</div>
+        </div>
+      </div>
+    );
+  }
+
+  const error = userAlarmsError?.message || groupAlarmsError?.message;
+  const loading = userAlarmsLoading || groupAlarmsLoading;
+
+  if (loading) {
+    <div className={styles.modalContainer}>
+      <div>Loading alarms...</div>
+    </div>;
+  }
 
   return (
     <div className={styles.container}>
@@ -41,30 +84,20 @@ function AlarmsPage() {
         <h2 className={styles.subheading}>Your Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(userAlarms) ? userAlarms : []).map((alarm) => (
-            <AlarmCard
-              alarm={alarm}
-              deleteAlarm={deleteAlarm}
-              onDeleted={loadAlarms}
-            />
+            <AlarmCard alarm={alarm} />
           ))}
         </div>
 
         <h2 className={styles.subheading}>Group Alarms</h2>
         <div className={styles.alarmList}>
           {(Array.isArray(groupAlarms) ? groupAlarms : []).map((alarm) => (
-            <AlarmCard
-              alarm={alarm}
-              deleteAlarm={deleteAlarm}
-              onDeleted={loadAlarms}
-              isGroup={true}
-            />
+            <AlarmCard alarm={alarm} isGroup={true} />
           ))}
         </div>
         <CustomModal
           form={
             <CreateAlarmForm
               onAlarmCreated={() => {
-                loadAlarms();
                 setCreateFormVisible(false);
               }}
             />
