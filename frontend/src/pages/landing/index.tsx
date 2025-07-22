@@ -22,8 +22,6 @@ const LandingPage: React.FC = () => {
     error: userError,
   } = useCurrentUser();
 
-  console.log(user);
-
   const createGroupMutation = useCreateGroup();
   const joinGroupMutation = useJoinGroup();
 
