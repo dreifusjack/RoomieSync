@@ -1,48 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "../../styles/Modal.module.css";
-import { fetchUserDetails } from "@/hooks/UserHooks";
 import { Button } from "@mui/material";
-import { useGroup } from "@/hooks/GroupHooks";
-import { User } from "@/types/user-types";
-import { GroupResponse } from "@/types/group-types";
+import { useRouter } from "next/router";
+import { useCurrentUser } from "@/hooks/auth.hooks";
+import { useCreateGroup, useJoinGroup } from "@/hooks/groups.hooks";
 
 const LandingPage: React.FC = () => {
-  const [user, setUser] = useState<User>({} as User);
   const [groupCode, setGroupCode] = useState("");
   const [groupName, setGroupName] = useState("");
   const [showGroupCode, setShowGroupCode] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { handleCreateGroup, handleJoinGroup, error, loading, onSuccess } =
-    useGroup();
   const [isCreating, setIsCreating] = useState(false);
+  const [createdGroupCode, setCreatedGroupCode] = useState("");
 
-  const fetchUser = async () => {
-    try {
-      const userData = await fetchUserDetails();
-      setUser(userData);
-    } catch (error) {
-      throw new Error("Error fetching data");
-    }
-  };
+  const router = useRouter();
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  // current user + group hooks
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useCurrentUser();
+
+  console.log(user);
+
+  const createGroupMutation = useCreateGroup();
+  const joinGroupMutation = useJoinGroup();
+
+  const loading = createGroupMutation.isPending || joinGroupMutation.isPending;
+  const error =
+    createGroupMutation.error?.message ||
+    joinGroupMutation.error?.message ||
+    null;
+
+  if (userLoading) {
+    return (
+      <div className={styles.modalContainer}>
+        <div className={styles.modalForm}>
+          <div>Loading user data...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (userError || !user) {
+    return (
+      <div className={styles.modalContainer}>
+        <div className={styles.modalForm}>
+          <div>Error loading user data. Please try refreshing the page.</div>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       if (isCreating) {
-        const result = (await handleCreateGroup(
-          groupName,
-          user.id
-        )) as GroupResponse;
-        if (result?.group?.group_code) {
-          setGroupCode(result.group.group_code);
+        const result = await createGroupMutation.mutateAsync(groupName);
+        if (result?.groupCode) {
+          setCreatedGroupCode(result.groupCode);
           setShowGroupCode(true);
         }
       } else {
-        await handleJoinGroup(groupCode, user.id);
+        await joinGroupMutation.mutateAsync(groupCode);
+        handleContinue;
       }
     } catch (err) {
       console.error("Error in handleSubmit:", err);
@@ -57,6 +80,10 @@ const LandingPage: React.FC = () => {
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
+  };
+
+  const handleContinue = () => {
+    router.push("/alarms");
   };
 
   return (
@@ -75,7 +102,7 @@ const LandingPage: React.FC = () => {
             >
               <input
                 type="text"
-                value={groupCode}
+                value={createdGroupCode}
                 readOnly
                 className={styles.floatingInput} // + code-display
               />
@@ -85,7 +112,7 @@ const LandingPage: React.FC = () => {
               {copied ? "Copied!" : "Copy Code"}
             </Button>
 
-            <Button onClick={onSuccess} className="continue-button">
+            <Button onClick={handleContinue} className="continue-button">
               Continue
             </Button>
           </div>

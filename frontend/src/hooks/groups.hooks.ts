@@ -3,7 +3,6 @@ import { Group } from "@/types/group-types"
 import { User } from "@/types/user-types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
-
 export const useCreateGroup = () => {
   const queryClient = useQueryClient()
 
@@ -14,7 +13,8 @@ export const useCreateGroup = () => {
     },
     onSuccess: (group) => {
       queryClient.invalidateQueries({ queryKey: ['groups'] });
-      queryClient.setQueryData(['groups'], group);
+      queryClient.invalidateQueries({ queryKey: ['auth', 'currentUser'] });
+      queryClient.setQueryData(['groups', group.id], group);
     }
   })
 }
@@ -29,7 +29,8 @@ export const useJoinGroup = () => {
     },
     onSuccess: (group) => {
       queryClient.invalidateQueries({ queryKey: ['groups'] });
-      queryClient.setQueryData(['groups'], group)
+      queryClient.invalidateQueries({ queryKey: ['auth', 'currentUser'] });
+      queryClient.setQueryData(['groups', group.id], group);
     }
   })
 }
@@ -40,7 +41,8 @@ export const useGroupById = (id: string) => {
     queryFn: async () => {
       const { data } = await getGroupById(id)
       return data
-    }
+    },
+    enabled: !!id 
   })
 }
 
@@ -48,7 +50,7 @@ export const useAllGroups = () => {
   return useQuery<Group[], Error>({
     queryKey: ['groups'],
     queryFn: async () => {
-      const {data } = await getAllGroups()
+      const { data } = await getAllGroups()
       return data
     }
   })
@@ -56,10 +58,11 @@ export const useAllGroups = () => {
 
 export const useGroupUsers = (id: string) => {
   return useQuery<User[], Error>({
-    queryKey: ['groups', id],
+    queryKey: ['groups', id, 'users'], 
     queryFn: async () => {
       const { data } = await getGroupUsers(id)
       return data
-    }
+    },
+    enabled: !!id 
   })
 }
