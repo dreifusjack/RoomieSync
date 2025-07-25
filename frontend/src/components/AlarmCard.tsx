@@ -31,7 +31,7 @@ const AlarmCard: React.FC<AlarmCardProps> = ({ alarm, isGroup }) => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
-
+  // test
   return (
     <div className={styles.alarmList}>
       <div className={styles.alarmCard} key={alarm.id || Math.random()}>
