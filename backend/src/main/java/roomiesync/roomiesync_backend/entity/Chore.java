@@ -3,6 +3,7 @@ package roomiesync.roomiesync_backend.entity;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,6 +45,6 @@ public class Chore {
   @Column(nullable = false, length = 100)
   private String cadence;
 
-  @OneToMany(mappedBy = "chore")
+  @OneToMany(mappedBy = "chore", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ChoreAssignment> assignments;
 }
