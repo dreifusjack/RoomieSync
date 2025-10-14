@@ -1,12 +1,12 @@
-import { getAllUsers, getUserById } from "@/apis/users.api"
+import { getAllGroupUsers, getUserById } from "@/apis/users.api"
 import { User } from "@/types/user-types"
 import { useQuery } from "@tanstack/react-query"
 
-export const useAllUsers = () => {
+export const useAllGroupUsers = () => {
   return useQuery<User[], Error>({
     queryKey: ['users'],
     queryFn: async () => {
-      const { data } = await getAllUsers();
+      const { data } = await getAllGroupUsers();
       return data;
     }
   });

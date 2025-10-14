@@ -8,14 +8,12 @@ interface ChoresListProps {
   chores: Chore[];
   onRemindUser: (choreId: string) => void;
   onDeletedChore: (choreId: string) => void;
-  onChoreAssigned: () => void;
 }
 
 const ChoresList: React.FC<ChoresListProps> = ({
   chores,
   onRemindUser,
   onDeletedChore,
-  onChoreAssigned,
 }) => {
   return (
     <div>
@@ -26,7 +24,6 @@ const ChoresList: React.FC<ChoresListProps> = ({
             chore={chore}
             onRemindUser={onRemindUser}
             onDeletedChore={onDeletedChore}
-            onChoreAssigned={onChoreAssigned}
           />
         ))}
       </div>

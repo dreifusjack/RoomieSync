@@ -1,42 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ChoresList from "@/components/ChoresList/ChoresList";
 import CreateChoreForm from "@/components/CreateChoreForm";
 import styles from "@/styles/Feature.module.css";
 import Sidebar from "@/components/Sidebar";
-import {
-  useRemindUser,
-  useDeleteChore,
-  useGetGroupChores,
-} from "@/hooks/ChoreHooks";
 import CustomModal from "@/components/Modal";
 import { Chore } from "@/types/chore-types";
+import {
+  useGroupChores,
+  useSendReminder,
+  useDeleteChore,
+} from "@/hooks/chores.hooks";
 
 const ChoresPage: React.FC = () => {
-  const [chores, setChores] = useState<Chore[]>([]);
   const [isCreateFormVisible, setCreateFormVisible] = useState(false);
-  const { getAllGroupChores, isLoading, error } = useGetGroupChores();
-  const { remindUserWithId } = useRemindUser();
-  const { deleteChoreWithId } = useDeleteChore();
+  const { data: groupChores, isLoading, isError } = useGroupChores();
+  const { mutate: sendReminder } = useSendReminder();
+  const { mutate: deleteChore } = useDeleteChore();
 
-  const fetchChores = async () => {
-    const choresData = await getAllGroupChores();
-    setChores(choresData || []);
-  };
+  // might need these
+  // const handleRemindUser = async (choreId: string) => {
+  //   sendReminder(choreId);
+  // };
 
-  useEffect(() => {
-    fetchChores();
-  }, []);
+  // const handleDeleteChore = (choreId: string) => {
+  //   deleteChore(choreId);
+  // };
 
-  const handleRemindUser = async (choreId: string) => {
-    await remindUserWithId(choreId);
-  };
+  if (isError) {
+    return <div>Error fetching user chores</div>;
+  }
 
-  const handleDeleteChore = async (choreId: string) => {
-    await deleteChoreWithId(choreId);
-    await fetchChores();
-  };
-
-  if (isLoading) {
+  if (isLoading || !groupChores) {
     return <div>Loading chores...</div>;
   }
 
@@ -56,22 +50,18 @@ const ChoresPage: React.FC = () => {
           </button>
         </div>
         <hr className={styles.horizontalLine} />
-        {error && <div className={styles.errorMessage}>{error}</div>}
+        {/* {isError && <div className={styles.errorMessage}>{error}</div>} */}
         <div className="chores-list">
           <ChoresList
-            chores={chores}
-            onRemindUser={handleRemindUser}
-            onDeletedChore={handleDeleteChore}
-            onChoreAssigned={() => {
-              fetchChores();
-            }}
+            chores={groupChores}
+            onRemindUser={sendReminder}
+            onDeletedChore={deleteChore}
           />
         </div>
         <CustomModal
           form={
             <CreateChoreForm
               onChoreCreated={() => {
-                fetchChores();
                 setCreateFormVisible(false);
               }}
             />

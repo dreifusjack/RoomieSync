@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../styles/Modal.module.css";
-import { useCreateChore } from "@/hooks/ChoreHooks";
 import { Button } from "@mui/material";
+import { useCreateChore } from "@/hooks/chores.hooks";
 
 interface CreateChoreFormProps {
   onChoreCreated: () => void;
@@ -13,26 +13,38 @@ const CreateChoreForm: React.FC<CreateChoreFormProps> = ({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [cadence, setCadence] = useState("");
-  const { createChoreWithPayload, error } = useCreateChore();
+  const createChoreMutation = useCreateChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      await createChoreWithPayload(name, description, cadence);
-
-      onChoreCreated();
-      setName("");
-      setDescription("");
-      setCadence("");
-    } catch (error) {
-      console.error("Error creating chore:", error);
-    }
+    createChoreMutation.mutate(
+      {
+        name,
+        description,
+        cadence,
+      },
+      {
+        onSuccess: () => {
+          onChoreCreated();
+          setName("");
+          setDescription("");
+          setCadence("");
+        },
+        onError: (error) => {
+          console.error("Error creating chore:", error);
+        },
+      }
+    );
   };
 
   return (
     <div className={styles.modalContainer}>
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      {createChoreMutation.error && (
+        <div className={styles.errorMessage}>
+          {createChoreMutation.error.message}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className={styles.modalForm}>
         <div className={styles.floatingLabelGroup}>
           <input

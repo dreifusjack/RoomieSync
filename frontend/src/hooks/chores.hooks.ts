@@ -14,8 +14,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 export const useCreateChore = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Chore, Error, { payload: CreateChorePayload }>({
-    mutationFn: async ({ payload }) => {
+  return useMutation<Chore, Error, CreateChorePayload >({
+    mutationFn: async (payload) => {
       const { data } = await createChore(payload);
       return data;
     },
@@ -64,14 +64,14 @@ export const useChoreAssignments = (choreId: string) => {
 export const useDeleteChore = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<string, Error, { choreId: string; groupId: string }>({
-    mutationFn: async ({ choreId }) => {
+  return useMutation<string, Error, string>({
+    mutationFn: async (choreId: string) => {
       const { data } = await deleteChore(choreId);
       return data;
     },
-    onSuccess: (message, { choreId, groupId }) => {
+    onSuccess: (choreId) => {
       queryClient.removeQueries({ queryKey: ['chores', choreId] });
-      queryClient.invalidateQueries({ queryKey: ['chores', groupId] });
+      queryClient.invalidateQueries({ queryKey: ['chores'] });
       queryClient.removeQueries({ queryKey: ['choreAssignments', choreId] });
     }
   });

@@ -123,16 +123,13 @@ const handleAuthSuccess = (data: AuthResponse): User | null => {
   const userData = data.user;
   if (userData && typeof userData === 'object' && 'id' in userData) {
     return userData as User;
-    console.log("exit 1")
   }
 
   if ('id' in data && 'email' in data) {
     const { user: _, accessToken: _a, access_token: _at, refreshToken: _r, refresh_token: _rt, ...userProps } = data;
     return userProps as User;
-    console.log("exit 2")
   }
   
-  console.log("exit 3")
   return null;
 };
 

@@ -1,69 +1,58 @@
 import React, { useEffect, useState } from "react";
 import "./list.css";
-import { useGetChoreAssignees } from "@/hooks/ChoreHooks";
-import { useAllGroupUsers, useUserById } from "@/hooks/UserHooks";
+import { useAllGroupUsers, useUserById } from "@/hooks/users.hooks";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AssignChoreForm from "../AssignChoreForm";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomModal from "../Modal";
-import { User } from "@/types/user-types";
-import { Chore, ChoreAssignee } from "@/types/chore-types";
+import { Chore, ChoreAssignment } from "@/types/chore-types";
+import { useChoreAssignments } from "@/hooks/chores.hooks";
 
 interface ChoreCardProps {
   chore: Chore;
   onRemindUser: (choreId: string) => void;
   onDeletedChore: (choreId: string) => void;
-  onChoreAssigned: () => void;
 }
 
 const ChoreCard: React.FC<ChoreCardProps> = ({
   chore,
   onRemindUser,
   onDeletedChore,
-  onChoreAssigned,
 }) => {
-  const { getChoreAssigneesFromId } = useGetChoreAssignees();
-  const [assignee, setAssignee] = useState<ChoreAssignee>();
-  const [users, setUsers] = useState<User[]>([]);
+  const [assignee, setAssignee] = useState<ChoreAssignment | null>(null);
   const [isAssignFormVisible, setAssignFormVisible] = useState(false);
-  const { getAllGroupUsers } = useAllGroupUsers();
-
-  const handleGetAssignee = async () => {
-    const assignee = await getChoreAssigneesFromId(chore.id);
-    setAssignee(assignee[0]);
-  };
-
-  const fetchGroupMembers = async () => {
-    const groupUsers = await getAllGroupUsers();
-    setUsers(groupUsers || []);
-  };
+  const { data: groupUsers } = useAllGroupUsers();
+  const { data: choreAssignments } = useChoreAssignments(chore.id);
 
   useEffect(() => {
-    handleGetAssignee();
-    fetchGroupMembers();
-  }, []);
+    if (choreAssignments && choreAssignments.length > 0) {
+      // currently assuming each chore has only one assignee
+      setAssignee(choreAssignments[0]);
+    } else {
+      setAssignee(null);
+    }
+  }, [choreAssignments]);
 
-  const userName = useUserById(assignee?.user_id || "").userName;
-  let parsedDueDate = "chore must be assigned";
+  const parsedDueDate = assignee?.dueDate
+    ? new Date(assignee.dueDate).toLocaleDateString()
+    : "Chore must be assigned";
 
-  if (assignee?.due_date) {
-    const date = new Date(assignee.due_date); // Parse the date string
-    parsedDueDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(
-      date.getDate()
-    ).padStart(2, "0")}/${date.getFullYear()}`;
-  }
+  const { data: assigneeUser } = useUserById(assignee?.userId ?? "");
+  const userName = assigneeUser
+    ? `${assigneeUser.firstName} ${assigneeUser.lastName}`
+    : "";
 
   return (
     <div key={chore.id} className="chore-card">
       <h3>{chore.name}</h3>
       <p>{chore.description}</p>
       <p>⏳ {chore.cadence}</p>
+
       {userName ? (
         <>
           <p>👤 {userName}</p>
           <p>⏰ {parsedDueDate}</p>
-
           <button
             onClick={() => {
               onRemindUser(chore.id);
@@ -76,13 +65,12 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
       ) : (
         <button
           className="action-button"
-          onClick={() => {
-            setAssignFormVisible(true);
-          }}
+          onClick={() => setAssignFormVisible(true)}
         >
           Assign Chore
         </button>
       )}
+
       <DeleteIcon
         sx={{
           marginLeft: "70px",
@@ -90,13 +78,16 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
           cursor: "pointer",
         }}
         onClick={() => onDeletedChore(chore.id)}
-      ></DeleteIcon>
+      />
+
       <CustomModal
         form={
           <AssignChoreForm
             chore={chore}
-            users={users}
-            onChoreAssigned={onChoreAssigned}
+            users={groupUsers || []}
+            onChoreAssigned={() => {
+              setAssignFormVisible(false);
+            }}
           />
         }
         open={isAssignFormVisible}

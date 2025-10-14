@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useAssignChore } from "@/hooks/ChoreHooks";
 import styles from "../styles/Modal.module.css";
 import { Button } from "@mui/material";
 import { User } from "@/types/user-types";
+import { useAssignChore } from "@/hooks/chores.hooks";
 import { Chore } from "@/types/chore-types";
 
 interface AssignChoreFormProps {
@@ -19,22 +19,38 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedDueDate, setSelectedDueDate] = useState("");
 
-  const { assignChoreWithPayload, isLoading, error } = useAssignChore();
+  const assignChoreMutation = useAssignChore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await assignChoreWithPayload(selectedUser, chore.id, selectedDueDate);
-      onChoreAssigned();
-      setSelectedUser("");
-    } catch (error) {
-      console.error("Error assigning chore:", error);
-    }
+
+    const dueDateISO = new Date(selectedDueDate).toISOString();
+
+    assignChoreMutation.mutate(
+      {
+        choreId: chore.id,
+        payload: { userId: selectedUser, dueDate: dueDateISO },
+      },
+      {
+        onSuccess: () => {
+          onChoreAssigned();
+          setSelectedUser("");
+          setSelectedDueDate("");
+        },
+        onError: (error) => {
+          console.error("Error assigning chore:", error);
+        },
+      }
+    );
   };
 
   return (
     <div className={styles.modalContainer}>
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      {assignChoreMutation.error && (
+        <div className={styles.errorMessage}>
+          {assignChoreMutation.error.message}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className={styles.modalForm}>
         <div className={styles.floatingLabelGroup}>
           <select
@@ -69,7 +85,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
         </div>
 
         <Button type="submit">
-          {isLoading ? "Assigning..." : "Assign Chore"}
+          {assignChoreMutation.isPending ? "Assigning..." : "Assign Chore"}
         </Button>
       </form>
     </div>
