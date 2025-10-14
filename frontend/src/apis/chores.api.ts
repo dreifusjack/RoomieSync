@@ -13,16 +13,16 @@ export interface AssignChorePayload {
   dueDate: string;
 }
 
-export const createChore = (groupId: string, payload: CreateChorePayload) => {
-  return api.post<Chore>(`${BASE_URL}/api/groups/${groupId}/chores`, payload);
+export const createChore = (payload: CreateChorePayload) => {
+  return api.post<Chore>(`${BASE_URL}/api/chores`, payload);
 }
 
 export const assignChore = (choreId: string, payload: AssignChorePayload) => {
   return api.post<ChoreAssignment>(`${BASE_URL}/api/chores/${choreId}/assignments`, payload);
 }
 
-export const getChores = (groupId: string) => {
-  return api.get<Chore[]>(`${BASE_URL}/api/groups/${groupId}/chores`);
+export const getChores = () => {
+  return api.get<Chore[]>(`${BASE_URL}/api/chores`);
 }
 
 export const getAssignments = (choreId: string) => {

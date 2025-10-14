@@ -14,13 +14,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 export const useCreateChore = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Chore, Error, { groupId: string; payload: CreateChorePayload }>({
-    mutationFn: async ({ groupId, payload }) => {
-      const { data } = await createChore(groupId, payload);
+  return useMutation<Chore, Error, { payload: CreateChorePayload }>({
+    mutationFn: async ({ payload }) => {
+      const { data } = await createChore(payload);
       return data;
     },
-    onSuccess: (chore, { groupId }) => {
-      queryClient.invalidateQueries({ queryKey: ['chores', groupId] });
+    onSuccess: (chore) => {
+      queryClient.invalidateQueries({ queryKey: ['chores'] });
       queryClient.setQueryData(['chores', chore.id], chore);
     }
   });
@@ -40,14 +40,13 @@ export const useAssignChore = () => {
   });
 };
 
-export const useAllChores = (groupId: string) => {
+export const useGroupChores = () => {
   return useQuery<Chore[], Error>({
-    queryKey: ['chores', groupId],
+    queryKey: ['chores'],
     queryFn: async () => {
-      const { data } = await getChores(groupId);
+      const { data } = await getChores();
       return data;
     },
-    enabled: !!groupId, // Only run if groupId exists
   });
 };
 
