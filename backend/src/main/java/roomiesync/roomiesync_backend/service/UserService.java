@@ -8,7 +8,7 @@ import roomiesync.roomiesync_backend.dto.UserDto;
 public interface UserService {
   UserDto getUserById(UUID id);
 
-  List<UserDto> getAllUsers();
+  List<UserDto> getAllGroupUsers();
 
   void deleteUserById(UUID id);
 }
