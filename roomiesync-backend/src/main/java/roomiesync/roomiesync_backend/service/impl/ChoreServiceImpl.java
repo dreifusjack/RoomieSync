@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import roomiesync.roomiesync_backend.dto.ChoreAssignmentDto;
 import roomiesync.roomiesync_backend.dto.ChoreDto;
+import roomiesync.roomiesync_backend.dto.UserDto;
 import roomiesync.roomiesync_backend.entity.Chore;
 import roomiesync.roomiesync_backend.entity.ChoreAssignment;
 import roomiesync.roomiesync_backend.entity.Group;
@@ -26,6 +27,7 @@ import roomiesync.roomiesync_backend.repository.ChoreAssignmentRepository;
 import roomiesync.roomiesync_backend.repository.ChoreRepository;
 import roomiesync.roomiesync_backend.repository.GroupRepository;
 import roomiesync.roomiesync_backend.repository.UserRepository;
+import roomiesync.roomiesync_backend.service.AuthService;
 import roomiesync.roomiesync_backend.service.ChoreService;
 
 @Service
@@ -36,20 +38,22 @@ public class ChoreServiceImpl implements ChoreService {
   private final GroupRepository groupRepository;
   private final UserRepository userRepository;
   private final JavaMailSender mailSender;
+  private final AuthService authService;
 
   @Value("${spring.mail.username}")
   private String fromEmail;
 
   @Override
-  public ChoreDto createChore(UUID groupId, ChoreDto choreDto) {
-    Group group = groupRepository.findById(groupId)
-            .orElseThrow(() -> new ResourceNotFoundException("Group not found with id: " + groupId));
+  public ChoreDto createChore(ChoreDto choreDto) {
+    UserDto currentUser = authService.getCurrentUser();
+    Group group = groupRepository.findById(currentUser.getGroupId())
+        .orElseThrow(() -> new ResourceNotFoundException("Group not found with id: " + currentUser.getGroupId()));
     Chore chore = Chore.builder()
-            .group(group)
-            .name(choreDto.getName())
-            .description(choreDto.getDescription())
-            .cadence(choreDto.getCadence())
-            .build();
+        .group(group)
+        .name(choreDto.getName())
+        .description(choreDto.getDescription())
+        .cadence(choreDto.getCadence())
+        .build();
 
     Chore savedChore = choreRepository.save(chore);
     return ChoreMapper.mapToChoreDto(savedChore);
@@ -58,47 +62,48 @@ public class ChoreServiceImpl implements ChoreService {
   @Override
   public ChoreAssignmentDto assignChore(UUID choreId, ChoreAssignmentDto choreAssignmentDto) {
     Chore chore = choreRepository.findById(choreId)
-            .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
+        .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
 
     UUID userId = choreAssignmentDto.getUserId();
     User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
     ChoreAssignment choreAssignment = ChoreAssignment.builder()
-            .chore(chore)
-            .user(user)
-            .dueDate(choreAssignmentDto.getDueDate())
-            .build();
+        .chore(chore)
+        .user(user)
+        .dueDate(choreAssignmentDto.getDueDate())
+        .build();
 
     ChoreAssignment savedAssignment = choreAssignmentRepository.save(choreAssignment);
     return ChoreAssignmentMapper.mapToChoreAssignmentDto(savedAssignment);
   }
 
   @Override
-  public List<ChoreDto> getChores(UUID groupId) {
-    return choreRepository.findByGroupId(groupId).stream()
-            .map(ChoreMapper::mapToChoreDto)
-            .collect(Collectors.toList());
+  public List<ChoreDto> getChores() {
+    UserDto currentUser = authService.getCurrentUser();
+    return choreRepository.findByGroupId(currentUser.getGroupId()).stream()
+        .map(ChoreMapper::mapToChoreDto)
+        .collect(Collectors.toList());
   }
 
   @Override
   public List<ChoreAssignmentDto> getAssignments(UUID choreId) {
     return choreAssignmentRepository.findByChoreId(choreId).stream()
-            .map(ChoreAssignmentMapper::mapToChoreAssignmentDto)
-            .collect(Collectors.toList());
+        .map(ChoreAssignmentMapper::mapToChoreAssignmentDto)
+        .collect(Collectors.toList());
   }
 
   @Override
   public void deleteChore(UUID choreId) {
     Chore chore = choreRepository.findById(choreId)
-            .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
+        .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
     choreRepository.delete(chore);
   }
 
   @Override
   public void sendReminder(UUID choreId) {
     Chore chore = choreRepository.findById(choreId)
-            .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
+        .orElseThrow(() -> new ResourceNotFoundException("Chore not found with id: " + choreId));
 
     List<ChoreAssignment> assignments = chore.getAssignments();
     if (assignments.isEmpty()) {
@@ -112,10 +117,10 @@ public class ChoreServiceImpl implements ChoreService {
       try {
         recipient = assignment.getUser();
         body = "Reminder: You are assigned to the chore \"" + chore.getName() + "\".\n" +
-                "Description: " + chore.getDescription() + ".\n" +
-                "Due date: " + assignment.getDueDate() + "\n" + "\n" +
-                "Best," + "\n" +
-                "RoomieSync";
+            "Description: " + chore.getDescription() + ".\n" +
+            "Due date: " + assignment.getDueDate() + "\n" + "\n" +
+            "Best," + "\n" +
+            "RoomieSync";
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);

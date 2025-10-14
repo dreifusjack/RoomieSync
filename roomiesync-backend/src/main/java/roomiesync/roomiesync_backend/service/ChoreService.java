@@ -7,11 +7,11 @@ import roomiesync.roomiesync_backend.dto.ChoreAssignmentDto;
 import roomiesync.roomiesync_backend.dto.ChoreDto;
 
 public interface ChoreService {
-  ChoreDto createChore(UUID groupId, ChoreDto choreDto);
+  ChoreDto createChore(ChoreDto choreDto);
 
   ChoreAssignmentDto assignChore(UUID choreId, ChoreAssignmentDto choreAssignmentDto);
 
-  List<ChoreDto> getChores(UUID groupId);
+  List<ChoreDto> getChores();
 
   List<ChoreAssignmentDto> getAssignments(UUID choreId);
 

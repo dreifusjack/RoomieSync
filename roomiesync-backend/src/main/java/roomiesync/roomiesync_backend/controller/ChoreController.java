@@ -25,23 +25,22 @@ public class ChoreController {
 
   private ChoreService choreService;
 
-  @PostMapping("/groups/{groupId}/chores")
-  public ResponseEntity<ChoreDto> createChore(
-          @PathVariable UUID groupId, @RequestBody ChoreDto choreDto) {
-    ChoreDto createdChore = choreService.createChore(groupId, choreDto);
+  @PostMapping("/chores")
+  public ResponseEntity<ChoreDto> createChore(@RequestBody ChoreDto choreDto) {
+    ChoreDto createdChore = choreService.createChore(choreDto);
     return new ResponseEntity<>(createdChore, HttpStatus.CREATED);
   }
 
   @PostMapping("/chores/{choreId}/assignments")
   public ResponseEntity<ChoreAssignmentDto> assignChore(
-          @PathVariable UUID choreId, @RequestBody ChoreAssignmentDto choreAssignmentDto) {
+      @PathVariable UUID choreId, @RequestBody ChoreAssignmentDto choreAssignmentDto) {
     ChoreAssignmentDto assigned = choreService.assignChore(choreId, choreAssignmentDto);
     return ResponseEntity.ok(assigned);
   }
 
-  @GetMapping("/groups/{groupId}/chores")
-  public ResponseEntity<List<ChoreDto>> getChores(@PathVariable UUID groupId) {
-    return ResponseEntity.ok(choreService.getChores(groupId));
+  @GetMapping("/chores")
+  public ResponseEntity<List<ChoreDto>> getChores() {
+    return ResponseEntity.ok(choreService.getChores());
   }
 
   @GetMapping("/chores/{choreId}/assignments")
