@@ -17,7 +17,7 @@ services:
 
   app:
     build:
-      context: ./roomiesync-backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: roomiesync-springboot-app
     environment:

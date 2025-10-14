@@ -12,9 +12,9 @@
     </parent>
 
     <groupId>roomiesync</groupId>
-    <artifactId>roomiesync-backend</artifactId>
+    <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>roomiesync-backend</name>
+    <name>backend</name>
     <description>Project for Spring Boot Roommate Organization Management App</description>
 
     <properties>
