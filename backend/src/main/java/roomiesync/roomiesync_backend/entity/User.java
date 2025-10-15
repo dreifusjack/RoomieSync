@@ -45,7 +45,7 @@ public class User {
   @Column(nullable = false)
   private String password;
 
-  @Column(name = "group _id")
+  @Column(name = "group_id")
   private UUID groupId;
 
   @Column(name = "recent_alarms", columnDefinition = "JSON")
@@ -58,10 +58,10 @@ public class User {
   public void addRecentAlarm(Alarm alarm) {
     try {
       RecentAlarmData recentAlarm = RecentAlarmData.builder()
-              .name(alarm.getName())
-              .time(alarm.getTime())
-              .cachedAt(LocalDateTime.now())
-              .build();
+          .name(alarm.getName())
+          .time(alarm.getTime())
+          .cachedAt(LocalDateTime.now())
+          .build();
 
       if (recentAlarms.size() >= MAX_RECENT_ALARMS) {
         recentAlarms.remove(recentAlarms.size() - 1);
