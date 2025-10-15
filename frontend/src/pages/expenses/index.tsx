@@ -12,7 +12,7 @@ const Expenses: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex">
         <Sidebar />
-        <div className="flex-1 ml-28 p-8">
+        <div className="flex-1 ml-0 md:ml-28 p-4 md:p-8">
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             {error}
           </div>
@@ -35,16 +35,18 @@ const Expenses: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Sidebar />
-      <div className="flex-1 ml-28 p-8">
+      <div className="flex-1 ml-0 md:ml-28 p-4 md:p-8 pt-20 md:pt-8">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Expenses</h1>
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              Expenses
+            </h1>
             <div className="w-20 h-1 bg-blue-600 rounded-full"></div>
           </div>
 
           {/* Create New Expense Form */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6 mb-6 md:mb-8">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">
               Create New Expense
             </h2>
             <form onSubmit={handleCreateExpense} className="space-y-4">
@@ -79,7 +81,7 @@ const Expenses: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Adding Expense..." : "Add Expense"}
               </button>
@@ -87,8 +89,8 @@ const Expenses: React.FC = () => {
           </div>
 
           {/* Expenses You Owe */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6 mb-6 md:mb-8">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">
               Expenses You Owe
             </h2>
             <div className="space-y-3">
@@ -98,9 +100,9 @@ const Expenses: React.FC = () => {
                   return (
                     <div
                       key={key}
-                      className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg gap-3"
                     >
-                      <span className="text-gray-700">
+                      <span className="text-sm md:text-base text-gray-700">
                         You owe{" "}
                         <span className="font-semibold">{recipient}</span>:{" "}
                         <span className="font-semibold text-red-600">
@@ -109,7 +111,7 @@ const Expenses: React.FC = () => {
                       </span>
                       <button
                         onClick={() => handlePaid(ower, recipient, amount)}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                        className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                       >
                         Mark as Paid
                       </button>
@@ -130,8 +132,8 @@ const Expenses: React.FC = () => {
           </div>
 
           {/* Expenses Owed to You */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">
               Expenses Owed to You
             </h2>
             <div className="space-y-3">
@@ -143,7 +145,7 @@ const Expenses: React.FC = () => {
                       key={key}
                       className="flex justify-between items-center p-4 bg-green-50 rounded-lg"
                     >
-                      <span className="text-gray-700">
+                      <span className="text-sm md:text-base text-gray-700">
                         <span className="font-semibold">{ower}</span> owes you:{" "}
                         <span className="font-semibold text-green-600">
                           ${amount}

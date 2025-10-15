@@ -24,7 +24,7 @@ function AlarmsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex">
         <Sidebar />
-        <div className="flex-1 ml-28 p-8">
+        <div className="flex-1 ml-0 md:ml-28 p-4 md:p-8">
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             <span className="ml-4 text-gray-600">Loading user data...</span>
@@ -40,7 +40,7 @@ function AlarmsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex">
         <Sidebar />
-        <div className="flex-1 ml-28 p-8">
+        <div className="flex-1 ml-0 md:ml-28 p-4 md:p-8">
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             <span className="ml-4 text-gray-600">Loading alarms...</span>
@@ -53,15 +53,17 @@ function AlarmsPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Sidebar />
-      <div className="flex-1 ml-28 p-8">
+      <div className="flex-1 ml-0 md:ml-28 p-4 md:p-8 pt-20 md:pt-8">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Alarms</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                Alarms
+              </h1>
               <div className="w-20 h-1 bg-blue-600 rounded-full"></div>
             </div>
             <button
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-sm"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-sm"
               onClick={() => setCreateFormVisible(true)}
             >
               Create New Alarm
@@ -69,13 +71,13 @@ function AlarmsPage() {
           </div>
 
           {/* Your Alarms */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">
               Your Alarms
             </h2>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
               {Array.isArray(userAlarms) && userAlarms.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 w-full">
                   {userAlarms.map((alarm) => (
                     <AlarmCard key={alarm.id} alarm={alarm} />
                   ))}
@@ -90,19 +92,19 @@ function AlarmsPage() {
 
           {/* Group Alarms */}
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-4">
               Roommate Alarms
             </h2>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
               {Array.isArray(roomateAlarms) && roomateAlarms.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 w-full">
                   {roomateAlarms.map((alarm) => (
                     <AlarmCard key={alarm.id} alarm={alarm} isGroup={true} />
                   ))}
                 </div>
               ) : (
                 <p className="text-gray-500 text-center py-4">
-                  No roommate alarms set
+                  No roommate alarms
                 </p>
               )}
             </div>

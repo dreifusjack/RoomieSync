@@ -43,13 +43,16 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
     : "";
 
   return (
-    <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-80 transition-all duration-300 hover:shadow-xl hover:scale-105">
+    <div className="bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 w-full transition-all duration-300 hover:shadow-xl hover:scale-105">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-semibold text-white mb-2">{chore.name}</h3>
+        <h3 className="text-lg md:text-xl font-semibold text-white mb-2 flex-1 pr-2 break-words">
+          {chore.name}
+        </h3>
         <DeleteIcon
           sx={{
             color: "#ffffff",
             cursor: "pointer",
+            flexShrink: 0,
             "&:hover": {
               color: "#ff6b6b",
             },
@@ -58,19 +61,25 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
         />
       </div>
 
-      <p className="text-gray-300 mb-3">{chore.description}</p>
-      <p className="text-gray-400 mb-3">⏳ {chore.cadence}</p>
+      <p className="text-sm md:text-base text-gray-300 mb-3 break-words">
+        {chore.description}
+      </p>
+      <p className="text-sm md:text-base text-gray-400 mb-3">
+        ⏳ {chore.cadence}
+      </p>
 
       {userName ? (
         <div className="space-y-3">
-          <p className="text-gray-300">👤 {userName}</p>
-          <p className="text-gray-400">⏰ {parsedDueDate}</p>
+          <p className="text-sm md:text-base text-gray-300">👤 {userName}</p>
+          <p className="text-sm md:text-base text-gray-400">
+            ⏰ {parsedDueDate}
+          </p>
           <button
             onClick={() => {
               onRemindUser(chore.id);
               toast.success("Reminder sent successfully!");
             }}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm md:text-base"
           >
             Send Reminder
           </button>
@@ -78,7 +87,7 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
       ) : (
         <button
           onClick={() => setAssignFormVisible(true)}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 text-sm md:text-base"
         >
           Assign Chore
         </button>
