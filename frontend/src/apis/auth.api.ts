@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/types/url";
 import { User } from "@/types/user-types"
-import api from "./api.config";
+import api from "@/apis/api.config"
 
 export interface LoginPayload {
   email: string;
@@ -15,13 +15,13 @@ export interface RegisterPayload {
 }
 
 export const registerUser = (payload: RegisterPayload) => {
-  return api.post<User>(`${BASE_URL}/api/auth/register`, payload);
+  return api.post<User>(`${BASE_URL}/auth/register`, payload);
 }
 
 export const loginUser = (payload: LoginPayload) => {
-  return api.post<User>(`${BASE_URL}/api/auth/login`, payload);
+  return api.post<User>(`${BASE_URL}/auth/login`, payload);
 }
 
 export const getCurrentUser = () => {
-  return api.get<User>(`${BASE_URL}/api/auth/user`);
+  return api.get<User>(`${BASE_URL}/auth/user`);
 }
