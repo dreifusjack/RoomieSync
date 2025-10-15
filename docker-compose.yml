@@ -1,17 +1,15 @@
-version: '3.8'
-
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: next-frontend
-    ports:
-      - "3000:3000"
+  postgres:
+    image: postgres:17-alpine
+    container_name: roomiesync-postgres-db
     environment:
-      - BASE_URL=http://127.0.0.1:8080
-    depends_on:
-      - app
+      POSTGRES_DB: ${PGDATABASE}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - roomiesync-network
 
@@ -21,12 +19,14 @@ services:
       dockerfile: Dockerfile
     container_name: roomiesync-springboot-app
     environment:
-      DB_URL: ${DB_URL}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: ${PGDATABASE}
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      FRONTEND_URL: ${FRONTEND_URL}
     ports:
       - "8080:8080"
     depends_on:
@@ -34,17 +34,18 @@ services:
     networks:
       - roomiesync-network
 
-  postgres:
-    image: postgres:17-alpine
-    container_name: roomiesync-postgres-db
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: next-frontend
     environment:
-      POSTGRES_DB: RoomieSync
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      BASE_URL: ${BASE_URL}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - "3000:3000"
+    depends_on:
+      - app
     networks:
       - roomiesync-network
 
