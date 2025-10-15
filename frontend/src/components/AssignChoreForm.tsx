@@ -57,7 +57,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 appearance-none"
+            className="peer w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-transparent"
           >
             <option value="">Select User</option>
             {users.map((user) => (
@@ -68,7 +68,7 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
           </select>
           <label
             htmlFor="user"
-            className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none"
+            className="absolute left-4 top-1 text-gray-500 text-xs transition-all duration-200 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-1 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-blue-600"
           >
             User
           </label>
@@ -81,11 +81,12 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
             value={selectedDueDate}
             onChange={(e) => setSelectedDueDate(e.target.value)}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
+            className="peer w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-transparent"
+            placeholder="Due Date"
           />
           <label
             htmlFor="dueDate"
-            className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none"
+            className="absolute left-4 top-1 text-gray-500 text-xs transition-all duration-200 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-1 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-blue-600"
           >
             Due Date
           </label>

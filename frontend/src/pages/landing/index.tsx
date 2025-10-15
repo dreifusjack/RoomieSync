@@ -164,10 +164,10 @@ const LandingPage: React.FC = () => {
                       value={groupName}
                       onChange={(e) => setGroupName(e.target.value)}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-gray-500"
-                      placeholder=" "
+                      className="peer w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-transparent"
+                      placeholder="Group Name"
                     />
-                    <label className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none">
+                    <label className="absolute left-4 top-1 text-gray-500 text-xs transition-all duration-200 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-1 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-blue-600">
                       Group Name
                     </label>
                   </div>
@@ -178,10 +178,10 @@ const LandingPage: React.FC = () => {
                       value={groupCode}
                       onChange={(e) => setGroupCode(e.target.value)}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-gray-500"
-                      placeholder=" "
+                      className="peer w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-transparent"
+                      placeholder="Group Code"
                     />
-                    <label className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none">
+                    <label className="absolute left-4 top-1 text-gray-500 text-xs transition-all duration-200 pointer-events-none peer-placeholder-shown:text-sm peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:top-1 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:text-blue-600">
                       Group Code
                     </label>
                   </div>
