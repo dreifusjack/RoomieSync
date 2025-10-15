@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLogin, useRegister } from "@/hooks/auth.hooks";
 
-const LoginForm: React.FC = () => {
+const WelcomePage: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -172,4 +172,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default WelcomePage;
