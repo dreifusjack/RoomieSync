@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import React from "react";
 
 interface SidebarElementProps {
   title?: string;
@@ -12,24 +12,13 @@ const SidebarElement: React.FC<SidebarElementProps> = ({
   href,
 }) => {
   return (
-    <a href={href}>
-      <Box
-        sx={{
-          height: "75px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "#a2a2a2",
-          "&:hover": {
-            backgroundColor: "#090909",
-          },
-          cursor: "pointer",
-        }}
-      >
+    <a href={href} className="block">
+      <div className="h-20 flex flex-col justify-center items-center text-gray-400 hover:bg-gray-800 cursor-pointer transition-colors duration-200">
         {icon}
-        {title}
-      </Box>
+        {title && (
+          <span className="text-xs mt-1 text-center px-1">{title}</span>
+        )}
+      </div>
     </a>
   );
 };

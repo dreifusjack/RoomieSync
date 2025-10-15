@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import styles from "../styles/Modal.module.css";
-import { Button } from "@mui/material";
 import { User } from "@/types/user-types";
 import { useAssignChore } from "@/hooks/chores.hooks";
 import { Chore } from "@/types/chore-types";
@@ -45,19 +43,21 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
   };
 
   return (
-    <div className={styles.modalContainer}>
+    <div className="w-96 max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
       {assignChoreMutation.error && (
-        <div className={styles.errorMessage}>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">
           {assignChoreMutation.error.message}
         </div>
       )}
-      <form onSubmit={handleSubmit} className={styles.modalForm}>
-        <div className={styles.floatingLabelGroup}>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="relative">
           <select
             id="user"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
             required
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 appearance-none"
           >
             <option value="">Select User</option>
             {users.map((user) => (
@@ -66,27 +66,38 @@ const AssignChoreForm: React.FC<AssignChoreFormProps> = ({
               </option>
             ))}
           </select>
-          <label htmlFor="user" className={styles.floatingLabel}>
+          <label
+            htmlFor="user"
+            className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none"
+          >
             User
           </label>
         </div>
-        <div className={styles.floatingLabelGroup}>
+
+        <div className="relative">
           <input
             type="date"
             id="dueDate"
             value={selectedDueDate}
             onChange={(e) => setSelectedDueDate(e.target.value)}
             required
-            className={styles.floatingInput}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900"
           />
-          <label htmlFor="dueDate" className={styles.floatingLabel}>
+          <label
+            htmlFor="dueDate"
+            className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none"
+          >
             Due Date
           </label>
         </div>
 
-        <Button type="submit">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={assignChoreMutation.isPending}
+        >
           {assignChoreMutation.isPending ? "Assigning..." : "Assign Chore"}
-        </Button>
+        </button>
       </form>
     </div>
   );

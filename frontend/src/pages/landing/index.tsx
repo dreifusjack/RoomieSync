@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import styles from "../../styles/Modal.module.css";
-import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { useCurrentUser } from "@/hooks/auth.hooks";
 import { useCreateGroup, useJoinGroup } from "@/hooks/groups.hooks";
@@ -33,9 +31,10 @@ const LandingPage: React.FC = () => {
 
   if (userLoading) {
     return (
-      <div className={styles.modalContainer}>
-        <div className={styles.modalForm}>
-          <div>Loading user data...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading user data...</p>
         </div>
       </div>
     );
@@ -43,9 +42,11 @@ const LandingPage: React.FC = () => {
 
   if (userError || !user) {
     return (
-      <div className={styles.modalContainer}>
-        <div className={styles.modalForm}>
-          <div>Error loading user data. Please try refreshing the page.</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg max-w-md">
+            Error loading user data. Please try refreshing the page.
+          </div>
         </div>
       </div>
     );
@@ -63,7 +64,7 @@ const LandingPage: React.FC = () => {
         }
       } else {
         await joinGroupMutation.mutateAsync(groupCode);
-        handleContinue;
+        handleContinue();
       }
     } catch (err) {
       console.error("Error in handleSubmit:", err);
@@ -72,7 +73,7 @@ const LandingPage: React.FC = () => {
 
   const handleCopyCode = async () => {
     try {
-      await navigator.clipboard.writeText(groupCode);
+      await navigator.clipboard.writeText(createdGroupCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -85,80 +86,133 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.modalContainer}>
-      <form onSubmit={handleSubmit} className={styles.modalForm}>
-        <h2>Welcome to RoomieSync, {user.firstName}!</h2>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          {showGroupCode ? (
+            <div className="text-center">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-8 h-8 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Group Created Successfully!
+                </h2>
+                <p className="text-gray-600">
+                  Share this code with your roommates:
+                </p>
+              </div>
 
-        {showGroupCode ? (
-          <div>
-            <h2>Group Created Successfully!</h2>
-            <p>Share this code with your roommates:</p>
+              <div className="mb-6">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={createdGroupCode}
+                    readOnly
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-center text-lg font-mono text-gray-900"
+                  />
+                </div>
+                <button
+                  onClick={handleCopyCode}
+                  className="mt-2 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                >
+                  {copied ? "Copied!" : "Copy Code"}
+                </button>
+              </div>
 
-            <div
-              className={styles.floatingLabelGroup}
-              style={{ marginTop: "40px" }}
-            >
-              <input
-                type="text"
-                value={createdGroupCode}
-                readOnly
-                className={styles.floatingInput} // + code-display
-              />
-              <label className={styles.floatingLabel}>Group Code</label>
+              <button
+                onClick={handleContinue}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200"
+              >
+                Continue to Dashboard
+              </button>
             </div>
-            <Button onClick={handleCopyCode} className="copy-button">
-              {copied ? "Copied!" : "Copy Code"}
-            </Button>
-
-            <Button onClick={handleContinue} className="continue-button">
-              Continue
-            </Button>
-          </div>
-        ) : (
-          <>
-            <h2>{isCreating ? "Create a Group" : "Join a Group"}</h2>
-            {error && <div className={styles.errorMessage}>{error}</div>}
-
-            {isCreating ? (
-              <div className={styles.floatingLabelGroup}>
-                <input
-                  type="text"
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                  required
-                  className={styles.floatingInput}
-                />
-                <label className={styles.floatingLabel}>Group Name</label>
+          ) : (
+            <div className="text-center">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                  Welcome to RoomieSync, {user.firstName}!
+                </h2>
+                <p className="text-gray-600">
+                  {isCreating ? "Create a new group" : "Join an existing group"}
+                </p>
               </div>
-            ) : (
-              <div className={styles.floatingLabelGroup}>
-                <input
-                  type="text"
-                  value={groupCode}
-                  onChange={(e) => setGroupCode(e.target.value)}
-                  required
-                  className={styles.floatingInput}
-                />
-                <label className={styles.floatingLabel}>Group Code</label>
-              </div>
-            )}
 
-            <Button type="submit" disabled={loading}>
-              {loading ? "Processing..." : isCreating ? "Create" : "Join"}
-            </Button>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
 
-            <Button
-              type="button"
-              onClick={() => setIsCreating(!isCreating)}
-              className="toggle-button"
-            >
-              {isCreating
-                ? "Join an existing group?"
-                : "Need to create a group?"}
-            </Button>
-          </>
-        )}
-      </form>
+                {isCreating ? (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={groupName}
+                      onChange={(e) => setGroupName(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-gray-500"
+                      placeholder=" "
+                    />
+                    <label className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none">
+                      Group Name
+                    </label>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={groupCode}
+                      onChange={(e) => setGroupCode(e.target.value)}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white text-gray-900 placeholder-gray-500"
+                      placeholder=" "
+                    />
+                    <label className="absolute left-4 top-3 text-gray-500 text-sm transition-all duration-200 pointer-events-none">
+                      Group Code
+                    </label>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading
+                    ? "Processing..."
+                    : isCreating
+                    ? "Create Group"
+                    : "Join Group"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCreating(!isCreating)}
+                  className="w-full text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors duration-200"
+                >
+                  {isCreating
+                    ? "Join an existing group instead?"
+                    : "Need to create a new group?"}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

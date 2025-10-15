@@ -1,46 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
-import styles from "@/styles/Feature.module.css";
 import { useCreateExpense, useExpenses } from "@/hooks/ExpenseHooks";
-
-/*
-interface Expense {
-  paid_by: string;
-  group_id: string;
-  amount: number;
-  description: string;
-  is_paid: boolean;
-}
-
-interface ExpenseSharingPageProps {
-  userId: string;
-  groupId: string;
-}
-
-const Expenses: React.FC<ExpenseSharingPageProps> = ({ userId, groupId }) => {
-  const [expenses, setExpenses] = useState<{ [key: string]: { [key: string]: number } }>({});
-
-  const addExpense = (expense: Expense) => {
-    setExpenses((prevExpenses) => ({
-      ...prevExpenses,
-      [expense.paid_by]: {
-        ...prevExpenses[expense.paid_by],
-        [expense.group_id]: expense.amount,
-      },
-    }));
-  };
-
-  return (
-    <div className={styles.container}>
-      <Sidebar />
-      <div className={styles.mainContent}>
-        <h1 className="text-primary">Expense Sharing</h1>
-        <ExpenseForm addExpense={addExpense} />
-        <ExpenseTable/>
-      </div>
-    </div>
-  );
-}; */
 
 const Expenses: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
@@ -49,7 +9,16 @@ const Expenses: React.FC = () => {
   const { expenses, userId, handlePaid } = useExpenses();
 
   if (error) {
-    return <div className="alert alert-danger">{error}</div>;
+    return (
+      <div className="min-h-screen bg-gray-50 flex">
+        <Sidebar />
+        <div className="flex-1 ml-28 p-8">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            {error}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const handleCreateExpense = async (e: React.FormEvent) => {
@@ -64,109 +33,137 @@ const Expenses: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="min-h-screen bg-gray-50 flex">
       <Sidebar />
-      <div className={styles.mainContent}>
-        <h1 className={styles.heading}>Expenses</h1>
-        <hr className={styles.horizontalLine} />
-        <h2 className={styles.subheading}>Create New Expense</h2>
-        <form className={styles.form} onSubmit={handleCreateExpense}>
-          <div>
-            <label className={styles.label}>
-              Amount:
-              <input
-                className={styles.input}
-                type="text"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-              />
-            </label>
+      <div className="flex-1 ml-28 p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Expenses</h1>
+            <div className="w-20 h-1 bg-blue-600 rounded-full"></div>
           </div>
-          <div>
-            <label className={styles.label}>
-              Description:
-              <input
-                className={styles.input}
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <button className={styles.button} type="submit">
-            {isLoading ? "Adding Expense..." : "Add Expense"}
-          </button>
-        </form>
 
-        <h2 className={styles.subheading}>Expenses You Owe</h2>
-        <div className={styles.alarmList}>
-          {expenses.map(([key, amount]) => {
-            const [ower, recipient] = key.split(",");
-            if (ower === userId && amount > 0) {
-              return (
-                <div
-                  key={key}
-                  className="mb-3"
-                  style={{
-                    backgroundColor: "#e9ecef",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <div
-                    className="d-flex justify-content-between align-items-center"
-                    style={{ marginBottom: "10px" }}
-                  >
-                    <span>
-                      You owe {recipient}: ${amount}
-                    </span>
-                    <button
-                      className="btn btn-success btn-sm"
-                      onClick={() => handlePaid(ower, recipient, amount)}
-                      style={{ marginLeft: "10px" }}
+          {/* Create New Expense Form */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Create New Expense
+            </h2>
+            <form onSubmit={handleCreateExpense} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Amount
+                  </label>
+                  <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </label>
+                  <input
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="What was this expense for?"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Adding Expense..." : "Add Expense"}
+              </button>
+            </form>
+          </div>
+
+          {/* Expenses You Owe */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Expenses You Owe
+            </h2>
+            <div className="space-y-3">
+              {expenses.map(([key, amount]) => {
+                const [ower, recipient] = key.split(",");
+                if (ower === userId && amount > 0) {
+                  return (
+                    <div
+                      key={key}
+                      className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
                     >
-                      Paid {recipient}
-                    </button>
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
+                      <span className="text-gray-700">
+                        You owe{" "}
+                        <span className="font-semibold">{recipient}</span>:{" "}
+                        <span className="font-semibold text-red-600">
+                          ${amount}
+                        </span>
+                      </span>
+                      <button
+                        onClick={() => handlePaid(ower, recipient, amount)}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                      >
+                        Mark as Paid
+                      </button>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+              {expenses.filter(([key, amount]) => {
+                const [ower] = key.split(",");
+                return ower === userId && amount > 0;
+              }).length === 0 && (
+                <p className="text-gray-500 text-center py-4">
+                  No outstanding expenses
+                </p>
+              )}
+            </div>
+          </div>
 
-        <h2 className={styles.subheading}>Expenses Owed to You</h2>
-        <div className={styles.alarmList}>
-          {expenses.map(([key, amount]) => {
-            const [ower, recipient] = key.split(",");
-            if (recipient === userId && amount > 0) {
-              return (
-                <div
-                  key={key}
-                  className="mb-3"
-                  style={{
-                    backgroundColor: "#e9ecef",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <div
-                    className="d-flex justify-content-between align-items-center"
-                    style={{ marginBottom: "10px" }}
-                  >
-                    <span>
-                      {ower} owes you: ${amount}
-                    </span>
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })}
+          {/* Expenses Owed to You */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Expenses Owed to You
+            </h2>
+            <div className="space-y-3">
+              {expenses.map(([key, amount]) => {
+                const [ower, recipient] = key.split(",");
+                if (recipient === userId && amount > 0) {
+                  return (
+                    <div
+                      key={key}
+                      className="flex justify-between items-center p-4 bg-green-50 rounded-lg"
+                    >
+                      <span className="text-gray-700">
+                        <span className="font-semibold">{ower}</span> owes you:{" "}
+                        <span className="font-semibold text-green-600">
+                          ${amount}
+                        </span>
+                      </span>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+              {expenses.filter(([key, amount]) => {
+                const [, recipient] = key.split(",");
+                return recipient === userId && amount > 0;
+              }).length === 0 && (
+                <p className="text-gray-500 text-center py-4">
+                  No one owes you money
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

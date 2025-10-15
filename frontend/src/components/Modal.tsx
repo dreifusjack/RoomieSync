@@ -19,9 +19,9 @@ const CustomModal: React.FC<CustomModalProps> = ({ form, open, onClose }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          bgcolor: "background.paper",
+          bgcolor: "#transparent",
           borderRadius: 2,
-          boxShadow: 24,
+          boxShadow: 0,
           p: 4,
           backgroundColor: "#transparent",
         }}

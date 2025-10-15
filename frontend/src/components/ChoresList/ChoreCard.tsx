@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./list.css";
 import { useAllGroupUsers, useUserById } from "@/hooks/users.hooks";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,41 +43,46 @@ const ChoreCard: React.FC<ChoreCardProps> = ({
     : "";
 
   return (
-    <div key={chore.id} className="chore-card">
-      <h3>{chore.name}</h3>
-      <p>{chore.description}</p>
-      <p>⏳ {chore.cadence}</p>
+    <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-80 transition-all duration-300 hover:shadow-xl hover:scale-105">
+      <div className="flex justify-between items-start mb-4">
+        <h3 className="text-xl font-semibold text-white mb-2">{chore.name}</h3>
+        <DeleteIcon
+          sx={{
+            color: "#ffffff",
+            cursor: "pointer",
+            "&:hover": {
+              color: "#ff6b6b",
+            },
+          }}
+          onClick={() => onDeletedChore(chore.id)}
+        />
+      </div>
+
+      <p className="text-gray-300 mb-3">{chore.description}</p>
+      <p className="text-gray-400 mb-3">⏳ {chore.cadence}</p>
 
       {userName ? (
-        <>
-          <p>👤 {userName}</p>
-          <p>⏰ {parsedDueDate}</p>
+        <div className="space-y-3">
+          <p className="text-gray-300">👤 {userName}</p>
+          <p className="text-gray-400">⏰ {parsedDueDate}</p>
           <button
             onClick={() => {
               onRemindUser(chore.id);
               toast.success("Reminder sent successfully!");
             }}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
           >
             Send Reminder
           </button>
-        </>
+        </div>
       ) : (
         <button
-          className="action-button"
           onClick={() => setAssignFormVisible(true)}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200"
         >
           Assign Chore
         </button>
       )}
-
-      <DeleteIcon
-        sx={{
-          marginLeft: "70px",
-          color: "#ffffff",
-          cursor: "pointer",
-        }}
-        onClick={() => onDeletedChore(chore.id)}
-      />
 
       <CustomModal
         form={
