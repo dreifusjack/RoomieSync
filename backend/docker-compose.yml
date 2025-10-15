@@ -12,14 +12,17 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - roomiesync-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: roomiesync-springboot-app
-    depends_on:
-      - postgres
     environment:
       PGHOST: postgres
       PGPORT: 5432
@@ -29,8 +32,12 @@ services:
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       FRONTEND_URL: ${FRONTEND_URL}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
     ports:
       - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - roomiesync-network
       
