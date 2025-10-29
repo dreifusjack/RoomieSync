@@ -1,4 +1,4 @@
-# Roomie Sync
+# RoomieSync
 
 A roommate management App designed to make shared living more organized and collaborative. With user authentication and group joining capabilities, roommates can work together to manage their household effectively. This app provides tools for shared alarms, expense tracking, and chore management to ensure everyone contributes fairly and stays informed.
 
@@ -18,7 +18,7 @@ A roommate management App designed to make shared living more organized and coll
 - Set reminders for chores to ensure they are completed on time.
 - Track contributions and keep the household running smoothly.
 
-## Gaols 
+## Goals 
 The app aims to:
 - Foster better communication and organization within shared households.
 - Encourage fairness and accountability among roommates.
