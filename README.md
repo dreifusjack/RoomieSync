@@ -42,7 +42,9 @@ The app aims to:
 
 **Backend**
 
-- Framework: Spring Boot (Java)
+- Framework: Spring Boot
+
+- Language: Java
 
 - Database: PostgreSQL
 
